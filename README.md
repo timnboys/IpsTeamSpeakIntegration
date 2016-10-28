@@ -22,7 +22,11 @@ This is also an effort to prevent (inevitable) nulled versions which might inclu
 ### TODO
 
 * Poke/Kick/Ban Clients from within the ACP
-* Features to come soon:
 * Ban syncing
 * Add/Edit TS groups within the ACP
 * Multiple server support
+
+### Credits
+
+* [par0noid](https://github.com/par0noid) using his API: https://github.com/par0noid/ts3admin.class
+* [LeoWinterDE](https://github.com/LeoWinterDE) using his (modified version) TS Viewer: https://github.com/5G5/TS3ServerStatusViewer
