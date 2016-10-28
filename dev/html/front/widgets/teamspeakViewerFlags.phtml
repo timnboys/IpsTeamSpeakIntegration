@@ -1,0 +1,8 @@
+<ips:template parameters="$flags" />
+<div class="ts3ssvFlags">
+	{{if is_array($flags)}}
+		{{foreach $flags as $flag}}
+			<i class="tsviewer tsviewer-{$flag}"></i>
+		{{endforeach}}
+	{{endif}}
+</div>

@@ -1,0 +1,9 @@
+<ips:template parameters="$users" />
+{{if is_array( $users )}}
+	{{foreach $users as $user}}
+		<div class="ts3ssvItem">
+			<i class="tsviewer tsviewer-{$user['icon']}"></i>{$user['name']}
+			{template="teamspeakViewerFlags" group="widgets" location="front" app="teamspeak" params="$user['flags']"}
+		</div>
+	{{endforeach}}
+{{endif}}

@@ -1,0 +1,19 @@
+<ips:template parameters="$ts, $ports" />
+<div class='ipsMessage {{if !$ts}}ipsMessage_error{{elseif $ts}}ipsMessage_success{{endif}}'>
+	{{if $ts}}
+		Connection could be established, YAY!
+	{{else}}
+		Oh no! Connection could not be established, please check the error logs for more information!
+	{{endif}}
+</div>
+{{foreach $ports as $port => $success}}
+	{{if $success}}
+		<div class='ipsMessage ipsMessage_success'>
+			The Port {$port} is open!
+		</div>
+	{{else}}
+		<div class='ipsMessage ipsMessage_error'>
+			The Port {$port} is closed, please contact your host to open them for you!
+		</div>
+	{{endif}}
+{{endforeach}}

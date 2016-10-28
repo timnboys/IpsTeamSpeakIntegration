@@ -1,0 +1,38 @@
+{
+    "overview": {
+        "test": {
+            "tab": "teamspeak",
+            "controller": "test",
+            "do": "",
+            "restriction": "test_manage"
+        },
+        "settings": {
+            "tab": "teamspeak",
+            "controller": "settings",
+            "do": "",
+            "restriction": "settings_manage"
+        }
+    },
+    "members": {
+        "members": {
+            "tab": "teamspeak",
+            "controller": "members",
+            "do": "",
+            "restriction": "members_manage"
+        }
+    },
+    "teamspeak": {
+        "server": {
+            "tab": "teamspeak",
+            "controller": "server",
+            "do": "",
+            "restriction": "server_manage"
+        },
+        "alert": {
+            "tab": "teamspeak",
+            "controller": "alert",
+            "do": "",
+            "restriction": "alert_manage"
+        }
+    }
+}

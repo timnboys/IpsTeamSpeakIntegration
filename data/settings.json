@@ -1,0 +1,38 @@
+[
+    {
+        "key": "teamspeak_file_transfer_port",
+        "default": "30033"
+    },
+    {
+        "key": "teamspeak_query_admin",
+        "default": "serveradmin"
+    },
+    {
+        "key": "teamspeak_query_nickname",
+        "default": "TeamSpeak Integration"
+    },
+    {
+        "key": "teamspeak_query_password",
+        "default": ""
+    },
+    {
+        "key": "teamspeak_query_port",
+        "default": "10011"
+    },
+    {
+        "key": "teamspeak_server_ip",
+        "default": ""
+    },
+    {
+        "key": "teamspeak_uuid_on_register",
+        "default": "0"
+    },
+    {
+        "key": "teamspeak_uuid_on_register_force",
+        "default": "0"
+    },
+    {
+        "key": "teamspeak_virtual_port",
+        "default": "9987"
+    }
+]

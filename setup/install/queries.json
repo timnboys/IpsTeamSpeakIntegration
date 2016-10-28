@@ -1,0 +1,32 @@
+{
+    "1": {
+        "method": "addColumn",
+        "params": [
+            "core_groups",
+            {
+                "name": "teamspeak_require_uuid",
+                "type": "TINYINT",
+                "length": 1,
+                "null": false,
+                "default": 0,
+                "comment": "",
+                "unsigned": true
+            }
+        ]
+    },
+    "2": {
+        "method": "addColumn",
+        "params": [
+            "core_groups",
+            {
+                "name": "teamspeak_group",
+                "type": "INT",
+                "length": 11,
+                "null": false,
+                "default": -1,
+                "comment": "TS3 Group associated with this one",
+                "unsigned": false
+            }
+        ]
+    }
+}

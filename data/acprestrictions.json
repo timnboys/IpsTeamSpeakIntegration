@@ -1,0 +1,23 @@
+{
+    "teamspeak": {
+        "server": {
+            "server_manage": "server_manage"
+        },
+        "alert": {
+            "alert_manage": "alert_manage"
+        }
+    },
+    "overview": {
+        "test": {
+            "test_manage": "test_manage"
+        },
+        "settings": {
+            "settings_manage": "settings_manage"
+        }
+    },
+    "members": {
+        "members": {
+            "members_manage": "members_manage"
+        }
+    }
+}

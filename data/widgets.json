@@ -1,0 +1,13 @@
+{
+    "teamspeakViewer": {
+        "class": "\\IPS\\Widget\\StaticCache",
+        "restrict": [
+            "sidebar",
+            "cms"
+        ],
+        "default_area": "sidebar",
+        "allow_reuse": false,
+        "menu_style": "modal",
+        "embeddable": true
+    }
+}

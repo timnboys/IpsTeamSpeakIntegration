@@ -1,0 +1,9 @@
+{
+  "topLevel": "",
+  "pages": {
+    "teamspeak_member_sync": {
+      "friendly": "teamspeak",
+      "real": "app=teamspeak&module=teamspeak&controller=membersync"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<ips:template parameters="$uuids, $forced" />
+{template="pageHeader" group="global" app="core" params="\IPS\Member::loggedIn()->language()->addToStack( 'page__teamspeak' )"}
+
+{{if $forced}}
+	<div class="ipsMessage ipsMessage_error">
+		{lang="teamspeak_you_are_forced_to_enter_one_uuid"}
+	</div>
+{{endif}}
+
+<ul class="ipsToolList ipsToolList_horizontal ipsClearfix ipsSpacer_bottom ipsSpacer_half">
+	<li class="ipsToolList_primaryAction">
+		<a class="ipsButton ipsButton_medium ipsButton_important" href="{url='app=teamspeak&module=teamspeak&controller=membersync&do=add' seoTemplate='teamspeak_member_sync' csrf='1'}" data-ipsdialog="" data-ipsdialog-modal="true" data-ipsdialog-title="{lang='teamspeak_add_uuid'}">+ {lang="teamspeak_add_uuid"}</a>
+	</li>
+</ul>
+
+<div class='ipsClear ipsBox'>
+	<h2 class='ipsType_sectionTitle ipsType_reset'>{lang="teamspeak_uuids"}</h2>
+	<ol class="ipsDataList ipsDataList_large">
+		{{if !empty($uuids)}}
+			{{foreach $uuids as $id => $uuid}}
+				<li class="ipsDataItem">
+					<div class='ipsDataItem_icon ipsPos_top ipsResponsive_hidePhone'>
+						{template="userPhoto" group="global" app="core" params="\IPS\Member::loggedIn(), 'tiny'"}
+					</div>
+					<div class='ipsDataItem_generic ipsDataItem_size6'>
+						<h4 class='ipsDataItem_title'>
+							{template="userLink" app="core" group="global" params="\IPS\Member::loggedIn(), NULL"}
+						</h4>
+					</div>
+					<div class="ipsDataItem_main">{$uuid}</div>
+					<div class='ipsDataItem_generic ipsDataItem_size4'>
+						<a class="ipsButton ipsButton_small ipsButton_normal" href="{url='app=teamspeak&module=teamspeak&controller=membersync&do=delete&id=$id' seoTemplate='teamspeak_member_sync' csrf='1'}" rel="nofollow noopener noreferrer" data-confirm>{lang="teamspeak_unlink_uuid"}</a>
+					</div>
+				</li>
+			{{endforeach}}
+		{{else}}
+		<li class="ipsDataItem">
+			<div class="ipsDataItem_main">{lang="teamspeak_no_uuids"}</div>
+		</li>
+		{{endif}}
+	</ol>
+</div>

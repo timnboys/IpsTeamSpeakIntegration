@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language>
+ <app key="teamspeak" version="10003">
+  <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
+  <word key="menutab__teamspeak" js="0">TeamSpeak</word>
+  <word key="menutab__teamspeak_icon" js="0">phone</word>
+  <word key="menu__teamspeak_overview" js="0">Overview</word>
+  <word key="menu__teamspeak_overview_test" js="0">Test Connection</word>
+  <word key="menu__teamspeak_overview_settings" js="0">Settings</word>
+  <word key="menu__teamspeak_members" js="0">TeamSpeak Members</word>
+  <word key="menu__teamspeak_members_members" js="0">UUIDs</word>
+  <word key="menu__teamspeak_teamspeak" js="0">TeamSpeak</word>
+  <word key="menu__teamspeak_teamspeak_server" js="0">Server</word>
+  <word key="menu__teamspeak_teamspeak_alert" js="0">Alert</word>
+  <word key="teamspeak_test_title" js="0">Test TeamSpeak</word>
+  <word key="teamspeak_settings_title" js="0">TeamSpeak Settings</word>
+  <word key="teamspeak_members_title" js="0">Member UUIDs</word>
+  <word key="teamspeak_alert_title" js="0">TeamSpeak Alert</word>
+  <word key="teamspeak_table_s_member_id" js="0">Member</word>
+  <word key="teamspeak_table_s_uuid" js="0">UUID</word>
+  <word key="teamspeak_table_s_date" js="0">Date</word>
+  <word key="teamspeak_table_name" js="0">Member</word>
+  <word key="alert_message" js="0">Message</word>
+  <word key="teamspeak_alert" js="0">Alert</word>
+  <word key="teamspeak_alert_sent" js="0">Alert sent</word>
+  <word key="teamspeak_basic_settings" js="0">Basic</word>
+  <word key="teamspeak_other_settings" js="0">Other</word>
+  <word key="teamspeak_server_ip" js="0">TeamSpeak IP/Host</word>
+  <word key="teamspeak_server_ip_desc" js="0">Your TeamSpeak server IP address or hostname.</word>
+  <word key="teamspeak_virtual_port" js="0">TeamSpeak Server Port</word>
+  <word key="teamspeak_virtual_port_desc" js="0">Your TeamSpeak Virtual Port, default is 9987.</word>
+  <word key="teamspeak_query_port" js="0">TeamSpeak Query Port</word>
+  <word key="teamspeak_query_port_desc" js="0">Your TeamSpeak Query Port, in most cases this is 10011. If unsure, ask your TeamSpeak host.</word>
+  <word key="teamspeak_file_transfer_port" js="0">TeamSpeak File Transfer Port</word>
+  <word key="teamspeak_file_transfer_port_desc" js="0">Your TeamSpeak File Transfer, in most cases this is 30033. If unsure, ask your TeamSpeak host</word>
+  <word key="teamspeak_query_admin" js="0">TeamSpeak QueryAdmin Name</word>
+  <word key="teamspeak_query_admin_desc" js="0">Your TeamSpeak Query Admin username, usually serveradmin.</word>
+  <word key="teamspeak_query_password" js="0">TeamSpeak QueryAdmin Password</word>
+  <word key="teamspeak_query_password_desc" js="0">Your TeamSpeak Query Admin password.</word>
+  <word key="teamspeak_query_nickname" js="0">TeamSpeak Nickname</word>
+  <word key="teamspeak_query_nickname_desc" js="0">Nickname for this APP, will be shown on the TS when automated actions take place.</word>
+  <word key="teamspeak_uuid_on_register" js="0">Show UUID on register form?</word>
+  <word key="teamspeak_uuid_on_register_desc" js="0">Display a textbox on register form for new members to enter their UUID?</word>
+  <word key="teamspeak_uuid_on_register_force" js="0">Require UUID on register form?</word>
+  <word key="teamspeak_uuid_on_register_force_desc" js="0">Make the UUID textbox on the register form required?</word>
+  <word key="teamspeak_server_title" js="0">Edit TS Server</word>
+  <word key="teamspeak_server" js="0">Server</word>
+  <word key="teamspeak_name" js="0">Server Name</word>
+  <word key="teamspeak_welcomemessage" js="0">Welcome Message</word>
+  <word key="teamspeak_maxclients" js="0">Max. Clients</word>
+  <word key="teamspeak_reserved_slots" js="0">Reserved Slots</word>
+  <word key="teamspeak_transfer" js="0">Transfer</word>
+  <word key="teamspeak_download" js="0">Download</word>
+  <word key="teamspeak_max_download_total_bandwidth" js="0">Total Bandwidth</word>
+  <word key="teamspeak_max_download_total_bandwidth_desc" js="0">In Bytes.</word>
+  <word key="teamspeak_download_quota" js="0">Quota</word>
+  <word key="teamspeak_download_quota_desc" js="0">In Bytes.</word>
+  <word key="teamspeak_upload" js="0">Upload</word>
+  <word key="teamspeak_max_upload_total_bandwidth" js="0">Total Bandwidth</word>
+  <word key="teamspeak_max_upload_total_bandwidth_desc" js="0">In Bytes.</word>
+  <word key="teamspeak_upload_quota" js="0">Quota</word>
+  <word key="teamspeak_upload_quota_desc" js="0">In Bytes.</word>
+  <word key="teamspeak_anti_flood" js="0">Anti Flood</word>
+  <word key="teamspeak_antiflood_points_needed_ip_block" js="0">Points for IP Block</word>
+  <word key="teamspeak_antiflood_points_tick_reduce" js="0">Decrease for being good</word>
+  <word key="teamspeak_antiflood_points_needed_command_block" js="0">Points for Command Block</word>
+  <word key="teamspeak_security" js="0">Security</word>
+  <word key="teamspeak_needed_identity_security_level" js="0">Needed Security Level</word>
+  <word key="teamspeak_other" js="0">Other</word>
+  <word key="teamspeak_default_server_group" js="0">Default Server Group</word>
+  <word key="teamspeak_default_channel_group" js="0">Default Channel Group</word>
+  <word key="teamspeak_default_channel_admin_group" js="0">Default Channel Admin Group</word>
+  <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
+  <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
+  <word key="page__teamspeak" js="0">TeamSpeak</word>
+  <word key="teamspeak_no_uuids" js="0">You have no UUIDs linked</word>
+  <word key="teamspeak_add_uuid" js="0">Add UUID</word>
+  <word key="teamspeak_uuids" js="0">TeamSpeak UUIDs</word>
+  <word key="teamspeak_unlink_uuid" js="0">Unlink UUID</word>
+  <word key="teamspeak_added_uuid" js="0">Added UUID</word>
+  <word key="teamspeak_removed_uuid" js="0">Unlinked UUID</word>
+  <word key="teamspeak_you_are_forced_to_enter_one_uuid" js="0">The administrator requires you to link at least one account</word>
+  <word key="s_uuid" js="0">UUID</word>
+  <word key="s_uuid_desc" js="0">Press CTRL+I on TeamSpeak to get your UUID</word>
+  <word key="group__teamspeak_ServerGroups" js="0">TeamSpeak</word>
+  <word key="teamspeak_group" js="0">TeamSpeak Group</word>
+  <word key="teamspeak_group_desc" js="0">Which TS Group should members that are in this group get?</word>
+  <word key="teamspeak_require_uuid" js="0">Force UUID?</word>
+  <word key="teamspeak_require_uuid_desc" js="0">Members of this group will be forced to enter at least one UUID.</word>
+  <word key="teamspeak_viewer" js="0">TeamSpeak Viewer</word>
+  <word key="block_teamspeakViewer" js="0">Viewer</word>
+  <word key="block_teamspeakViewer_desc" js="0">Shows your TeamSpeak server and lets members connect to it through clicking on a channel.</word>
+  <word key="resync" js="0">Resync</word>
+  <word key="teamspeak_member_resynced" js="0">Member has been re-synced successfully</word>
+  <word key="teamspeak_member_deleted" js="0">UUID has been unlinked successfully</word>
+  <word key="teamspeak_front" js="0">TeamSpeak</word>
+  <word key="cacheTime" js="0">Cache Time</word>
+  <word key="showGuestOnly" js="0">Only show channels that are visible to guests?</word>
+  <word key="showGuestOnly_desc" js="0">If turned off, it will show all clients even if they are in channels that require a high subscribe power (which guests do not have).</word>
+  <word key="cacheTime_desc" js="0">In Seconds.</word>
+  <word key="hideEmptyChannels" js="0">Hide empty Channels?</word>
+  <word key="hideParentChannels" js="0">Hide Parent Channels?</word>
+  <word key="r__server" js="0">Server</word>
+  <word key="r__server_manage" js="0">Can edit server information?</word>
+  <word key="r__alert" js="0">Alert</word>
+  <word key="r__alert_manage" js="0">Can send global alert to the server?</word>
+  <word key="r__test" js="0">Test</word>
+  <word key="r__test_manage" js="0">Can test connection?</word>
+ </app>
+</language>

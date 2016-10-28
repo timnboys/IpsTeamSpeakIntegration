@@ -1,0 +1,22 @@
+{
+    "front": {
+        "teamspeak": {
+            "default_controller": "membersync",
+            "protected": false
+        }
+    },
+    "admin": {
+        "members": {
+            "default_controller": "",
+            "protected": 0
+        },
+        "overview": {
+            "default_controller": "settings",
+            "protected": 0
+        },
+        "teamspeak": {
+            "default_controller": "",
+            "protected": 0
+        }
+    }
+}
