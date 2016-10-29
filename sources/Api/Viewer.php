@@ -139,7 +139,13 @@ class _Viewer extends \IPS\teamspeak\Api
 	protected function update()
 	{
 		$response = \substr( $this->queryServer(), 1 );
-		$lines = explode( "\n\r \n\r", $response );
+		$lines = explode( "\n\r\n\r", $response );
+
+		if ( count( $lines ) == 1 )
+		{
+			$lines = explode( "\n\r \n\r", $response );
+		}
+
 		if ( count( $lines ) == 5 )
 		{
 			$this->_serverDatas = $this->parseLine( $lines[0] );

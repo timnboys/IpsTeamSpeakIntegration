@@ -9,6 +9,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
+use IPS\Application;
 use IPS\DateTime;
 use IPS\Dispatcher;
 use IPS\Helpers\Table;
@@ -34,6 +35,7 @@ class _Members extends \IPS\Dispatcher\Controller
 	{
 		Dispatcher::i()->checkAcpPermission( 'members_manage' );
 		parent::execute();
+		Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**

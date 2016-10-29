@@ -10,6 +10,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
+use IPS\Application;
 use IPS\Dispatcher;
 use IPS\Member;
 use IPS\Output;
@@ -31,6 +32,7 @@ class _test extends \IPS\Dispatcher\Controller
 	{
 		Dispatcher::i()->checkAcpPermission( 'test_manage' );
 		parent::execute();
+		Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**

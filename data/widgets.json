@@ -7,7 +7,7 @@
         ],
         "default_area": "sidebar",
         "allow_reuse": false,
-        "menu_style": "modal",
+        "menu_style": "menu",
         "embeddable": true
     }
 }

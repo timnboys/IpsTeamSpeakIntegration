@@ -10,6 +10,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
+use IPS\Application;
 use IPS\Dispatcher;
 use IPS\Helpers\Form;
 use IPS\Http\Url;
@@ -31,6 +32,7 @@ class _Alert extends \IPS\Dispatcher\Controller
 	{
 		Dispatcher::i()->checkAcpPermission( 'alert_manage' );
 		parent::execute();
+		Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
