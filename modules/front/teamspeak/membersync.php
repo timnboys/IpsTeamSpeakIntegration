@@ -1,6 +1,5 @@
 <?php
 
-
 namespace IPS\teamspeak\modules\front\teamspeak;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
@@ -38,26 +37,18 @@ class _membersync extends \IPS\Dispatcher\Controller
 		/* Prevent Guests from accessing this page */
 		if ( !Member::loggedIn()->member_id )
 		{
-			Output::i()->error( 'no_module_permission_guest', '2S100/2', 403 );
+			Output::i()->error( 'no_module_permission_guest', '2P100/1', 403 );
 		}
 	}
 
 	/**
-	 * ...
+	 * Display table containing all UUIDs that have been registered by this member.
 	 *
 	 * @return    void
 	 */
 	protected function manage()
 	{
-		$uuids = array();
-
-		foreach ( Db::i()->select(
-			's_id, s_uuid', 'teamspeak_member_sync', array( 's_member_id=?', Member::loggedIn()->member_id )
-		) as $uuid )
-		{
-			$uuids[$uuid['s_id']] = $uuid['s_uuid'];
-		}
-
+		$uuids = Member::loggedIn()->teamspeak_uuids;
 		$forced = (bool) Request::i()->forced;
 
 		/* Display */
@@ -65,6 +56,11 @@ class _membersync extends \IPS\Dispatcher\Controller
 		Output::i()->output = Theme::i()->getTemplate( 'tables', 'teamspeak' )->syncTable( $uuids, $forced );
 	}
 
+	/**
+	 * Link a new UUID.
+	 *
+	 * @return void
+	 */
 	protected function add()
 	{
 		/* Check CSRF */
@@ -119,6 +115,9 @@ class _membersync extends \IPS\Dispatcher\Controller
 		}
 	}
 
+	/**
+	 * Unlink a UUID.
+	 */
 	protected function delete()
 	{
 		/* Check CSRF */
@@ -128,11 +127,12 @@ class _membersync extends \IPS\Dispatcher\Controller
 
 		if ( $tsMember->member_id !== Member::loggedIn()->member_id )
 		{
-			Output::i()->error( 'uuid_does_not_belong_to_you', '4P1011', 403 );
+			Output::i()->error( 'uuid_does_not_belong_to_you', '2P100/1', 403 );
 		}
 
 		$tsMember->delete();
 
+		/* Redirect back to the table with a message that the UUID has been removed */
 		Output::i()->redirect(
 			Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ), 'teamspeak_removed_uuid'
 		);

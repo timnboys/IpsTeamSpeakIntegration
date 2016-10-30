@@ -33,6 +33,12 @@
             "controller": "alert",
             "do": "",
             "restriction": "alert_manage"
+        },
+        "clients": {
+            "tab": "teamspeak",
+            "controller": "clients",
+            "do": "",
+            "restriction": "clients_manage"
         }
     }
 }

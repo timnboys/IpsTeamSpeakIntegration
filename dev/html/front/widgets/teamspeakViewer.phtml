@@ -1,4 +1,4 @@
-<ips:template parameters="$content, $orientation='horizontal'" />
+<ips:template parameters="$content, $showConnectButton, $orientation='horizontal'" />
 <h3 class="ipsWidget_title ipsType_reset">{lang="teamspeak_viewer"}</h3>
 {{if is_array( $content )}}
 	{{$jsName = $content['jsName'];}}
@@ -6,7 +6,10 @@
 	{{$serverName = $content['name'];}}
 	{{$channels = $content['channels'];}}
 
-	<div class='{{if $orientation == 'vertical'}}ipsPad{{endif}}'>
+	<div class="{{if $orientation == 'vertical'}}ipsPad{{endif}}">
+		{{if $showConnectButton}}
+			<a id="tsviewer_connect_button" class="ipsButton ipsButton_small ipsButton_normal" href="javascript:ts3ssvconnect('{$jsName}')">Connect</a>
+		{{endif}}
 		<div class="ts3ssv">
 			<input type="hidden" id="ts3ssv-{$jsName}-hostport" value="{setting='teamspeak_server_ip'}:{setting='teamspeak_virtual_port'}" />
 			<div class="ts3ssvItem ts3ssvServer">

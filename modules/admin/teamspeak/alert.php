@@ -1,6 +1,5 @@
 <?php
 
-
 namespace IPS\teamspeak\modules\admin\teamspeak;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
@@ -36,12 +35,13 @@ class _Alert extends \IPS\Dispatcher\Controller
 	}
 
 	/**
-	 * ...
+	 * Show form to send a global alert to the TeamSpeak server.
 	 *
 	 * @return    void
 	 */
 	protected function manage()
 	{
+		/* Build alert form */
 		$form = new Form( 'alert', 'teamspeak_alert' );
 		$form->add( new Form\Text( 'alert_message', null, true ) );
 
@@ -55,6 +55,7 @@ class _Alert extends \IPS\Dispatcher\Controller
 			);
 		}
 
+		/* Display */
 		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_alert_title' );
 		Output::i()->output = $form;
 	}

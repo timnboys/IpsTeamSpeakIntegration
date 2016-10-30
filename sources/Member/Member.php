@@ -12,13 +12,14 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 use IPS\Member;
 use IPS\Member\Group as IpsGroup;
 use IPS\teamspeak\Api\Group;
+use IPS\teamspeak\Member as TsMember;
 
 class _Member
 {
 	/**
 	 * Get called class.
 	 *
-	 * @return Member
+	 * @return TsMember
 	 */
 	public static function i()
 	{
@@ -85,6 +86,29 @@ class _Member
 
 		$teamspeak = Group::i();
 		return $teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups );
+	}
+
+	/**
+	 * Remove groups from member that they gained through this APP.
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
+	public function resyncGroupsAllUuids( Member $member )
+	{
+		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
+		$teamspeak = Group::i();
+		$success = true;
+
+		foreach ( $member->teamspeak_uuids as $uuid )
+		{
+			if ( !$teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups ) )
+			{
+				$success = false;
+			}
+		}
+
+		return $success;
 	}
 
 	/**

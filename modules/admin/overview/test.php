@@ -1,6 +1,5 @@
 <?php
 
-
 namespace IPS\teamspeak\modules\admin\overview;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
@@ -36,7 +35,7 @@ class _test extends \IPS\Dispatcher\Controller
 	}
 
 	/**
-	 * ...
+	 * Test connection and return the results.
 	 *
 	 * @return    void
 	 */

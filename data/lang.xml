@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10003">
+ <app key="teamspeak" version="10004">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -12,14 +12,21 @@
   <word key="menu__teamspeak_teamspeak" js="0">TeamSpeak</word>
   <word key="menu__teamspeak_teamspeak_server" js="0">Server</word>
   <word key="menu__teamspeak_teamspeak_alert" js="0">Alert</word>
+  <word key="menu__teamspeak_teamspeak_clients" js="0">Clients</word>
   <word key="teamspeak_test_title" js="0">Test TeamSpeak</word>
   <word key="teamspeak_settings_title" js="0">TeamSpeak Settings</word>
   <word key="teamspeak_members_title" js="0">Member UUIDs</word>
   <word key="teamspeak_alert_title" js="0">TeamSpeak Alert</word>
+  <word key="teamspeak_clients_title" js="0">TeamSpeak Clients</word>
+  <word key="teamspeak_resync_all" js="0">Re-sync all</word>
+  <word key="teamspeak_members_resynced" js="0">Re-synced all members</word>
   <word key="teamspeak_table_s_member_id" js="0">Member</word>
   <word key="teamspeak_table_s_uuid" js="0">UUID</word>
   <word key="teamspeak_table_s_date" js="0">Date</word>
   <word key="teamspeak_table_name" js="0">Member</word>
+  <word key="resync" js="0">Resync</word>
+  <word key="teamspeak_member_resynced" js="0">Member has been re-synced successfully</word>
+  <word key="teamspeak_member_deleted" js="0">UUID has been unlinked successfully</word>
   <word key="alert_message" js="0">Message</word>
   <word key="teamspeak_alert" js="0">Alert</word>
   <word key="teamspeak_alert_sent" js="0">Alert sent</word>
@@ -70,6 +77,38 @@
   <word key="teamspeak_default_server_group" js="0">Default Server Group</word>
   <word key="teamspeak_default_channel_group" js="0">Default Channel Group</word>
   <word key="teamspeak_default_channel_admin_group" js="0">Default Channel Admin Group</word>
+  <word key="teamspeak_client_nickname" js="0">Nickname</word>
+  <word key="teamspeak_clid" js="0">Client ID</word>
+  <word key="teamspeak_kick" js="0">Kick</word>
+  <word key="teamspeak_poke" js="0">Poke</word>
+  <word key="teamspeak_ban" js="0">Ban</word>
+  <word key="teamspeak_client_poked" js="0">Client has been poked</word>
+  <word key="teamspeak_client_kicked" js="0">Client has been kicked</word>
+  <word key="teamspeak_client_banned" js="0">Client has been banned</word>
+  <word key="teamspeak_kick_title" js="0">Kick Client</word>
+  <word key="teamspeak_kick_message" js="0">Kick Message</word>
+  <word key="teamspeak_poke_title" js="0">Poke Client</word>
+  <word key="teamspeak_poke_message" js="0">Poke Message</word>
+  <word key="teamspeak_ban_title" js="0">Ban Client</word>
+  <word key="teamspeak_ban_message" js="0">Ban Reason</word>
+  <word key="teamspeak_ban_date" js="0">Ban until</word>
+  <word key="teamspeak_indefinite" js="0">Permanently</word>
+  <word key="teamspeak_resync_uuids" js="0">Re-sync TeamSpeak Groups</word>
+  <word key="group__teamspeak_ServerGroups" js="0">TeamSpeak</word>
+  <word key="teamspeak_group" js="0">TeamSpeak Group</word>
+  <word key="teamspeak_group_desc" js="0">Which TS Group should members that are in this group get?</word>
+  <word key="teamspeak_require_uuid" js="0">Force UUID?</word>
+  <word key="teamspeak_require_uuid_desc" js="0">Members of this group will be forced to enter at least one UUID.</word>
+  <word key="r__server" js="0">Server</word>
+  <word key="r__server_manage" js="0">Can edit server information?</word>
+  <word key="r__alert" js="0">Alert</word>
+  <word key="r__alert_manage" js="0">Can send global alert to the server?</word>
+  <word key="r__test" js="0">Test</word>
+  <word key="r__test_manage" js="0">Can test connection?</word>
+  <word key="teamspeak_id_missing" js="0">ID parameter is missing!</word>
+  <word key="teamspeak_resync_groups_failed" js="0">Re-syncing the groups failed!</word>
+  <word key="teamspeak_serverinfo_error" js="0">There was an error loading the server information, please check the system logs for more information!</word>
+  <word key="teamspeak_update_server_failed" js="0">There was an error updating the server information, please check the system logs for more information!</word>
   <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="page__teamspeak" js="0">TeamSpeak</word>
@@ -82,29 +121,19 @@
   <word key="teamspeak_you_are_forced_to_enter_one_uuid" js="0">The administrator requires you to link at least one account</word>
   <word key="s_uuid" js="0">UUID</word>
   <word key="s_uuid_desc" js="0">Press CTRL+I on TeamSpeak to get your UUID</word>
-  <word key="group__teamspeak_ServerGroups" js="0">TeamSpeak</word>
-  <word key="teamspeak_group" js="0">TeamSpeak Group</word>
-  <word key="teamspeak_group_desc" js="0">Which TS Group should members that are in this group get?</word>
-  <word key="teamspeak_require_uuid" js="0">Force UUID?</word>
-  <word key="teamspeak_require_uuid_desc" js="0">Members of this group will be forced to enter at least one UUID.</word>
   <word key="teamspeak_viewer" js="0">TeamSpeak Viewer</word>
   <word key="block_teamspeakViewer" js="0">Viewer</word>
   <word key="block_teamspeakViewer_desc" js="0">Shows your TeamSpeak server and lets members connect to it through clicking on a channel.</word>
-  <word key="resync" js="0">Resync</word>
-  <word key="teamspeak_member_resynced" js="0">Member has been re-synced successfully</word>
-  <word key="teamspeak_member_deleted" js="0">UUID has been unlinked successfully</word>
   <word key="teamspeak_front" js="0">TeamSpeak</word>
+  <word key="teamspeak_viewer_groups" js="0">Allowed Groups</word>
+  <word key="teamspeak_viewer_groups_desc" js="0">Which groups are allowed to see the TeamSpeak Viewer?</word>
   <word key="cacheTime" js="0">Cache Time</word>
+  <word key="showConnectButton" js="0">Display connect button?</word>
+  <word key="showConnectButton_desc" js="0">If enabled there will be an additional button which you can click to connect to the TS server.</word>
   <word key="showGuestOnly" js="0">Only show channels that are visible to guests?</word>
   <word key="showGuestOnly_desc" js="0">If turned off, it will show all clients even if they are in channels that require a high subscribe power (which guests do not have).</word>
   <word key="cacheTime_desc" js="0">In Seconds.</word>
   <word key="hideEmptyChannels" js="0">Hide empty Channels?</word>
   <word key="hideParentChannels" js="0">Hide Parent Channels?</word>
-  <word key="r__server" js="0">Server</word>
-  <word key="r__server_manage" js="0">Can edit server information?</word>
-  <word key="r__alert" js="0">Alert</word>
-  <word key="r__alert_manage" js="0">Can send global alert to the server?</word>
-  <word key="r__test" js="0">Test</word>
-  <word key="r__test_manage" js="0">Can test connection?</word>
  </app>
 </language>

@@ -46,7 +46,7 @@ class _syncTsGroups extends \IPS\Task
 		{
 			$tsMember = TsMember::i();
 
-			/* Get the members who have a UID set */
+			/* Get the members who have a UUID set */
 			foreach ( Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
 			{
 				try

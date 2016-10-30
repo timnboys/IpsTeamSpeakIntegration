@@ -1,6 +1,5 @@
 <?php
 
-
 namespace IPS\teamspeak\modules\admin\overview;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
@@ -36,7 +35,7 @@ class _settings extends \IPS\Dispatcher\Controller
 	}
 
 	/**
-	 * ...
+	 * Display all available settings.
 	 *
 	 * @return	void
 	 */

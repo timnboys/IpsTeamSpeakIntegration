@@ -1,6 +1,5 @@
 <?php
 
-
 namespace IPS\teamspeak\modules\admin\teamspeak;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
@@ -37,7 +36,7 @@ class _Server extends \IPS\Dispatcher\Controller
 	}
 
 	/**
-	 * ...
+	 * Display form to edit the TeamSpeak server information.
 	 *
 	 * @return    void
 	 */
@@ -50,11 +49,11 @@ class _Server extends \IPS\Dispatcher\Controller
 
 		if ( !$serverInfo )
 		{
-			Output::i()->error( 'teamspeak_serverinfo_error', 'TODO' );
+			Output::i()->error( 'teamspeak_serverinfo_error', '4P101/1' );
 		}
 
+		/* Build form */
 		$form = new Form();
-
 		$form->addTab( 'teamspeak_server' );
 		$form->add( new Form\Text( 'teamspeak_name', $serverInfo['teamspeak_name'] ?: null, true ) );
 
@@ -139,9 +138,10 @@ class _Server extends \IPS\Dispatcher\Controller
 				);
 			}
 
-			Output::i()->error( 'teamspeak_update_server_failed', 'TODO' );
+			Output::i()->error( 'teamspeak_update_server_failed', '4P101/2' );
 		}
 
+		/* Display */
 		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_server_title' );
 		Output::i()->output = $form;
 	}

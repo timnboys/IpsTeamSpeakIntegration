@@ -1,13 +1,11 @@
 <?php
 
 $lang = array(
+
+	/* !Admin */
 	'__app_teamspeak'	=> "TeamSpeak Integration",
 
-
-
-	/* Admin */
-
-	/* Menu */
+	/* !Menu */
 	'menutab__teamspeak' => "TeamSpeak",
 	'menutab__teamspeak_icon' => "phone",
 	'menu__teamspeak_overview' => "Overview",
@@ -18,21 +16,32 @@ $lang = array(
 	'menu__teamspeak_teamspeak' => "TeamSpeak",
 	'menu__teamspeak_teamspeak_server' => "Server",
 	'menu__teamspeak_teamspeak_alert' => "Alert",
+	'menu__teamspeak_teamspeak_clients' => "Clients",
 
+	/* !Titles */
 	'teamspeak_test_title' => "Test TeamSpeak",
 	'teamspeak_settings_title' => "TeamSpeak Settings",
 	'teamspeak_members_title' => "Member UUIDs",
 	'teamspeak_alert_title' => "TeamSpeak Alert",
+	'teamspeak_clients_title' => "TeamSpeak Clients",
 
+	/* UUID Table */
+	'teamspeak_resync_all' => "Re-sync all",
+	'teamspeak_members_resynced' => "Re-synced all members",
 	'teamspeak_table_s_member_id' => "Member",
 	'teamspeak_table_s_uuid' => "UUID",
 	'teamspeak_table_s_date' => "Date",
 	'teamspeak_table_name' => "Member",
+	'resync' => "Resync",
+	'teamspeak_member_resynced' => "Member has been re-synced successfully",
+	'teamspeak_member_deleted' => "UUID has been unlinked successfully",
 
+	/* Alert Form */
 	'alert_message' => "Message",
 	'teamspeak_alert' => "Alert",
 	'teamspeak_alert_sent' => "Alert sent",
 
+	/* Settings form */
 	'teamspeak_basic_settings' => "Basic",
 	'teamspeak_other_settings' => "Other",
 	'teamspeak_server_ip' => "TeamSpeak IP/Host",
@@ -54,6 +63,7 @@ $lang = array(
 	'teamspeak_uuid_on_register_force' => "Require UUID on register form?",
 	'teamspeak_uuid_on_register_force_desc' => "Make the UUID textbox on the register form required?",
 
+	/* Server information form */
 	'teamspeak_server_title' => "Edit TS Server",
 	'teamspeak_server' => "Server",
 	'teamspeak_name' => "Server Name",
@@ -82,10 +92,63 @@ $lang = array(
 	'teamspeak_default_channel_group' => "Default Channel Group",
 	'teamspeak_default_channel_admin_group' => "Default Channel Admin Group",
 
+	/* Clients table */
+	'teamspeak_client_nickname' => "Nickname",
+	'teamspeak_clid' => "Client ID",
+	'teamspeak_kick' => "Kick",
+	'teamspeak_poke' => "Poke",
+	'teamspeak_ban' => "Ban",
+	'teamspeak_client_poked' => "Client has been poked",
+	'teamspeak_client_kicked' => "Client has been kicked",
+	'teamspeak_client_banned' => "Client has been banned",
+
+	/* Kick Form */
+	'teamspeak_kick_title' => "Kick Client",
+	'teamspeak_kick_message' => "Kick Message",
+
+	/* Poke Form */
+	'teamspeak_poke_title' => "Poke Client",
+	'teamspeak_poke_message' => "Poke Message",
+
+	/* Ban Form */
+	'teamspeak_ban_title' => "Ban Client",
+	'teamspeak_ban_message' => "Ban Reason",
+	'teamspeak_ban_date' => "Ban until",
+	'teamspeak_indefinite' => "Permanently",
+
+	/* Member Form */
+	'teamspeak_resync_uuids' => "Re-sync TeamSpeak Groups",
+
+	/* !Group Form */
+	'group__teamspeak_ServerGroups' => "TeamSpeak",
+	'teamspeak_group' => "TeamSpeak Group",
+	'teamspeak_group_desc' => "Which TS Group should members that are in this group get?",
+	'teamspeak_require_uuid' => "Force UUID?",
+	'teamspeak_require_uuid_desc' => "Members of this group will be forced to enter at least one UUID.",
+
+	/* !Restrictions */
+	'r__server' => "Server",
+	'r__server_manage' => "Can edit server information?",
+	'r__alert' => "Alert",
+	'r__alert_manage' => "Can send global alert to the server?",
+	'r__test' => "Test",
+	'r__test_manage' => "Can test connection?",
+
+	/* !Errors */
+	'teamspeak_id_missing' => "ID parameter is missing!",
+	'teamspeak_resync_groups_failed' => "Re-syncing the groups failed!",
+	'teamspeak_serverinfo_error' => "There was an error loading the server information, please check the system logs for more information!",
+	'teamspeak_update_server_failed' => "There was an error updating the server information, please check the system logs for more information!",
+
+
+	/* !Front */
+
+	/* !Navigation */
 	'frontnavigation_teamspeak' => "TeamSpeak Sync",
 	'module__teamspeak_teamspeak' => "TeamSpeak Sync",
 	'page__teamspeak' => "TeamSpeak",
 
+	/* Sync table */
 	'teamspeak_no_uuids' => "You have no UUIDs linked",
 	'teamspeak_add_uuid' => "Add UUID",
 	'teamspeak_uuids' => "TeamSpeak UUIDs",
@@ -94,36 +157,27 @@ $lang = array(
 	'teamspeak_removed_uuid' => "Unlinked UUID",
 	'teamspeak_you_are_forced_to_enter_one_uuid' => "The administrator requires you to link at least one account",
 
+	/* Add UUID Form */
 	's_uuid' => "UUID",
 	's_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID",
 
-	'group__teamspeak_ServerGroups' => "TeamSpeak",
-	'teamspeak_group' => "TeamSpeak Group",
-	'teamspeak_group_desc' => "Which TS Group should members that are in this group get?",
-	'teamspeak_require_uuid' => "Force UUID?",
-	'teamspeak_require_uuid_desc' => "Members of this group will be forced to enter at least one UUID.",
-
+	/* Block manager Viewer */
 	'teamspeak_viewer' => "TeamSpeak Viewer",
 	'block_teamspeakViewer' => "Viewer",
 	'block_teamspeakViewer_desc' => "Shows your TeamSpeak server and lets members connect to it through clicking on a channel.",
 
-	'resync' => "Resync",
-	'teamspeak_member_resynced' => "Member has been re-synced successfully",
-	'teamspeak_member_deleted' => "UUID has been unlinked successfully",
-
+	/* Front Title */
 	'teamspeak_front' => "TeamSpeak",
 
+	/* Viewer Setting Form */
+	'teamspeak_viewer_groups' => "Allowed Groups",
+	'teamspeak_viewer_groups_desc' => "Which groups are allowed to see the TeamSpeak Viewer?",
 	'cacheTime' => "Cache Time",
+	'showConnectButton' => "Display connect button?",
+	'showConnectButton_desc' => "If enabled there will be an additional button which you can click to connect to the TS server.",
 	'showGuestOnly' => "Only show channels that are visible to guests?",
 	'showGuestOnly_desc' => "If turned off, it will show all clients even if they are in channels that require a high subscribe power (which guests do not have).",
 	'cacheTime_desc' => "In Seconds.",
 	'hideEmptyChannels' => "Hide empty Channels?",
 	'hideParentChannels' => "Hide Parent Channels?",
-
-	'r__server' => "Server",
-	'r__server_manage' => "Can edit server information?",
-	'r__alert' => "Alert",
-	'r__alert_manage' => "Can send global alert to the server?",
-	'r__test' => "Test",
-	'r__test_manage' => "Can test connection?",
 );

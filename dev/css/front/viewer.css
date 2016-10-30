@@ -77,6 +77,14 @@
 	display: block;
 }
 
+.tscenter {
+	text-align: center;
+}
+
+#tsviewer_connect_button {
+	margin-bottom: 10px;
+}
+
 .tsviewer-100x100_broken_image {
 	width: 100px;
 	height: 100px;

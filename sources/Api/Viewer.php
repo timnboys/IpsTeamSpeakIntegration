@@ -121,6 +121,55 @@ class _Viewer extends \IPS\teamspeak\Api
 		return $data;
 	}
 
+	protected function parseChannelName( $channel )
+	{
+		$name = $channel["channel_name"];
+		$cssClass = '';
+		$noFlags = false;
+
+		if ( preg_match( '/\[(.*)spacer([\d\p{L}\w]+)?\]/', $name, $matches ) && $channel["channel_flag_permanent"] && !$channel["pid"] )
+		{
+			$noFlags = true;
+			$spacer = explode( $matches[0], $name );
+			$checkSpacer = isset( $spacer[1][0] ) ? $spacer[1][0] . $spacer[1][0] . $spacer[1][0] : '';
+
+			if ( $matches[1] == 'c' )
+			{
+				/* Channel name should be centered */
+				$name = $spacer[1];
+				$cssClass = 'tscenter';
+			}
+			elseif ( $matches[1] == '*' || ( mb_strlen( $spacer[1] ) == 3 && $checkSpacer == $spacer[1] ) )
+			{
+				/* Repeat given character (in most use-cases this draws a line) */
+				$addSpacer = '';
+
+				for ( $i = 0; $i <= 100; $i++ )
+				{
+					if ( mb_strlen( $addSpacer ) >= 100 )
+					{
+						break;
+					}
+
+					$addSpacer .= $spacer[1];
+				}
+
+				$name = $addSpacer;
+				$cssClass = 'tscenter';
+			}
+			else
+			{
+				$name = $spacer[1];
+			}
+		}
+
+		return array(
+			'name' => $name,
+			'cssClass' => $cssClass,
+			'noFlags' => $noFlags
+		);
+	}
+
 	protected function queryServer()
 	{
 		//TODO rewrite this using the API instead of manual commands (error checking)
@@ -306,8 +355,7 @@ class _Viewer extends \IPS\teamspeak\Api
 			{
 				if ( $channel["show"] )
 				{
-					$name = $channel["channel_name"];
-					$title = $name . " [" . $channel["cid"] . "]";
+					$title = $channel["channel_name"] . " [" . $channel["cid"] . "]";
 					$link = "javascript:ts3ssvconnect('" . $this->_javascriptName . "'," . $channel["cid"] . ")";
 
 					$icon = "16x16_channel_green";
@@ -347,15 +395,17 @@ class _Viewer extends \IPS\teamspeak\Api
 
 					$users = $this->renderUsers( $cid );
 					$childs = $this->renderChannels( $cid );
-
+					$channelNameParsed = $this->parseChannelName( $channel );
 
 					$content[$cid]['link'] = $link;
 					$content[$cid]['title'] = $title;
 					$content[$cid]['icon'] = $icon;
-					$content[$cid]['name'] = $name;
+					$content[$cid]['name'] = $channelNameParsed["name"];
 					$content[$cid]['flags'] = $flags;
 					$content[$cid]['users'] = $users;
 					$content[$cid]['childs'] = $childs;
+					$content[$cid]['class'] = $channelNameParsed["cssClass"];
+					$content[$cid]['noFlags'] = $channelNameParsed["noFlags"];
 				}
 			}
 		}

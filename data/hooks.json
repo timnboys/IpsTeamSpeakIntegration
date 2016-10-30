@@ -10,5 +10,9 @@
     "force_to_enter_uuid": {
         "type": "C",
         "class": "\\IPS\\Dispatcher\\Front"
+    },
+    "helpers": {
+        "type": "C",
+        "class": "\\IPS\\Member"
     }
 }

@@ -1,15 +1,21 @@
 <ips:template parameters="$channels" />
 {{foreach $channels as $item}}
 <div class="ts3ssvItem">
-	<a href="{$item['link']}" title="{$item['title']}">
-		<i class="tsviewer tsviewer-{$item['icon']}"></i>{$item['name']}
-		<div class="ts3ssvFlags">
-			{{foreach $item['flags'] as $flag}}
-				<i class="tsviewer tsviewer-{$flag}"></i>
-			{{endforeach}}
-		</div>
-		{template="teamspeakViewerUsers" group="widgets" location="front" app="teamspeak" params="$item['users']"}
-	</a>
+	{{if !$item['noFlags'] }}
+		<a href="{$item['link']}" title="{$item['title']}" class="{$item['class']}">
+				<i class="tsviewer tsviewer-{$item['icon']}"></i>{$item['name']}
+				<div class="ts3ssvFlags">
+					{{foreach $item['flags'] as $flag}}
+						<i class="tsviewer tsviewer-{$flag}"></i>
+					{{endforeach}}
+				</div>
+			{template="teamspeakViewerUsers" group="widgets" location="front" app="teamspeak" params="$item['users']"}
+		</a>
+	{{else}}
+		<a href="#" title="{$item['title']}" class="{$item['class']}">
+			{$item['name']}
+		</a>
+	{{endif}}
 	{{if is_array( $item['childs'] )}}
 		{template="teamspeakViewerChannels" group="widgets" location="front" app="teamspeak" params="$item['childs']"}
 	{{endif}}

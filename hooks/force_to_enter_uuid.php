@@ -56,22 +56,24 @@ class teamspeak_hook_force_to_enter_uuid extends _HOOK_CLASS_
 				$hasUuid = Db::i()
 				             ->select( 's_id', 'teamspeak_member_sync', array( 's_member_id=?', $member->member_id ) )
 				             ->count();
-			}
 
-			$app = 'teamspeak';
-			$module = 'teamspeak';
-			$controller = 'membersync';
 
-			if ( $forced && !$member->members_bitoptions['validating'] && !$hasUuid &&
-				!( $request->app == $app && $request->module == $module && $request->controller == $controller ) &&
-				Dispatcher::i()->controllerLocation == 'front' && $request->controller != 'login'
-			)
-			{
-				Output::i()->redirect(
-					Url::internal(
-						"app={$app}&module={$module}&controller={$controller}&forced=1", 'front'
-					)
-				);
+				$app = 'teamspeak';
+				$module = 'teamspeak';
+				$controller = 'membersync';
+				$alreadyOnPage =
+					$request->app == $app && $request->module == $module && $request->controller == $controller;
+
+				if ( !$member->members_bitoptions['validating'] && !$hasUuid && !$alreadyOnPage &&
+					Dispatcher::i()->controllerLocation == 'front' && $request->controller != 'login'
+				)
+				{
+					Output::i()->redirect(
+						Url::internal(
+							"app={$app}&module={$module}&controller={$controller}&forced=1", 'front'
+						)
+					);
+				}
 			}
 		}
 	}

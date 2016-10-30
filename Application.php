@@ -48,9 +48,9 @@ class _Application extends \IPS\Application
 	 */
 	public function isConfigured()
 	{
-		if ( empty( Settings::i()->teamspeak_server_ip ) || empty( Settings::i()->teamspeak_teamspeak_query_password ) )
+		if ( empty( Settings::i()->teamspeak_server_ip ) || empty( Settings::i()->teamspeak_query_password ) )
 		{
-			Output::i()->error( 'teamspeak_not_configured', '4P1031' );
+			Output::i()->error( 'teamspeak_not_configured', '4P103/1' );
 		}
 	}
 }

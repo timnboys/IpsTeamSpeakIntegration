@@ -87,8 +87,8 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 
 		$form->add(
 			new Form\Select(
-				'ts3_viewer_groups',
-				isset( $this->configuration['ts3_viewer_groups'] ) ? $this->configuration['ts3_viewer_groups'] : 'all',
+				'teamspeak_viewer_groups',
+				isset( $this->configuration['teamspeak_viewer_groups'] ) ? $this->configuration['teamspeak_viewer_groups'] : 'all',
 				true, array(
 					'options' => Member\Group::groups(),
 					'parse' => 'normal',
@@ -96,6 +96,12 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 					'unlimited' => 'all',
 					'unlimitedLang' => 'all_groups'
 				)
+			)
+		);
+		$form->add(
+			new Form\YesNo(
+				'showConnectButton',
+				isset( $this->configuration['showConnectButton'] ) ? $this->configuration['showConnectButton'] : 0, true
 			)
 		);
 		$form->add(
@@ -145,9 +151,9 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 	 */
 	public function render()
 	{
-		if ( isset( $this->configuration['ts3_viewer_groups'] ) &&
-			$this->configuration['ts3_viewer_groups'] !== 'all' &&
-			!Member::loggedIn()->inGroup( $this->configuration['ts3_viewer_groups'] )
+		if ( isset( $this->configuration['teamspeak_viewer_groups'] ) &&
+			$this->configuration['teamspeak_viewer_groups'] !== 'all' &&
+			!Member::loggedIn()->inGroup( $this->configuration['teamspeak_viewer_groups'] )
 		)
 		{
 			return "";
@@ -156,6 +162,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 		$hideEmptyChannels = isset( $this->configuration['hideEmptyChannels'] ) ? $this->configuration['hideEmptyChannels'] : false;
 		$hideParentChannels = isset( $this->configuration['hideParentChannels'] ) ? $this->configuration['hideParentChannels'] : false;
 		$login = isset( $this->configuration['showGuestOnly'] ) ? !$this->configuration['showGuestOnly'] : false;
+		$showConnectButton = isset( $this->configuration['showConnectButton'] ) ? $this->configuration['showConnectButton'] : false;
 
 		try
 		{
@@ -176,6 +183,6 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 		//			$theme = $this->configuration['theme'];
 		//		}
 
-		return $this->output( $content );
+		return $this->output( $content, $showConnectButton );
 	}
 }

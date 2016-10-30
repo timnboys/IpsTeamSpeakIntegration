@@ -60,7 +60,7 @@ class _Uuid extends \IPS\Patterns\ActiveRecord
 		
 		if ( !$teamspeak->removeGroups( $member, $this->uuid ) )
 		{
-			Output::i()->error( 'teamspeak_could_not_remove_groups', '4P1021' );
+			Output::i()->error( 'teamspeak_could_not_remove_groups', '4P102/1' );
 		}
 		
 		parent::delete();

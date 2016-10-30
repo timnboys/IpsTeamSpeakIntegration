@@ -20,7 +20,8 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 }
 
 use IPS\Db;
-use IPS\teamspeak\Member;
+use IPS\Output;
+use IPS\teamspeak\Member as TsMember;
 
 /**
  * Member Sync
@@ -36,7 +37,25 @@ class _MemberSync
 	 */
 	public function onProfileUpdate( $member, $changes )
 	{
-		//TODO
+		/* Determine whether group(s) has been changed */
+		if ( ( isset( $changes['member_group_id'] ) || isset( $changes['mgroup_others'] ) ) )
+		{
+			/* Check if member has at least one UUID set before trying to sync */
+			$hasUuid = Db::i()->select( 's_id', 'teamspeak_member_sync', array( 's_member_id=?', $member->member_id ) )->count();
+
+			if ( $hasUuid )
+			{
+				try
+				{
+					$tsMember = TsMember::i();
+					$tsMember->resyncGroupsAllUuids( $member );
+				}
+				catch ( \Exception $e )
+				{
+					Output::i()->error( $e->getMessage(), $e->getCode() );
+				}
+			}
+		}
 	}
 
 	/**
@@ -78,9 +97,9 @@ class _MemberSync
 			$member2->member_id
 		];
 
-		$tsMember = Member::i();
+		$tsMember = TsMember::i();
 
-		foreach ( Db::i()->select( 's_uuid', 'teamspeak_member_sync', array( 's_member_id=?', $member2->member_id ) ) as $uuid )
+		foreach ( $member2->teamspeak_uuids as $uuid )
 		{
 			$tsMember->removeGroups( $member2, $uuid );
 			$tsMember->addGroups( $member, $uuid );
@@ -97,18 +116,18 @@ class _MemberSync
 	 */
 	public function onDelete( $member )
 	{
-		$tsMember = Member::i();
+		$tsMember = TsMember::i();
 
-		foreach ( Db::i()->select( 's_uuid', 'teamspeak_member_sync', array( 's_member_id=?', $member->member_id ) ) as $uuid )
+		foreach ( $member->teamspeak_uuids as $uuid )
 		{
 			$tsMember->removeGroups( $member, $uuid );
 		}
 
 		Db::i()->delete(
 			'teamspeak_member_sync', [
-			's_member_id=?',
-			$member->member_id
-		]
+				's_member_id=?',
+				$member->member_id
+			]
 		);
 	}
 }

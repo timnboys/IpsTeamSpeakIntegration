@@ -5,6 +5,9 @@
         },
         "alert": {
             "alert_manage": "alert_manage"
+        },
+        "clients": {
+            "clients_manage": "clients_manage"
         }
     },
     "overview": {
