@@ -2,7 +2,7 @@
     "front": {
         "teamspeak": {
             "default_controller": "membersync",
-            "protected": false
+            "protected": 0
         }
     },
     "admin": {
@@ -17,6 +17,10 @@
         "teamspeak": {
             "default_controller": "",
             "protected": 0
+        },
+        "groups": {
+            "default_controller": "",
+            "protected": false
         }
     }
 }

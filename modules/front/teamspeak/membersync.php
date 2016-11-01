@@ -67,9 +67,13 @@ class _membersync extends \IPS\Dispatcher\Controller
 		Session::i()->csrfCheck();
 
 		$form = new Form();
-		//TODO: custom validation
 		$form->addHeader( 'teamspeak_add_uuid' );
-		$form->add( new Form\Text( 's_uuid', null, true ) );
+		$form->add( new Form\Text( 's_uuid', null, true, array(), function ( $value ) {
+
+			//TODO: check if given UUID is valid (either regex or check against TS DB)
+
+			return $value;
+		} ) );
 
 		if ( $values = $form->values() )
 		{

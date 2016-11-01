@@ -40,5 +40,13 @@
             "do": "",
             "restriction": "clients_manage"
         }
+    },
+    "groups": {
+        "servergroups": {
+            "tab": "teamspeak",
+            "controller": "servergroups",
+            "do": "",
+            "restriction": "servergroups_manage"
+        }
     }
 }

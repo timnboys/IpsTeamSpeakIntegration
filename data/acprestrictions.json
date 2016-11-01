@@ -22,5 +22,10 @@
         "members": {
             "members_manage": "members_manage"
         }
+    },
+    "groups": {
+        "servergroups": {
+            "servergroups_manage": "servergroups_manage"
+        }
     }
 }

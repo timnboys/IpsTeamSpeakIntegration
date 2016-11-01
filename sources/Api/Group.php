@@ -10,11 +10,11 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 }
 
 use IPS\Data\Store;
-use IPS\teamspeak\ClientNotFoundException;
+use IPS\teamspeak\Exception\ClientNotFoundException;
 use IPS\teamspeak\Exception\ChannelGroupException;
 use IPS\teamspeak\Exception\ServerException;
 use IPS\teamspeak\Exception\ServerGroupException;
-use IPS\teamspeak\GroupNotFoundException;
+use IPS\teamspeak\Exception\GroupNotFoundException;
 
 class _Group extends \IPS\teamspeak\Api
 {
@@ -30,6 +30,27 @@ class _Group extends \IPS\teamspeak\Api
 	public static function i()
 	{
 		return parent::i();
+	}
+
+	/**
+	 * Delete given server group.
+	 *
+	 * @param int $serverGroupId
+	 * @param int $force
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function deleteServerGroup( $serverGroupId, $force )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->serverGroupDelete( $serverGroupId, $force );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
 	}
 
 	/**
@@ -273,15 +294,19 @@ class _Group extends \IPS\teamspeak\Api
 	 * Get server groups.
 	 *
 	 * @param \TeamSpeakAdmin $ts
+	 * @param bool $simplified Simplify the array?
 	 * @param bool $regularOnly Only include regular groups?
+	 * @param bool $templateGroups Include template groups?
 	 * @return array
 	 * @throws ServerException
 	 * @throws ServerGroupException
 	 */
-	public static function getServerGroups( \TeamSpeakAdmin $ts = null, $regularOnly = true )
+	public static function getServerGroups( \TeamSpeakAdmin $ts = null, $simplified = true, $regularOnly = true, $templateGroups = false )
 	{
 		$dataStore = Store::i();
 		$cacheKey = $regularOnly ? 'teamspeak_server_groups_regular' : 'teamspeak_server_groups_all';
+		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
+		$cacheKey = $templateGroups ? $cacheKey . '_templates' : $cacheKey;
 
 		/* If it is cached, return the cached data */
 		if ( isset( $dataStore->$cacheKey ) )
@@ -303,15 +328,18 @@ class _Group extends \IPS\teamspeak\Api
 
 			foreach ( $groups as $group )
 			{
-				if ( ( $group['sgid'] != $defaultGroupIds['default_server_group'] || !$regularOnly ) &&
-					$group['type'] == static::TYPE_REGULAR
-				)
+				if ( ( $group['sgid'] != $defaultGroupIds['default_server_group'] || !$regularOnly ) && ( $group['type'] == static::TYPE_REGULAR || $templateGroups ) )
 				{
+					$group['name'] = $group['type'] == static::TYPE_TEMPLATE ? '[T] ' . $group['name'] : $group['name'];
 					$returnGroups[] = $group;
 				}
 			}
 
-			$returnGroups = static::simplifyGroups( $returnGroups );
+			if ( $simplified )
+			{
+				$returnGroups = static::simplifyGroups( $returnGroups );
+			}
+
 			$dataStore->$cacheKey = $returnGroups;
 
 			return $returnGroups;
@@ -457,6 +485,10 @@ class _Group extends \IPS\teamspeak\Api
 		return $returnGroups;
 	}
 
+	/**
+	 * @param array $groups
+	 * @return array
+	 */
 	protected static function convertGroupsToCompare( array $groups )
 	{
 		$returnGroups = array();

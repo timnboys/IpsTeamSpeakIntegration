@@ -17,6 +17,8 @@ $lang = array(
 	'menu__teamspeak_teamspeak_server' => "Server",
 	'menu__teamspeak_teamspeak_alert' => "Alert",
 	'menu__teamspeak_teamspeak_clients' => "Clients",
+	'menu__teamspeak_groups' => "Groups",
+	'menu__teamspeak_groups_servergroups' => "Server Groups",
 
 	/* !Titles */
 	'teamspeak_test_title' => "Test TeamSpeak",
@@ -24,6 +26,8 @@ $lang = array(
 	'teamspeak_members_title' => "Member UUIDs",
 	'teamspeak_alert_title' => "TeamSpeak Alert",
 	'teamspeak_clients_title' => "TeamSpeak Clients",
+	'teamspeak_server_groups_title' => "Edit Server Groups",
+	'teamspeak_servergroup_edit_title' => "Edit Server Group",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -140,6 +144,14 @@ $lang = array(
 	'teamspeak_serverinfo_error' => "There was an error loading the server information, please check the system logs for more information!",
 	'teamspeak_update_server_failed' => "There was an error updating the server information, please check the system logs for more information!",
 
+	/* !Server Group Edit Form */
+	'teamspeak_servergroup_sgid' => "Group ID",
+	'teamspeak_servergroup_name' => "Group Name",
+	'description' => "Description",
+	'value' => "Value",
+	'skip' => "Skip",
+	'negated' => "Negated",
+	'grant' => "Grant",
 
 	/* !Front */
 
