@@ -26,10 +26,12 @@ $lang = array(
 	'teamspeak_members_title' => "Member UUIDs",
 	'teamspeak_alert_title' => "TeamSpeak Alert",
 	'teamspeak_clients_title' => "TeamSpeak Clients",
-	'teamspeak_server_groups_title' => "Edit Server Groups",
-	'teamspeak_servergroup_edit_title' => "Edit Server Group",
+	'teamspeak_server_groups_title' => "Server Groups",
+	'teamspeak_add_servergroup_title' => "Add Server Group",
+	'teamspeak_edit_servergroup_title' => "Edit Server Group",
 	'teamspeak_delete_servergroup_title' => "Delete Server Group",
 	'teamspeak_copy_servergroup_title' => "Copy Server Group",
+	'teamspeak_masspoke_title' => "Mass Poke",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -107,6 +109,7 @@ $lang = array(
 	'teamspeak_client_poked' => "Client has been poked",
 	'teamspeak_client_kicked' => "Client has been kicked",
 	'teamspeak_client_banned' => "Client has been banned",
+	'teamspeak_masspoke' => "Mass Poke",
 
 	/* Kick Form */
 	'teamspeak_kick_title' => "Kick Client",
@@ -115,6 +118,11 @@ $lang = array(
 	/* Poke Form */
 	'teamspeak_poke_title' => "Poke Client",
 	'teamspeak_poke_message' => "Poke Message",
+
+	/* Mass Poke Form */
+	'teamspeak_poke_groups' => 'Groups to poke',
+	'teamspeak_poke_groups_desc' => 'Clients in the selected groups will be poked.',
+	'teamspeak_client_masspoked' => "Clients have been poked",
 
 	/* Ban Form */
 	'teamspeak_ban_title' => "Ban Client",
@@ -145,6 +153,9 @@ $lang = array(
 	'teamspeak_resync_groups_failed' => "Re-syncing the groups failed!",
 	'teamspeak_serverinfo_error' => "There was an error loading the server information, please check the system logs for more information!",
 	'teamspeak_update_server_failed' => "There was an error updating the server information, please check the system logs for more information!",
+
+	/* !Server Group Add Form */
+	'teamspeak_servergroup_added' => "Created new server group",
 
 	/* !Server Group Edit Form */
 	'teamspeak_servergroup_sgid' => "Group ID",

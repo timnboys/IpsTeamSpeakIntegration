@@ -19,6 +19,7 @@ use IPS\Member;
 use IPS\Output;
 use IPS\Request;
 use IPS\teamspeak\Api\Client;
+use IPS\teamspeak\Api\Group;
 use IPS\Theme;
 
 /**
@@ -64,6 +65,20 @@ class _clients extends \IPS\Dispatcher\Controller
 		$table->quickSearch = 'client_nickname';
 		$table->advancedSearch = array(
 			'client_nickname' => Table\SEARCH_CONTAINS_TEXT
+		);
+
+		/* Root buttons */
+		$table->rootButtons = array(
+			'masspoke' => array(
+				'icon' => 'comments',
+				'title' => 'teamspeak_masspoke',
+				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=masspoke' ),
+				'data' => array(
+					'ipsdialog' => '',
+					'ipsdialog-modal' => 'true',
+					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' )
+				)
+			)
 		);
 
 		/* Row buttons */
@@ -247,6 +262,43 @@ class _clients extends \IPS\Dispatcher\Controller
 
 		/* Display */
 		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_ban_title' );
+		Output::i()->output = $form;
+	}
+
+	protected function masspoke()
+	{
+		/* Get client class */
+		$client = Client::i();
+
+		/* Get Server Groups */
+		$serverGroups = Group::getServerGroups( $client->getInstance(), true, false );
+
+		/* Build form for the poke message */
+		$form = new Form( 'teamspeak_poke', 'teamspeak_poke' );
+		$form->add( new Form\Text( 'teamspeak_poke_message', null, true ) );
+		$form->add( new Form\Select( 'teamspeak_poke_groups', -1, true, array( 'options' => $serverGroups, 'multiple' => true, 'unlimited' => -1 ) ) );
+
+		if ( $values = $form->values() )
+		{
+
+			try
+			{
+				/* Poke client with given message */
+				$client->masspoke( $values['teamspeak_poke_message'], $values['teamspeak_poke_groups'] );
+			}
+			catch ( \Exception $e )
+			{
+				Output::i()->error( $e->getMessage(), '4P104/4' );
+			}
+
+			/* Redirect back to the table and display a message that the client has been poked */
+			Output::i()->redirect(
+				Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_masspoked'
+			);
+		}
+
+		/* Display */
+		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' );
 		Output::i()->output = $form;
 	}
 }

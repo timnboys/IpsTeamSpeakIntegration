@@ -67,6 +67,20 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			'name' => Table\SEARCH_CONTAINS_TEXT
 		);
 
+		/* Root buttons */
+		$table->rootButtons = array(
+			'add' => array(
+				'icon' => 'plus',
+				'title' => 'add',
+				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=add' ),
+				'data' => array(
+					'ipsdialog' => '',
+					'ipsdialog-modal' => 'true',
+					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' )
+				)
+			)
+		);
+
 		/* Row buttons */
 		$table->rowButtons = function ( $row )
 		{
@@ -80,7 +94,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			$return['copy'] = array(
 				'icon' => 'copy',
 				'title' => 'copy',
-				'link' => Url::internal( "app=teamspeak&module=groups&controller=servergroups&do=copy&id=" ) .
+				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=copy&id=' ) .
 					$row['sgid'],
 				'data' => array(
 					'ipsdialog' => '',
@@ -107,6 +121,47 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		/* Display */
 		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_server_groups_title' );
 		Output::i()->output = Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+	}
+
+	/**
+	 * Add a server group.
+	 *
+	 * @return void
+	 */
+	protected function add()
+	{
+		/* Set Group Types */
+		$types = array(
+			Group::TYPE_REGULAR => 'Regular Group',
+			Group::TYPE_TEMPLATE => 'Template Group',
+			Group::TYPE_SERVERQUERY => 'ServerQuery Group',
+		);
+
+		/* Build form for adding a server group */
+		$form = new Form;
+		$form->add( new Form\Text( 'teamspeak_servergroup_name', null, true ) );
+		$form->add( new Form\Select( 'teamspeak_servergroup_target_type', Group::TYPE_REGULAR, true, array( 'options' => $types ) ) );
+
+		if ( $values = $form->values() )
+		{
+			try
+			{
+				$group = Group::i();
+				$group->addServerGroup( $values['teamspeak_servergroup_name'], $values['teamspeak_servergroup_target_type'] );
+
+				Output::i()->redirect(
+					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_added'
+				);
+			}
+			catch ( \Exception $e )
+			{
+				Output::i()->error( $e->getMessage(), '4P104/1' );
+			}
+		}
+
+		/* Display */
+		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' );
+		Output::i()->output = $form;
 	}
 
 	/**
@@ -143,12 +198,12 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/1' );
+				Output::i()->error( $e->getMessage(), '4P104/2' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_servergroup_edit_title' );
+		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_edit_servergroup_title' );
 		Output::i()->output = $form;
 	}
 
@@ -178,7 +233,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group->deleteServerGroup( $id, intval( $values['force'] ) );
+				$group->deleteServerGroup( $id, intval( $values['teamspeak_force_delete'] ) );
 
 				Output::i()->redirect(
 					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_deleted'
@@ -186,7 +241,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/2' );
+				Output::i()->error( $e->getMessage(), '4P104/3' );
 			}
 		}
 
@@ -207,7 +262,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P104/3' );
+			Output::i()->error( 'teamspeak_id_missing', '3P104/4' );
 		}
 
 		/* Get Group class */
@@ -242,7 +297,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/3' );
+				Output::i()->error( $e->getMessage(), '4P104/5' );
 			}
 		}
 

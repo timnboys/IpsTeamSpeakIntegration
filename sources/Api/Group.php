@@ -32,6 +32,29 @@ class _Group extends \IPS\teamspeak\Api
 		return parent::i();
 	}
 
+
+	/**
+	 * Add server group.
+	 *
+	 * @param string $serverGroupName
+	 * @param int $serverGroupType
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function addServerGroup( $serverGroupName, $serverGroupType )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->serverGroupAdd( $serverGroupName, $serverGroupType );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$this->clearCache();
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
 	/**
 	 * Delete given server group.
 	 *

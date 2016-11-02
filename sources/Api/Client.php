@@ -65,7 +65,6 @@ class _Client extends \IPS\teamspeak\Api
 		}
 
 		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $kickInfo ) ) );
-		return false;
 	}
 
 	/**
@@ -88,7 +87,45 @@ class _Client extends \IPS\teamspeak\Api
 		}
 
 		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $pokeInfo ) ) );
-		return false;
+	}
+
+	/**
+	 * Mass poke clients with given message.
+	 *
+	 * @param string $message
+	 * @param int|array $groups
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function masspoke( $message, $groups )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->clientList( '-groups' );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$clients = $ts->getElement( 'data', $temp );
+
+			foreach ( $clients as $client )
+			{
+				/* Skip non-regular clients */
+				if ( $client['client_type'] != static::REGULAR_CLIENT )
+				{
+					continue;
+				}
+
+				$clientGroups = explode( ',', $client['client_servergroups'] );
+
+				if ( $groups == -1 || ( is_array( $groups ) && !empty( array_intersect( $groups, $clientGroups ) ) ) )
+				{
+					$ts->clientPoke( $client['clid'], $message );
+				}
+			}
+
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
 	}
 
 	/**
@@ -117,7 +154,6 @@ class _Client extends \IPS\teamspeak\Api
 		}
 
 		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $banInfo ) ) );
-		return false;
 	}
 
 	/**
