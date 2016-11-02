@@ -36,7 +36,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * Delete given server group.
 	 *
 	 * @param int $serverGroupId
-	 * @param int $force
+	 * @param int $force Force deletion (delete even if there are members in the group).
 	 * @return bool
 	 * @throws \Exception
 	 */
@@ -47,6 +47,31 @@ class _Group extends \IPS\teamspeak\Api
 
 		if ( $ts->succeeded( $temp ) )
 		{
+			$this->clearCache();
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Copy given server group.
+	 *
+	 * @param int $sourceGroupId Group ID of the group to be copied.
+	 * @param string $targetGroupName
+	 * @param int $targetGroupType Type of the group.
+	 * @param int $targetGroupId Target group id (0 = create new group).
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function copyServerGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$this->clearCache();
 			return true;
 		}
 
@@ -331,6 +356,7 @@ class _Group extends \IPS\teamspeak\Api
 				if ( ( $group['sgid'] != $defaultGroupIds['default_server_group'] || !$regularOnly ) && ( $group['type'] == static::TYPE_REGULAR || $templateGroups ) )
 				{
 					$group['name'] = $group['type'] == static::TYPE_TEMPLATE ? '[T] ' . $group['name'] : $group['name'];
+					$group['name'] = $group['type'] == static::TYPE_SERVERQUERY ? '[Q] ' . $group['name'] : $group['name'];
 					$returnGroups[] = $group;
 				}
 			}
@@ -463,6 +489,33 @@ class _Group extends \IPS\teamspeak\Api
 		}
 
 		throw new ClientNotFoundException();
+	}
+
+	/**
+	 * Clear all group caches.
+	 *
+	 * @return void
+	 */
+	protected function clearCache()
+	{
+		try
+		{
+			$dataStore = \IPS\Data\Store::i();
+			$cacheKeys[] = 'teamspeak_server_groups_regular';
+			$cacheKeys[] = 'teamspeak_server_groups_regular_simplified';
+			$cacheKeys[] = 'teamspeak_server_groups_regular_simplified_templates';
+			$cacheKeys[] = 'teamspeak_server_groups_regular_templates';
+			$cacheKeys[] = 'teamspeak_server_groups_all';
+			$cacheKeys[] = 'teamspeak_server_groups_all_simplified';
+			$cacheKeys[] = 'teamspeak_server_groups_all_simplified_templates';
+			$cacheKeys[] = 'teamspeak_server_groups_all_templates';
+
+			foreach ( $cacheKeys as $cacheKey )
+			{
+				unset( $dataStore->$cacheKey );
+			}
+		}
+		catch ( \Exception $e ){}
 	}
 
 	/**

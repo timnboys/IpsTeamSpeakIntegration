@@ -28,6 +28,8 @@ $lang = array(
 	'teamspeak_clients_title' => "TeamSpeak Clients",
 	'teamspeak_server_groups_title' => "Edit Server Groups",
 	'teamspeak_servergroup_edit_title' => "Edit Server Group",
+	'teamspeak_delete_servergroup_title' => "Delete Server Group",
+	'teamspeak_copy_servergroup_title' => "Copy Server Group",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -147,11 +149,24 @@ $lang = array(
 	/* !Server Group Edit Form */
 	'teamspeak_servergroup_sgid' => "Group ID",
 	'teamspeak_servergroup_name' => "Group Name",
+	'teamspeak_servergroup_edited' => "Server Group has been edited",
 	'description' => "Description",
 	'value' => "Value",
 	'skip' => "Skip",
 	'negated' => "Negated",
 	'grant' => "Grant",
+
+	/* !Server Group Delete Form */
+	'teamspeak_force_delete' => "Force Deletion?",
+	'teamspeak_force_delete_desc' => "If enabled, group will be deleted even if it still has members!",
+	'teamspeak_servergroup_deleted' => "Server Group has been deleted",
+
+	/* !Server Group Copy Form */
+	'teamspeak_servergroup_name' => "Name",
+	'teamspeak_servergroup_target_group' => "Target Group",
+	'teamspeak_new_group' => "New Group",
+	'teamspeak_servergroup_target_type' => "Type",
+	'teamspeak_servergroup_copied' => "Server Group has been copied",
 
 	/* !Front */
 
