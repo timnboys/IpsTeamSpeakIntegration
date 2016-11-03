@@ -24,6 +24,10 @@
         "default": ""
     },
     {
+        "key": "teamspeak_sync_bans",
+        "default": "1"
+    },
+    {
         "key": "teamspeak_uuid_on_register",
         "default": "0"
     },

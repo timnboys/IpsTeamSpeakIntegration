@@ -14,5 +14,9 @@
     "helpers": {
         "type": "C",
         "class": "\\IPS\\Member"
+    },
+    "ban_sync": {
+        "type": "C",
+        "class": "\\IPS\\Member"
     }
 }

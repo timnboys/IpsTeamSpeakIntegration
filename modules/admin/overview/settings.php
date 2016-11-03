@@ -51,11 +51,12 @@ class _settings extends \IPS\Dispatcher\Controller
 		$settings->add( new Number( 'teamspeak_file_transfer_port', Settings::i()->teamspeak_file_transfer_port ?: null, true ) );
 		$settings->add( new Text( 'teamspeak_query_admin', Settings::i()->teamspeak_query_admin ?: null, true ) );
 		$settings->add( new Password( 'teamspeak_query_password', Settings::i()->teamspeak_query_password ?: null, true ) );
-		$settings->add( new Text( 'teamspeak_query_nickname', Settings::i()->teamspeak_query_nickname ?: null, true/*,  [ 'regex' => "/^[\w\-]+$/" ]*/ ) );
+		$settings->add( new Text( 'teamspeak_query_nickname', Settings::i()->teamspeak_query_nickname ?: null, true ) );
 
 		$settings->addTab('teamspeak_other_settings');
 		$settings->add( new Form\YesNo( 'teamspeak_uuid_on_register', Settings::i()->teamspeak_uuid_on_register ?: null, false, array( 'togglesOn' => array( 'ts_uuid_register_force' ) ) ) );
 		$settings->add( new Form\YesNo( 'teamspeak_uuid_on_register_force', Settings::i()->teamspeak_uuid_on_register_force ?: null, false, array(), null, null, null, 'ts_uuid_register_force' ) );
+		$settings->add( new Form\YesNo( 'teamspeak_sync_bans', Settings::i()->teamspeak_sync_bans ?: 1 ) );
 
 		if ( $values = $settings->values() )
 		{

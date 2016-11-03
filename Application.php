@@ -37,10 +37,10 @@ class _Application extends \IPS\Application
 				$uuid->uuid = $info['ts3_uuid'];
 				$uuid->save();
 			}
-		}
 
-		/* Disable old app */
-		Db::i()->update( 'core_applications', array( 'app_enabled' => 0 ), array( 'app_directory=?', 'ts3integration' ) );
+			/* Disable old app */
+			Db::i()->update( 'core_applications', array( 'app_enabled' => 0 ), array( 'app_directory=?', 'ts3integration' ) );
+		}
 	}
 
 	/**

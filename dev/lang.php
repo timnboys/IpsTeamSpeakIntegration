@@ -76,6 +76,8 @@ $lang = array(
 	'teamspeak_uuid_on_register_desc' => "Display a textbox on register form for new members to enter their UUID?",
 	'teamspeak_uuid_on_register_force' => "Require UUID on register form?",
 	'teamspeak_uuid_on_register_force_desc' => "Make the UUID textbox on the register form required?",
+	'teamspeak_sync_bans' => "Sync bans?",
+	'teamspeak_sync_bans_desc' => "If a member gets banned on the forum, this member will automatically be banned from the TeamSpeak.",
 
 	/* Server information form */
 	'teamspeak_server_title' => "Edit TS Server",

@@ -84,5 +84,80 @@
         "collation": "utf8mb4_unicode_ci",
         "engine": "InnoDB",
         "comment": ""
+    },
+    "teamspeak_member_ban": {
+        "name": "teamspeak_member_ban",
+        "columns": {
+            "b_id": {
+                "allow_null": false,
+                "auto_increment": true,
+                "binary": false,
+                "comment": "ID Number",
+                "decimals": null,
+                "default": null,
+                "length": 20,
+                "name": "b_id",
+                "type": "BIGINT",
+                "unsigned": true,
+                "values": [],
+                "zerofill": false
+            },
+            "b_member_id": {
+                "allow_null": false,
+                "auto_increment": false,
+                "binary": false,
+                "comment": "",
+                "decimals": null,
+                "default": "",
+                "length": 8,
+                "name": "b_member_id",
+                "type": "MEDIUMINT",
+                "unsigned": true,
+                "values": [],
+                "zerofill": false
+            },
+            "b_ban_ids": {
+                "name": "b_ban_ids",
+                "type": "TEXT",
+                "length": null,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "",
+                "unsigned": false,
+                "zerofill": false,
+                "auto_increment": false,
+                "binary": false
+            },
+            "b_date": {
+                "name": "b_date",
+                "type": "INT",
+                "length": 11,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "",
+                "unsigned": true,
+                "zerofill": false,
+                "auto_increment": false,
+                "binary": false
+            }
+        },
+        "indexes": {
+            "PRIMARY": {
+                "type": "primary",
+                "name": "PRIMARY",
+                "length": [
+                    null
+                ],
+                "columns": [
+                    "b_id"
+                ]
+            }
+        },
+        "collation": "utf8mb4_unicode_ci",
+        "engine": "InnoDB"
     }
 }

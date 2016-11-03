@@ -11,7 +11,9 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 
 use IPS\Member;
 use IPS\Member\Group as IpsGroup;
+use IPS\teamspeak\Api\Client;
 use IPS\teamspeak\Api\Group;
+use IPS\teamspeak\Ban;
 use IPS\teamspeak\Exception\ClientNotFoundException;
 use IPS\teamspeak\Member as TsMember;
 
@@ -132,6 +134,68 @@ class _Member
 		}
 
 		return true;
+	}
+
+	/**
+	 * Ban all UUIDs of given member.
+	 *
+	 * @param Member $member
+	 * @param int $time
+	 * @param string $reason
+	 * @return void
+	 */
+	public function ban( Member $member, $time, $reason )
+	{
+		$teamspeak = Client::i();
+		$banIds = array();
+
+		foreach ( $member->teamspeak_uuids as $uuid )
+		{
+			try
+			{
+				$banIds[] = $teamspeak->banByUuid( $uuid, $time, $reason );
+			}
+			catch ( \Exception $e ){}
+		}
+
+		/* Save ban ids */
+		$tsBan = new Ban;
+		$tsBan->member_id = $member->member_id;
+		$tsBan->ban_ids = $banIds;
+		$tsBan->save();
+	}
+
+	/**
+	 * Ban all UUIDs of given member.
+	 *
+	 * @param Member $member
+	 * @return void
+	 */
+	public function unban( Member $member )
+	{
+		$teamspeak = Client::i();
+
+		try
+		{
+			$tsBan = Ban::load( $member->member_id, 'b_member_id' );
+		}
+		catch ( \OutOfRangeException $e )
+		{
+			return;
+		}
+
+		$banIds = $tsBan->ban_ids;
+
+		foreach ( $banIds as $banId )
+		{
+			try
+			{
+				$teamspeak->unban( $banId );
+			}
+			catch ( \Exception $e ){}
+		}
+
+		$tsBan->delete();
 	}
 
 	/**

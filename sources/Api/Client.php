@@ -157,6 +157,43 @@ class _Client extends \IPS\teamspeak\Api
 	}
 
 	/**
+	 * Ban given UUID from the server for given time.
+	 *
+	 * @param string $uuid
+	 * @param int $time
+	 * @param string $reason
+	 * @return int Ban ID.
+	 * @throws \Exception
+	 */
+	public function banByUuid( $uuid, $time, $reason )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->banAddByUid( $uuid, $time, $reason );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$banInfo = $ts->getElement( 'data', $temp );
+
+			return intval( $banInfo['banid'] );
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Unban given ban id.
+	 *
+	 * @param int $banId
+	 * @return void
+	 */
+	public function unban( $banId )
+	{
+		$ts = static::getInstance();
+
+		$ts->banDelete( $banId );
+	}
+
+	/**
 	 * Only return regular clients.
 	 *
 	 * @param array $clientList

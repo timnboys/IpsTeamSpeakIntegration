@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10005">
+ <app key="teamspeak" version="10006">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -64,6 +64,8 @@
   <word key="teamspeak_uuid_on_register_desc" js="0">Display a textbox on register form for new members to enter their UUID?</word>
   <word key="teamspeak_uuid_on_register_force" js="0">Require UUID on register form?</word>
   <word key="teamspeak_uuid_on_register_force_desc" js="0">Make the UUID textbox on the register form required?</word>
+  <word key="teamspeak_sync_bans" js="0">Sync bans?</word>
+  <word key="teamspeak_sync_bans_desc" js="0">If a member gets banned on the forum, this member will automatically be banned from the TeamSpeak.</word>
   <word key="teamspeak_server_title" js="0">Edit TS Server</word>
   <word key="teamspeak_server" js="0">Server</word>
   <word key="teamspeak_name" js="0">Server Name</word>
