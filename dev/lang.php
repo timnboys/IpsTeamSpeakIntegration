@@ -20,6 +20,7 @@ $lang = array(
 	'menu__teamspeak_groups' => "Groups",
 	'menu__teamspeak_groups_servergroups' => "Server Groups",
 	'menu__teamspeak_groups_channelgroups' => "Channel Groups",
+	'menu__teamspeak_teamspeak_snapshot' => "Snapshots",
 
 	/* !Titles */
 	'teamspeak_test_title' => "Test TeamSpeak",
@@ -38,6 +39,7 @@ $lang = array(
 	'teamspeak_add_channelgroup_title' => "Add Channel Group",
 	'teamspeak_delete_channelgroup_title' => "Delete Channel Group",
 	'teamspeak_copy_channelgroup_title' => "Copy Channel Group",
+	'teamspeak_snapshot_title' => "Server Snapshots",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -211,6 +213,18 @@ $lang = array(
 
 	/* !Channel Group Delete Form */
 	'teamspeak_channelgroup_deleted' => "Channel Group has been deleted",
+
+	/* Snapshot Table */
+	'teamspeak_s_id' => "Snapshot ID",
+	'teamspeak_s_name' => "Name",
+	'teamspeak_s_date' => "Created",
+	'teamspeak_snapshot_create' => "Create New Snapshot",
+	'teamspeak_deploy' => "Deploy",
+	'teamspeak_snapshot_name' => "Name",
+	'teamspeak_snapshot_name_desc' => "Give the snapshot a unique name.",
+	'teamspeak_snapshot_created' => "Snapshot has been created",
+	'teamspeak_snapshot_deleted' => "Snapshot has been deleted",
+	'teamspeak_snapshot_deployed' => "Snapshot has been deployed",
 
 	/* !Front */
 

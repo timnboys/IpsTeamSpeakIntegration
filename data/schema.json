@@ -159,5 +159,78 @@
         },
         "collation": "utf8mb4_unicode_ci",
         "engine": "InnoDB"
+    },
+    "teamspeak_server_snapshots": {
+        "name": "teamspeak_server_snapshots",
+        "columns": {
+            "s_id": {
+                "name": "s_id",
+                "type": "BIGINT",
+                "length": 20,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "ID Number",
+                "unsigned": true,
+                "zerofill": false,
+                "auto_increment": true,
+                "binary": false
+            },
+            "s_name": {
+                "name": "s_name",
+                "type": "VARCHAR",
+                "length": 255,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "",
+                "unsigned": false,
+                "zerofill": false,
+                "auto_increment": false,
+                "binary": false
+            },
+            "s_data": {
+                "name": "s_data",
+                "type": "LONGTEXT",
+                "length": null,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "",
+                "unsigned": false,
+                "zerofill": false,
+                "auto_increment": false,
+                "binary": false
+            },
+            "s_date": {
+                "name": "s_date",
+                "type": "INT",
+                "length": 11,
+                "decimals": null,
+                "values": null,
+                "allow_null": false,
+                "default": null,
+                "comment": "",
+                "unsigned": true,
+                "zerofill": false,
+                "auto_increment": false,
+                "binary": false
+            }
+        },
+        "indexes": {
+            "PRIMARY": {
+                "type": "primary",
+                "name": "PRIMARY",
+                "columns": [
+                    "s_id"
+                ],
+                "length": [
+                    null
+                ]
+            }
+        }
     }
 }

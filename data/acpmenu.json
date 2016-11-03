@@ -39,6 +39,12 @@
             "controller": "clients",
             "do": "",
             "restriction": "clients_manage"
+        },
+        "snapshot": {
+            "tab": "teamspeak",
+            "controller": "snapshot",
+            "do": "",
+            "restriction": "snapshot_manage"
         }
     },
     "groups": {

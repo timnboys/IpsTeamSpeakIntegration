@@ -43,7 +43,7 @@ class _Server extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		$tsServer = Server::i();
-		$serverGroups = Group::getServerGroups( $tsServer->getInstance(), false );
+		$serverGroups = Group::getServerGroups( $tsServer->getInstance(), true, false );
 		$channelGroups = Group::getChannelGroups( $tsServer->getInstance() );
 		$serverInfo = $tsServer->getServerInfo();
 

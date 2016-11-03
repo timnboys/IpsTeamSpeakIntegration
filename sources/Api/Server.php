@@ -24,6 +24,45 @@ class _Server extends \IPS\teamspeak\Api
 	}
 
 	/**
+	 * Deploy snapshot.
+	 *
+	 * @param mixed $data
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function deploySnapshot( $data )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->serverSnapshotDeploy( $data );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Create new snapshot.
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function createSnapshot()
+	{
+		$ts = static::getInstance();
+		$temp = $ts->serverSnapshotCreate();
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			return $ts->getElement( 'data', $temp );
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
 	 * Get the TS server information.
 	 *
 	 * @return array|bool

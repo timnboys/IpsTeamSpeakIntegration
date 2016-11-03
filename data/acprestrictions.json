@@ -8,6 +8,9 @@
         },
         "clients": {
             "clients_manage": "clients_manage"
+        },
+        "snapshot": {
+            "snapshot_manage": "snapshot_manage"
         }
     },
     "overview": {
