@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10004">
+ <app key="teamspeak" version="10005">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -13,11 +13,25 @@
   <word key="menu__teamspeak_teamspeak_server" js="0">Server</word>
   <word key="menu__teamspeak_teamspeak_alert" js="0">Alert</word>
   <word key="menu__teamspeak_teamspeak_clients" js="0">Clients</word>
+  <word key="menu__teamspeak_groups" js="0">Groups</word>
+  <word key="menu__teamspeak_groups_servergroups" js="0">Server Groups</word>
+  <word key="menu__teamspeak_groups_channelgroups" js="0">Channel Groups</word>
   <word key="teamspeak_test_title" js="0">Test TeamSpeak</word>
   <word key="teamspeak_settings_title" js="0">TeamSpeak Settings</word>
   <word key="teamspeak_members_title" js="0">Member UUIDs</word>
   <word key="teamspeak_alert_title" js="0">TeamSpeak Alert</word>
   <word key="teamspeak_clients_title" js="0">TeamSpeak Clients</word>
+  <word key="teamspeak_server_groups_title" js="0">Server Groups</word>
+  <word key="teamspeak_add_servergroup_title" js="0">Add Server Group</word>
+  <word key="teamspeak_edit_servergroup_title" js="0">Edit Server Group</word>
+  <word key="teamspeak_delete_servergroup_title" js="0">Delete Server Group</word>
+  <word key="teamspeak_copy_servergroup_title" js="0">Copy Server Group</word>
+  <word key="teamspeak_masspoke_title" js="0">Mass Poke</word>
+  <word key="teamspeak_channel_groups_title" js="0">Channel Groups</word>
+  <word key="teamspeak_edit_channelgroup_title" js="0">Edit Channel Group</word>
+  <word key="teamspeak_add_channelgroup_title" js="0">Add Channel Group</word>
+  <word key="teamspeak_delete_channelgroup_title" js="0">Delete Channel Group</word>
+  <word key="teamspeak_copy_channelgroup_title" js="0">Copy Channel Group</word>
   <word key="teamspeak_resync_all" js="0">Re-sync all</word>
   <word key="teamspeak_members_resynced" js="0">Re-synced all members</word>
   <word key="teamspeak_table_s_member_id" js="0">Member</word>
@@ -85,10 +99,14 @@
   <word key="teamspeak_client_poked" js="0">Client has been poked</word>
   <word key="teamspeak_client_kicked" js="0">Client has been kicked</word>
   <word key="teamspeak_client_banned" js="0">Client has been banned</word>
+  <word key="teamspeak_masspoke" js="0">Mass Poke</word>
   <word key="teamspeak_kick_title" js="0">Kick Client</word>
   <word key="teamspeak_kick_message" js="0">Kick Message</word>
   <word key="teamspeak_poke_title" js="0">Poke Client</word>
   <word key="teamspeak_poke_message" js="0">Poke Message</word>
+  <word key="teamspeak_poke_groups" js="0">Groups to poke</word>
+  <word key="teamspeak_poke_groups_desc" js="0">Clients in the selected groups will be poked.</word>
+  <word key="teamspeak_client_masspoked" js="0">Clients have been poked</word>
   <word key="teamspeak_ban_title" js="0">Ban Client</word>
   <word key="teamspeak_ban_message" js="0">Ban Reason</word>
   <word key="teamspeak_ban_date" js="0">Ban until</word>
@@ -105,10 +123,41 @@
   <word key="r__alert_manage" js="0">Can send global alert to the server?</word>
   <word key="r__test" js="0">Test</word>
   <word key="r__test_manage" js="0">Can test connection?</word>
+  <word key="r__servergroups" js="0">Server Groups</word>
+  <word key="r__servergroups_manage" js="0">Can manage server groups?</word>
+  <word key="r__channelgroups" js="0">Channel Groups</word>
+  <word key="r__channelgroups_manage" js="0">Can manage channel groups?</word>
+  <word key="r__members_manage" js="0">Can manage UUIDs?</word>
+  <word key="r__clients" js="0">Clients</word>
+  <word key="r__clients_manage" js="0">Can manage clients?</word>
   <word key="teamspeak_id_missing" js="0">ID parameter is missing!</word>
   <word key="teamspeak_resync_groups_failed" js="0">Re-syncing the groups failed!</word>
   <word key="teamspeak_serverinfo_error" js="0">There was an error loading the server information, please check the system logs for more information!</word>
   <word key="teamspeak_update_server_failed" js="0">There was an error updating the server information, please check the system logs for more information!</word>
+  <word key="teamspeak_servergroup_added" js="0">Created new server group</word>
+  <word key="teamspeak_servergroup_sgid" js="0">Group ID</word>
+  <word key="teamspeak_servergroup_name" js="0">Name</word>
+  <word key="teamspeak_servergroup_edited" js="0">Server Group has been edited</word>
+  <word key="description" js="0">Description</word>
+  <word key="value" js="0">Value</word>
+  <word key="skip" js="0">Skip</word>
+  <word key="negated" js="0">Negated</word>
+  <word key="grant" js="0">Grant</word>
+  <word key="teamspeak_force_delete" js="0">Force Deletion?</word>
+  <word key="teamspeak_force_delete_desc" js="0">If enabled, group will be deleted even if it still has members!</word>
+  <word key="teamspeak_servergroup_deleted" js="0">Server Group has been deleted</word>
+  <word key="teamspeak_servergroup_target_group" js="0">Target Group</word>
+  <word key="teamspeak_new_group" js="0">New Group</word>
+  <word key="teamspeak_servergroup_target_type" js="0">Type</word>
+  <word key="teamspeak_servergroup_copied" js="0">Server Group has been copied</word>
+  <word key="teamspeak_channelgroup_cgid" js="0">Group ID</word>
+  <word key="teamspeak_channelgroup_name" js="0">Name</word>
+  <word key="teamspeak_channelgroup_target_type" js="0">Type</word>
+  <word key="teamspeak_channelgroup_added" js="0">Created new channel group</word>
+  <word key="teamspeak_channelgroup_edited" js="0">Channel Group has been edited</word>
+  <word key="teamspeak_channelgroup_target_group" js="0">Target Group</word>
+  <word key="teamspeak_channelgroup_copied" js="0">Channel Group has been copied</word>
+  <word key="teamspeak_channelgroup_deleted" js="0">Channel Group has been deleted</word>
   <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="page__teamspeak" js="0">TeamSpeak</word>

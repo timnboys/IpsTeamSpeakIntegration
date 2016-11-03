@@ -12,6 +12,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 use IPS\Member;
 use IPS\Member\Group as IpsGroup;
 use IPS\teamspeak\Api\Group;
+use IPS\teamspeak\Exception\ClientNotFoundException;
 use IPS\teamspeak\Member as TsMember;
 
 class _Member
@@ -109,6 +110,28 @@ class _Member
 		}
 
 		return $success;
+	}
+
+	/**
+	 * Does given UUID exist?
+	 *
+	 * @param $uuid
+	 * @return bool
+	 */
+	public function isValidUuid( $uuid )
+	{
+		$teamspeak = Group::i();
+		
+		try 
+		{
+			$teamspeak->getClientFromUuid( $uuid, $teamspeak->getInstance() );
+		}
+		catch ( ClientNotFoundException $e )
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

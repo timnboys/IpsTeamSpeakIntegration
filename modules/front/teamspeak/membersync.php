@@ -66,11 +66,16 @@ class _membersync extends \IPS\Dispatcher\Controller
 		/* Check CSRF */
 		Session::i()->csrfCheck();
 
+		$tsMember = TsMember::i();
+
 		$form = new Form();
 		$form->addHeader( 'teamspeak_add_uuid' );
-		$form->add( new Form\Text( 's_uuid', null, true, array(), function ( $value ) {
+		$form->add( new Form\Text( 's_uuid', null, true, array(), function ( $value ) use ( $tsMember ) {
 
-			//TODO: check if given UUID is valid (either regex or check against TS DB)
+			if ( !$tsMember->isValidUuid( $value ) )
+			{
+				throw new \InvalidArgumentException( 'Invalid UUID' );
+			}
 
 			return $value;
 		} ) );
@@ -84,7 +89,6 @@ class _membersync extends \IPS\Dispatcher\Controller
 				$uuid->uuid = $values['s_uuid'];
 				$uuid->save();
 
-				$tsMember = TsMember::i();
 				$tsMember->addGroups( Member::loggedIn(), $values['s_uuid'] );
 
 				Output::i()->redirect(

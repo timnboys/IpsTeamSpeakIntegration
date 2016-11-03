@@ -242,7 +242,7 @@ class _Group extends \IPS\teamspeak\Api
 
 		if ( !$client )
 		{
-			$client = $this->getClientFromUuuid( $uuid, $ts );
+			$client = $this->getClientFromUuid( $uuid, $ts );
 		}
 
 		return $this->addClientToGroup( $client['cldbid'], $groupId );
@@ -260,7 +260,7 @@ class _Group extends \IPS\teamspeak\Api
 	public function addUuidToGroups( $uuid, array $groups )
 	{
 		$ts = static::getInstance();
-		$client = $this->getClientFromUuuid( $uuid, $ts );
+		$client = $this->getClientFromUuid( $uuid, $ts );
 		$success = true;
 
 		foreach ( $groups as $groupId )
@@ -342,7 +342,7 @@ class _Group extends \IPS\teamspeak\Api
 
 		if ( !$client )
 		{
-			$client = $this->getClientFromUuuid( $uuid, $ts );
+			$client = $this->getClientFromUuid( $uuid, $ts );
 		}
 
 		if ( $this->isValidGroupId( $groupId, $ts ) )
@@ -365,7 +365,7 @@ class _Group extends \IPS\teamspeak\Api
 	public function removeUuidFromGroups( $uuid, array $groups )
 	{
 		$ts = static::getInstance();
-		$client = $this->getClientFromUuuid( $uuid, $ts );
+		$client = $this->getClientFromUuid( $uuid, $ts );
 		$success = true;
 
 		foreach ( $groups as $groupId )
@@ -391,7 +391,7 @@ class _Group extends \IPS\teamspeak\Api
 	public function resyncGroupsByUuid( $uuid, array $assignGroups )
 	{
 		$ts = static::getInstance();
-		$client = $this->getClientFromUuuid( $uuid, $ts );
+		$client = $this->getClientFromUuid( $uuid, $ts );
 
 		$currentGroups = $this->convertGroupsToCompare(
 			$ts->getElement( 'data', $ts->serverGroupsByClientID( $client['cldbid'] ) )
@@ -578,7 +578,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @return array
 	 * @throws ClientNotFoundException
 	 */
-	protected function getClientFromUuuid( $uuid, \TeamSpeakAdmin $ts )
+	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )
 	{
 		$client = $ts->clientDbFind( $uuid, true );
 
