@@ -47,6 +47,12 @@
             "controller": "servergroups",
             "do": "",
             "restriction": "servergroups_manage"
+        },
+        "channelgroups": {
+            "tab": "teamspeak",
+            "controller": "channelgroups",
+            "do": "",
+            "restriction": "channelgroups_manage"
         }
     }
 }

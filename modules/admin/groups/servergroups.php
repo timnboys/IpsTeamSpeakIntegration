@@ -39,7 +39,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	}
 
 	/**
-	 * Show table of regular server groups.
+	 * Show table of server groups.
 	 *
 	 * @return    void
 	 */
@@ -184,13 +184,13 @@ class _servergroups extends \IPS\Dispatcher\Controller
 
 		/* Build form for editing the server group */
 		$form = new Form;
-		$permissions->buildPermissionForm( $form, $id );
+		$permissions->buildServerGroupPermissionForm( $form, $id );
 
 		if ( $values = $form->values() )
 		{
 			try
 			{
-				$permissions->updatePermissionsFromFormValues( $values, $id );
+				$permissions->updateServerGroupPermissionsFromFormValues( $values, $id );
 
 				Output::i()->redirect(
 					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_edited'

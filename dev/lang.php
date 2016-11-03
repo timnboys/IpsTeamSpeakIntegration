@@ -19,6 +19,7 @@ $lang = array(
 	'menu__teamspeak_teamspeak_clients' => "Clients",
 	'menu__teamspeak_groups' => "Groups",
 	'menu__teamspeak_groups_servergroups' => "Server Groups",
+	'menu__teamspeak_groups_channelgroups' => "Channel Groups",
 
 	/* !Titles */
 	'teamspeak_test_title' => "Test TeamSpeak",
@@ -32,6 +33,11 @@ $lang = array(
 	'teamspeak_delete_servergroup_title' => "Delete Server Group",
 	'teamspeak_copy_servergroup_title' => "Copy Server Group",
 	'teamspeak_masspoke_title' => "Mass Poke",
+	'teamspeak_channel_groups_title' => "Channel Groups",
+	'teamspeak_edit_channelgroup_title' => "Edit Channel Group",
+	'teamspeak_add_channelgroup_title' => "Add Channel Group",
+	'teamspeak_delete_channelgroup_title' => "Delete Channel Group",
+	'teamspeak_copy_channelgroup_title' => "Copy Channel Group",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -147,6 +153,13 @@ $lang = array(
 	'r__alert_manage' => "Can send global alert to the server?",
 	'r__test' => "Test",
 	'r__test_manage' => "Can test connection?",
+	'r__servergroups' => "Server Groups",
+	'r__servergroups_manage' => "Can manage server groups?",
+	'r__channelgroups' => "Channel Groups",
+	'r__channelgroups_manage' => "Can manage channel groups?",
+	'r__members_manage' => "Can manage UUIDs?",
+	'r__clients' => "Clients",
+	'r__clients_manage' => "Can manage clients?",
 
 	/* !Errors */
 	'teamspeak_id_missing' => "ID parameter is missing!",
@@ -178,6 +191,24 @@ $lang = array(
 	'teamspeak_new_group' => "New Group",
 	'teamspeak_servergroup_target_type' => "Type",
 	'teamspeak_servergroup_copied' => "Server Group has been copied",
+
+	/* Channel Group Table */
+	'teamspeak_channelgroup_cgid' => "Group ID",
+	'teamspeak_channelgroup_name' => "Name",
+
+	/* !Channel Group Add Form */
+	'teamspeak_channelgroup_target_type' => "Type",
+	'teamspeak_channelgroup_added' => "Created new channel group",
+
+	/* !Channel Group Edit Form */
+	'teamspeak_channelgroup_edited' => "Channel Group has been edited",
+
+	/* !Channel Group Copy Form */
+	'teamspeak_channelgroup_target_group' => "Target Group",
+	'teamspeak_channelgroup_copied' => "Channel Group has been copied",
+
+	/* !Channel Group Delete Form */
+	'teamspeak_channelgroup_deleted' => "Channel Group has been deleted",
 
 	/* !Front */
 

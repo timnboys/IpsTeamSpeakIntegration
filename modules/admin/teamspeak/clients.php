@@ -265,6 +265,11 @@ class _clients extends \IPS\Dispatcher\Controller
 		Output::i()->output = $form;
 	}
 
+	/**
+	 * Mass poke.
+	 *
+	 * @return void
+	 */
 	protected function masspoke()
 	{
 		/* Get client class */

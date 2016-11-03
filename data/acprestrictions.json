@@ -26,6 +26,9 @@
     "groups": {
         "servergroups": {
             "servergroups_manage": "servergroups_manage"
+        },
+        "channelgroups": {
+            "channelgroups_manage": "channelgroups_manage"
         }
     }
 }

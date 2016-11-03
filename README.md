@@ -18,12 +18,13 @@ This is also an effort to prevent (inevitable) nulled versions which might inclu
 * Edit TS Server information in the ACP
 * Send global alert to the TS in the ACP
 * Unlink UUIDs as an admin
-* Poke/Kick/Ban Clients from within the ACP
+* (Mass)Poke/Kick/Ban Clients from within the ACP
+* Add/Edit/Delete/Copy Server Groups within the ACP
+* Add/Edit/Delete/Copy Channel Groups within the ACP
 
 ### TODO
 
 * Ban syncing
-* Add/Edit TS groups within the ACP
 * Multiple server support
 
 ### Credits

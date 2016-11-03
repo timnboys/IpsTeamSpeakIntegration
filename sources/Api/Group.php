@@ -32,7 +32,6 @@ class _Group extends \IPS\teamspeak\Api
 		return parent::i();
 	}
 
-
 	/**
 	 * Add server group.
 	 *
@@ -45,6 +44,28 @@ class _Group extends \IPS\teamspeak\Api
 	{
 		$ts = static::getInstance();
 		$temp = $ts->serverGroupAdd( $serverGroupName, $serverGroupType );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$this->clearCache();
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Add channel group.
+	 *
+	 * @param string $channelGroupName
+	 * @param int $channelGroupType
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function addChannelGroup( $channelGroupName, $channelGroupType )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->channelGroupAdd( $channelGroupName, $channelGroupType );
 
 		if ( $ts->succeeded( $temp ) )
 		{
@@ -78,6 +99,28 @@ class _Group extends \IPS\teamspeak\Api
 	}
 
 	/**
+	 * Delete given channel group.
+	 *
+	 * @param int $channelGroupId
+	 * @param int $force Force deletion (delete even if there are members in the group).
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function deleteChannelGroup( $channelGroupId, $force )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->channelGroupDelete( $channelGroupId, $force );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$this->clearCache();
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
 	 * Copy given server group.
 	 *
 	 * @param int $sourceGroupId Group ID of the group to be copied.
@@ -91,6 +134,30 @@ class _Group extends \IPS\teamspeak\Api
 	{
 		$ts = static::getInstance();
 		$temp = $ts->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			$this->clearCache();
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Copy given channel group.
+	 *
+	 * @param int $sourceGroupId Group ID of the group to be copied.
+	 * @param string $targetGroupName
+	 * @param int $targetGroupType Type of the group.
+	 * @param int $targetGroupId Target group id (0 = create new group).
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function copyChannelGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->channelGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
 
 		if ( $ts->succeeded( $temp ) )
 		{
@@ -401,17 +468,23 @@ class _Group extends \IPS\teamspeak\Api
 	 * Get channel groups.
 	 *
 	 * @param \TeamSpeakAdmin $ts
+	 * @param bool $simplified Simplify the array (only group id and name)?
+	 * @param bool $all Include template groups too?
 	 * @return array
 	 * @throws ChannelGroupException
 	 */
-	public static function getChannelGroups( \TeamSpeakAdmin $ts )
+	public static function getChannelGroups( \TeamSpeakAdmin $ts, $simplified = true, $all = false )
 	{
 		$dataStore = Store::i();
 
+		$cacheKey = 'teamspeak_channel_groups';
+		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
+		$cacheKey = $all ? $cacheKey . '_all' : $cacheKey;
+
 		/* If it is cached, return the cached data */
-		if ( isset( $dataStore->teamspeak_channel_groups ) )
+		if ( isset( $dataStore->$cacheKey ) )
 		{
-			return $dataStore->teamspeak_channel_groups;
+			return $dataStore->$cacheKey;
 		}
 
 		$channelGroups = $ts->channelGroupList();
@@ -422,15 +495,19 @@ class _Group extends \IPS\teamspeak\Api
 
 			foreach ( $channelGroups as $channelGroup )
 			{
-
-				if ( $channelGroup['type'] == static::TYPE_REGULAR )
+				if ( $channelGroup['type'] == static::TYPE_REGULAR || $all )
 				{
+					$channelGroup['name'] = $channelGroup['type'] == static::TYPE_TEMPLATE ? '[T] ' . $channelGroup['name'] : $channelGroup['name'];
 					$returnGroups[] = $channelGroup;
 				}
 			}
 
-			$returnGroups = static::simplifyGroups( $returnGroups, true );
-			$dataStore->teamspeak_channel_groups = $returnGroups;
+			if ( $simplified )
+			{
+				$returnGroups = static::simplifyGroups( $returnGroups, true );
+			}
+
+			$dataStore->$cacheKey = $returnGroups;
 
 			return $returnGroups;
 		}
@@ -532,6 +609,10 @@ class _Group extends \IPS\teamspeak\Api
 			$cacheKeys[] = 'teamspeak_server_groups_all_simplified';
 			$cacheKeys[] = 'teamspeak_server_groups_all_simplified_templates';
 			$cacheKeys[] = 'teamspeak_server_groups_all_templates';
+			$cacheKeys[] = 'teamspeak_channel_groups';
+			$cacheKeys[] = 'teamspeak_channel_groups_all';
+			$cacheKeys[] = 'teamspeak_channel_groups_simplified';
+			$cacheKeys[] = 'teamspeak_channel_groups_simplified_all';
 
 			foreach ( $cacheKeys as $cacheKey )
 			{

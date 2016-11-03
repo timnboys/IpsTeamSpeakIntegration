@@ -41,7 +41,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildPermissionForm( Form &$form, $serverGroupIp )
+	public function buildServerGroupPermissionForm( Form &$form, $serverGroupIp )
 	{
 		$allPermission = $this->getPermissionList();
 		$serverGroupPermission = $this->getServerGroupPerms( $serverGroupIp );
@@ -122,6 +122,84 @@ class _Permission extends \IPS\teamspeak\Api
 	}
 
 	/**
+	 * Return $form with correct permission matrix.
+	 *
+	 * @param Form $form
+	 * @param $channelGroupId
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function buildChannelGroupPermissionForm( Form &$form, $channelGroupId )
+	{
+		$allPermission = $this->getPermissionList();
+		$channelGroupPermission = $this->getChannelGroupPerms( $channelGroupId );
+
+		$matrix = new \IPS\Helpers\Form\Matrix();
+		$matrix->manageable = false;
+		$rows = array();
+
+		$matrix->columns = array(
+			'label'	=> function( $key, $value, $data )
+			{
+				return $value;
+			},
+			'description' => function( $key, $value, $data )
+			{
+				return $value;
+			},
+			'value'	=> function( $key, $value, $data )
+			{
+				$permId = intval( explode( '[', $key )[0] );
+
+				if ( in_array( $permId, static::$numberValues ) )
+				{
+					return new \IPS\Helpers\Form\Number( $key, $value, false, array( 'min' => -1 ) );
+				}
+
+				return new \IPS\Helpers\Form\YesNo( $key, $value );
+			},
+			'grant'	=> function( $key, $value, $data )
+			{
+				$key = $data['grantId'] . '[grant]';
+				return new \IPS\Helpers\Form\Number( $key, $value );
+			}
+		);
+
+		foreach ( $allPermission as $item )
+		{
+			if ( $item['pcount'] <= 0 )
+			{
+				continue;
+			}
+
+			foreach ( $item['permissions'] as $permission )
+			{
+				if ( isset( $channelGroupPermission[$permission['permid']] ) )
+				{
+					$rows[$permission['permid']] = array(
+						'label' => $permission['permname'],
+						'description' => $permission['permdesc'],
+						'value' => $channelGroupPermission[$permission['permid']]['permvalue'],
+						'grant' => isset( $channelGroupPermission[$permission['grantpermid']] ) ? $channelGroupPermission[$permission['grantpermid']]['permvalue'] : 0,
+						'grantId' => $permission['grantpermid']
+					);
+				}
+				else
+				{
+					$rows[$permission['permid']] = array(
+						'label' => $permission['permname'],
+						'description' => $permission['permdesc'],
+						'grantId' => $permission['grantpermid']
+					);
+				}
+			}
+		}
+
+		$matrix->rows = $rows;
+		$form->addMatrix( 'edit_channel_group', $matrix );
+	}
+
+	/**
 	 * Update permissions of given server group.
 	 *
 	 * @param array $values
@@ -129,7 +207,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function updatePermissionsFromFormValues( array $values, $serverGroupId )
+	public function updateServerGroupPermissionsFromFormValues( array $values, $serverGroupId )
 	{
 		$newArray = array();
 		$grantPerm = $this->getGrantPermArray();
@@ -153,7 +231,34 @@ class _Permission extends \IPS\teamspeak\Api
 			);
 		}
 
-		return $this->addPermissions( $serverGroupId, $newArray );
+		return $this->addPermissionsToServerGroup( $serverGroupId, $newArray );
+	}
+
+	/**
+	 * Update permissions of given channel group.
+	 *
+	 * @param array $values
+	 * @param $channelGroupId
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function updateChannelGroupPermissionsFromFormValues( array $values, $channelGroupId )
+	{
+		$newArray = array();
+		$grantPerm = $this->getGrantPermArray();
+
+		foreach ( $values['edit_channel_group'] as $permId => $permissions )
+		{
+			/* Set grant perm id with value */
+			if ( isset( $grantPerm[$permId] ) )
+			{
+				$newArray[$grantPerm[$permId]] = intval( $permissions['grant'] );
+			}
+
+			$newArray[$permId] = intval( $permissions['value'] );
+		}
+
+		return $this->addPermissionsToChannelGroup( $channelGroupId, $newArray );
 	}
 
 	/**
@@ -184,7 +289,28 @@ class _Permission extends \IPS\teamspeak\Api
 		if ( $ts->succeeded( $permissions ) )
 		{
 			$permissions = $ts->getElement( 'data', $permissions );
-			return $this->prepareServerGroupPermissionList( $permissions );
+			return $this->prepareGroupPermissionList( $permissions );
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $permissions ) ) );
+	}
+
+	/**
+	 * Get all permissions that are assigned to the given channel group.
+	 *
+	 * @param int $channelGroupId
+	 * @return array
+	 * @throws \Exception
+	 */
+	protected function getChannelGroupPerms( $channelGroupId )
+	{
+		$ts = static::getInstance();
+		$permissions = $ts->channelGroupPermList( $channelGroupId );
+
+		if ( $ts->succeeded( $permissions ) )
+		{
+			$permissions = $ts->getElement( 'data', $permissions );
+			return $this->prepareGroupPermissionList( $permissions );
 		}
 
 		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $permissions ) ) );
@@ -198,10 +324,31 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @return bool
 	 * @throws \Exception
 	 */
-	protected function addPermissions( $serverGroupId, array $permissions )
+	protected function addPermissionsToServerGroup( $serverGroupId, array $permissions )
 	{
 		$ts = static::getInstance();
 		$temp = $ts->serverGroupAddPerm( $serverGroupId, $permissions );
+
+		if ( $ts->succeeded( $temp ) )
+		{
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+	}
+
+	/**
+	 * Add given permission to the given channel group.
+	 *
+	 * @param $channelGroupId
+	 * @param array $permissions
+	 * @return bool
+	 * @throws \Exception
+	 */
+	protected function addPermissionsToChannelGroup( $channelGroupId, array $permissions )
+	{
+		$ts = static::getInstance();
+		$temp = $ts->channelGroupAddPerm( $channelGroupId, $permissions );
 
 		if ( $ts->succeeded( $temp ) )
 		{
@@ -217,7 +364,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @param array $permissions
 	 * @return array
 	 */
-	protected function prepareServerGroupPermissionList( array $permissions )
+	protected function prepareGroupPermissionList( array $permissions )
 	{
 		$newArray = array();
 
