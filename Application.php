@@ -41,12 +41,22 @@ class _Application extends \IPS\Application
 
 	/**
 	 * Output friendly error, in-case teamspeak is not configured.
+	 *
+	 * @param bool $return Return false if not configured.
+	 * @return bool
 	 */
-	public function isConfigured()
+	public function isConfigured( $return = false )
 	{
 		if ( empty( \IPS\Settings::i()->teamspeak_server_ip ) || empty( \IPS\Settings::i()->teamspeak_query_password ) )
 		{
+			if ( $return )
+			{
+				return false;
+			}
+
 			\IPS\Output::i()->error( 'teamspeak_not_configured', '4P103/1' );
 		}
+
+		return true;
 	}
 }

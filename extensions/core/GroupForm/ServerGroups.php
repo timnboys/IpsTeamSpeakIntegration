@@ -33,6 +33,19 @@ class _ServerGroups
 	 */
 	public function process( &$form, $group )
 	{
+		if ( !\IPS\Application::load( 'teamspeak' )->isConfigured( true ) )
+		{
+			$form->add(
+				new \IPS\Helpers\Form\TextArea(
+					'teamspeak_error',
+					'Please configure the teamspeak app before trying to use this.',
+					false, array( 'disabled' => true )
+				)
+			);
+
+			return;
+		}
+
 		try
 		{
 			$groups = \IPS\teamspeak\Api\Group::getServerGroups();
@@ -59,7 +72,7 @@ class _ServerGroups
 				new \IPS\Helpers\Form\TextArea(
 					'teamspeak_error',
 					'Connection to the TeamSpeak server failed, please check the error logs for more information.',
-					false, [ 'disabled' => true ]
+					false, array( 'disabled' => true )
 				)
 			);
 		}
