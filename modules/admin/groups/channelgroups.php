@@ -9,18 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Helpers\Table;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\teamspeak\Api\Group;
-use IPS\teamspeak\Api\Permission;
-use IPS\Theme;
-
 /**
  * channelgroups
  */
@@ -33,9 +21,9 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'channelgroups_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'channelgroups_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 	
 	/**
@@ -46,11 +34,11 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get channel groups */
-		$tsGroup = Group::i();
+		$tsGroup = \IPS\teamspeak\Api\Group::i();
 		$channelGroups = $tsGroup->getChannelGroups( $tsGroup->getInstance(), false, true );
 
 		/* Create the table */
-		$table = new Table\Custom( $channelGroups, Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ) );
+		$table = new \IPS\Helpers\Table\Custom( $channelGroups, \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ) );
 		$table->langPrefix = 'teamspeak_channelgroup_';
 
 		/* Column stuff */
@@ -64,7 +52,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 'name';
 		$table->advancedSearch = array(
-			'name' => Table\SEARCH_CONTAINS_TEXT
+			'name' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT
 		);
 
 		/* Root buttons */
@@ -72,11 +60,11 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 			'add' => array(
 				'icon' => 'plus',
 				'title' => 'add',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=add' ),
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=add' ),
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_add_channelgroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_add_channelgroup_title' )
 				)
 			)
 		);
@@ -87,31 +75,31 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 			$return['edit'] = array(
 				'icon' => 'pencil',
 				'title' => 'edit',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=edit&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=edit&id=' ) .
 					$row['cgid']
 			);
 
 			$return['copy'] = array(
 				'icon' => 'copy',
 				'title' => 'copy',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=copy&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=copy&id=' ) .
 					$row['cgid'],
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_copy_channelgroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_copy_channelgroup_title' )
 				)
 			);
 
 			$return['delete'] = array(
 				'icon' => 'times-circle',
 				'title' => 'delete',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=delete&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups&do=delete&id=' ) .
 					$row['cgid'],
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_delete_channelgroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_delete_channelgroup_title' )
 				)
 			);
 
@@ -119,8 +107,8 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		};
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_channel_groups_title' );
-		Output::i()->output	= Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_channel_groups_title' );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
 	/**
@@ -132,35 +120,35 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	{
 		/* Set Group Types */
 		$types = array(
-			Group::TYPE_REGULAR => 'Regular Group',
-			Group::TYPE_TEMPLATE => 'Template Group',
+			\IPS\teamspeak\Api\Group::TYPE_REGULAR => 'Regular Group',
+			\IPS\teamspeak\Api\Group::TYPE_TEMPLATE => 'Template Group',
 		);
 
 		/* Build form for adding a channel group */
-		$form = new Form;
-		$form->add( new Form\Text( 'teamspeak_channelgroup_name', null, true ) );
-		$form->add( new Form\Select( 'teamspeak_channelgroup_target_type', Group::TYPE_REGULAR, true, array( 'options' => $types ) ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_channelgroup_name', null, true ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_channelgroup_target_type', \IPS\teamspeak\Api\Group::TYPE_REGULAR, true, array( 'options' => $types ) ) );
 
 		if ( $values = $form->values() )
 		{
 			try
 			{
-				$group = Group::i();
+				$group = \IPS\teamspeak\Api\Group::i();
 				$group->addChannelGroup( $values['teamspeak_channelgroup_name'], $values['teamspeak_channelgroup_target_type'] );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_added'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_added'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P105/1' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P105/1' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_add_channelgroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_add_channelgroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -171,19 +159,19 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	protected function delete()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P105/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P105/1' );
 		}
 
 		/* Get Group class */
-		$group = Group::i();
+		$group = \IPS\teamspeak\Api\Group::i();
 
 		/* Build form for editing the server group */
-		$form = new Form;
-		$form->add( new Form\YesNo( 'teamspeak_force_delete', 0 ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_force_delete', 0 ) );
 
 		if ( $values = $form->values() )
 		{
@@ -191,19 +179,19 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 			{
 				$group->deleteChannelGroup( $id, intval( $values['teamspeak_force_delete'] ) );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_deleted'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_deleted'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P105/2' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P105/2' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_delete_channelgroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_delete_channelgroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -214,31 +202,31 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	protected function copy()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P105/2' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P105/2' );
 		}
 
 		/* Get Group class */
-		$group = Group::i();
+		$group = \IPS\teamspeak\Api\Group::i();
 		$channelGroups = $group->getChannelGroups( $group->getInstance(), true, true );
 
-		$channelGroups[0] = Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
+		$channelGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
 		ksort( $channelGroups, SORT_ASC );
 
 		$types = array(
-			Group::TYPE_REGULAR => 'Regular Group',
-			Group::TYPE_TEMPLATE => 'Template Group',
+			\IPS\teamspeak\Api\Group::TYPE_REGULAR => 'Regular Group',
+			\IPS\teamspeak\Api\Group::TYPE_TEMPLATE => 'Template Group',
 		);
 
 		$defaultName = $channelGroups[$id] . ' (Copy)';
 
-		$form = new Form;
-		$form->add( new Form\Text( 'teamspeak_channelgroup_name', $defaultName, true ) );
-		$form->add( new Form\Select( 'teamspeak_channelgroup_target_group', 0, true, array( 'options' => $channelGroups ) ) );
-		$form->add( new Form\Select( 'teamspeak_channelgroup_target_type', 1, true, array( 'options' => $types ) ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_channelgroup_name', $defaultName, true ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_channelgroup_target_group', 0, true, array( 'options' => $channelGroups ) ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_channelgroup_target_type', 1, true, array( 'options' => $types ) ) );
 
 		if ( $values = $form->values() )
 		{
@@ -246,19 +234,19 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 			{
 				$group->copyChannelGroup( $id, $values['teamspeak_channelgroup_name'], $values['teamspeak_channelgroup_target_type'], $values['teamspeak_channelgroup_target_group'] );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_copied'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_copied'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P105/3' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P105/3' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_copy_channelgroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_copy_channelgroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -269,15 +257,15 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	protected function edit()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P104/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P104/1' );
 		}
 
 		/* Get permission class */
-		$permissions = Permission::i();
+		$permissions = \IPS\teamspeak\Api\Permission::i();
 
 		/* Build form for editing the server group */
 		$form = new Form;
@@ -289,18 +277,18 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 			{
 				$permissions->updateChannelGroupPermissionsFromFormValues( $values, $id );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_edited'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_edited'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P105/4' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P105/4' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_edit_channelgroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_edit_channelgroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 }

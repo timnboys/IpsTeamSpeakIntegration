@@ -9,19 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\DateTime;
-use IPS\Db;
-use IPS\Dispatcher;
-use IPS\Helpers\Table;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\teamspeak\Member as TsMember;
-use IPS\teamspeak\Uuid;
-use IPS\Theme;
-
 /**
  * members
  */
@@ -34,9 +21,9 @@ class _Members extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'members_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'members_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
@@ -47,8 +34,8 @@ class _Members extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Create the table */
-		$table = new Table\Db(
-			'teamspeak_member_sync', Url::internal( 'app=teamspeak&module=members&controller=members' )
+		$table = new \IPS\Helpers\Table\Db(
+			'teamspeak_member_sync', \IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members' )
 		);
 		$table->langPrefix = 'teamspeak_table_';
 
@@ -72,9 +59,9 @@ class _Members extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 'name';
 		$table->advancedSearch = array(
-			's_member_id' => Table\SEARCH_MEMBER,
-			's_date' => Table\SEARCH_DATE_RANGE,
-			's_uuid' => Table\SEARCH_CONTAINS_TEXT
+			's_member_id' => \IPS\Helpers\Table\SEARCH_MEMBER,
+			's_date' => \IPS\Helpers\Table\SEARCH_DATE_RANGE,
+			's_uuid' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT
 		);
 
 		/* Formatters */
@@ -83,7 +70,7 @@ class _Members extends \IPS\Dispatcher\Controller
 			{
 				try
 				{
-					$member = htmlentities( Member::load( $val )->name, \IPS\HTMLENTITIES, 'UTF-8', FALSE );
+					$member = htmlentities( \IPS\Member::load( $val )->name, \IPS\HTMLENTITIES, 'UTF-8', FALSE );
 
 					return $member;
 				}
@@ -94,7 +81,7 @@ class _Members extends \IPS\Dispatcher\Controller
 			},
 			's_date' => function ( $val, $row )
 			{
-				$date = DateTime::ts( $val );
+				$date = \IPS\DateTime::ts( $val );
 
 				return $date->localeDate();
 			},
@@ -105,7 +92,7 @@ class _Members extends \IPS\Dispatcher\Controller
 			'resync' => array(
 				'icon' => 'refresh',
 				'title' => 'teamspeak_resync_all',
-				'link' => Url::internal(
+				'link' => \IPS\Http\Url::internal(
 					'app=teamspeak&module=members&controller=members&do=resyncAllMembers'
 				),
 				'data' => array( 'confirm' => '' )
@@ -118,14 +105,14 @@ class _Members extends \IPS\Dispatcher\Controller
 			$return['view'] = array(
 				'icon' => 'search',
 				'title' => 'view',
-				'link' => Url::internal( 'app=core&module=members&controller=members&do=edit&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=core&module=members&controller=members&do=edit&id=' ) .
 					$row['s_member_id']
 			);
 
 			$return['delete'] = array(
 				'icon' => 'times-circle',
 				'title' => 'delete',
-				'link' => Url::internal( 'app=teamspeak&module=members&controller=members&do=delete&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members&do=delete&id=' ) .
 					$row['s_id'],
 				'data' => array( 'delete' => '' ),
 			);
@@ -133,7 +120,7 @@ class _Members extends \IPS\Dispatcher\Controller
 			$return['resync'] = array(
 				'icon' => 'refresh',
 				'title' => 'resync',
-				'link' => Url::internal( 'app=teamspeak&module=members&controller=members&do=resync&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members&do=resync&id=' ) .
 					$row['s_id'],
 				'data' => array( 'confirm' => '' ),
 			);
@@ -142,8 +129,8 @@ class _Members extends \IPS\Dispatcher\Controller
 		};
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_members_title' );
-		Output::i()->output = Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_members_title' );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
 	/**
@@ -154,19 +141,19 @@ class _Members extends \IPS\Dispatcher\Controller
 	protected function delete()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P100/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P100/1' );
 		}
 
-		$uuid = Uuid::load( $id );
+		$uuid = \IPS\teamspeak\Uuid::load( $id );
 		$uuid->delete();
 
 		/* Redirect back to the table with a message that the UUID has been removed */
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_member_deleted'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_member_deleted'
 		);
 	}
 
@@ -178,24 +165,24 @@ class _Members extends \IPS\Dispatcher\Controller
 	protected function resync()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P100/2' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P100/2' );
 		}
 
-		$uuid = Uuid::load( $id );
+		$uuid = \IPS\teamspeak\Uuid::load( $id );
 
-		$tsMember = TsMember::i();
-		if ( !$tsMember->resyncGroups( Member::load( $uuid->member_id ), $uuid->uuid ) )
+		$tsMember = \IPS\teamspeak\Member::i();
+		if ( !$tsMember->resyncGroups( \IPS\Member::load( $uuid->member_id ), $uuid->uuid ) )
 		{
-			Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/1' );
+			\IPS\Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/1' );
 		}
 
 		/* Redirect back to the table with a message that the UUID has been re-synced */
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_member_resynced'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_member_resynced'
 		);
 	}
 
@@ -207,23 +194,23 @@ class _Members extends \IPS\Dispatcher\Controller
 	protected function resyncAll()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P100/4' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P100/4' );
 		}
 
-		$member = Member::load( $id );
-		$tsMember = TsMember::i();
+		$member = \IPS\Member::load( $id );
+		$tsMember = \IPS\teamspeak\Member::i();
 
 		if ( !$tsMember->resyncGroupsAllUuids( $member ) )
 		{
-			Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/2' );
+			\IPS\Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/2' );
 		}
 		/* Redirect back to the member form with a message that the UUIDs have been re-synced */
-		Output::i()->redirect(
-			Url::internal( 'app=core&module=members&controller=members&do=edit&id=' . $member->member_id ),
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=core&module=members&controller=members&do=edit&id=' . $member->member_id ),
 			'teamspeak_member_resynced'
 		);
 	}
@@ -235,16 +222,16 @@ class _Members extends \IPS\Dispatcher\Controller
 	 */
 	protected function resyncAllMembers()
 	{
-		$tsMember = TsMember::i();
+		$tsMember = \IPS\teamspeak\Member::i();
 
 		try
 		{
 			/* Get the members who have a UUID set */
-			foreach ( Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
+			foreach ( \IPS\Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
 			{
 				try
 				{
-					$member = Member::load( $info['s_member_id'] );
+					$member = \IPS\Member::load( $info['s_member_id'] );
 				}
 				catch ( \OutOfRangeException $e )
 				{
@@ -256,12 +243,12 @@ class _Members extends \IPS\Dispatcher\Controller
 		}
 		catch ( \Exception $e )
 		{
-			Output::i()->error( $e->getMessage(), '4P100/3' );
+			\IPS\Output::i()->error( $e->getMessage(), '4P100/3' );
 		}
 
 		/* Redirect back to the table with a message that the UUIDs have been re-synced */
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_members_resynced'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=members&controller=members' ), 'teamspeak_members_resynced'
 		);
 	}
 }

@@ -9,10 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Log;
-use IPS\Settings;
-use IPS\teamspeak\Exception\ConnectionException;
-
 require_once( \IPS\ROOT_PATH . '/applications/teamspeak/sources/3rd_party/TeamSpeakAdmin.php' );
 
 abstract class _Api
@@ -30,7 +26,7 @@ abstract class _Api
 	 */
 	public function __construct( $login = true )
 	{
-		$this->settings = Settings::i();
+		$this->settings = \IPS\Settings::i();
 
 		try
 		{
@@ -46,13 +42,13 @@ abstract class _Api
 				$this->instance = $this->connect( $config['host'], $config['query_port'], $config['username'], $config['password'], $login );
 			}
 		}
-		catch ( ConnectionException $e )
+		catch ( \IPS\teamspeak\Exception\ConnectionException $e )
 		{
-			Log::log( $e, 'teamspeak_connect' );
+			\IPS\Log::log( $e, 'teamspeak_connect' );
 		}
 		catch ( \Exception $e )
 		{
-			Log::log( $e, 'teamspeak_connect_2' );
+			\IPS\Log::log( $e, 'teamspeak_connect_2' );
 		}
 	}
 
@@ -103,7 +99,7 @@ abstract class _Api
 	 * @param bool $login
 	 * @param int $timeout Connection timeout
 	 * @return \TeamSpeakAdmin
-	 * @throws ConnectionException
+	 * @throws \IPS\teamspeak\Exception\ConnectionException
 	 */
 	protected function connect( $host, $qPort, $username, $password, $login = true, $timeout = 2 )
 	{
@@ -115,7 +111,7 @@ abstract class _Api
 			{
 				if ( !$ts->succeeded( $e = $ts->login( $username, $password ) ) )
 				{
-					throw new ConnectionException( $this->arrayToString( $e['errors'] ) );
+					throw new \IPS\teamspeak\Exception\ConnectionException( $this->arrayToString( $e['errors'] ) );
 				}
 			}
 
@@ -133,7 +129,7 @@ abstract class _Api
 			}
 		}
 
-		throw new ConnectionException( $this->arrayToString( $e['errors'] ) );
+		throw new \IPS\teamspeak\Exception\ConnectionException( $this->arrayToString( $e['errors'] ) );
 	}
 
 	/**

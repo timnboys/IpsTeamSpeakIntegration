@@ -9,14 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\teamspeak\Api\Alert;
-
 /**
  * Alert
  */
@@ -29,9 +21,9 @@ class _Alert extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'alert_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'alert_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
@@ -42,21 +34,21 @@ class _Alert extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Build alert form */
-		$form = new Form( 'alert', 'teamspeak_alert' );
-		$form->add( new Form\Text( 'alert_message', null, true ) );
+		$form = new \IPS\Helpers\Form( 'alert', 'teamspeak_alert' );
+		$form->add( new \IPS\Helpers\Form\Text( 'alert_message', null, true ) );
 
 		if ( $values = $form->values() )
 		{
-			$teamspeak = Alert::i();
+			$teamspeak = \IPS\teamspeak\Api\Alert::i();
 			$teamspeak->sendMessage( $values['alert_message'] );
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=alert', 'admin' ),
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=alert', 'admin' ),
 				'teamspeak_alert_sent'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_alert_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_alert_title' );
+		\IPS\Output::i()->output = $form;
 	}
 }

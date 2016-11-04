@@ -6,24 +6,20 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Output;
-use IPS\Request;
-use IPS\Theme;
-
 abstract class teamspeak_hook_hookCssJs extends _HOOK_CLASS_
 {
 	protected static function baseJs()
 	{
 		parent::baseJS();
-		if ( !Request::i()->isAjax() )
+		if ( !\IPS\Request::i()->isAjax() )
 		{
-			Output::i()->jsFiles = array_merge( Output::i()->jsFiles, Output::i()->js( 'viewer.js', 'teamspeak', 'interface' ) );
+			\IPS\Output::i()->jsFiles = array_merge( \IPS\Output::i()->jsFiles, \IPS\Output::i()->js( 'viewer.js', 'teamspeak', 'interface' ) );
 		}
 	}
 
 	public static function baseCss()
 	{
 		parent::baseCss();
-		Output::i()->cssFiles = array_merge( Output::i()->cssFiles, Theme::i()->css( 'viewer.css', 'teamspeak', 'front' ) );
+		\IPS\Output::i()->cssFiles = array_merge( \IPS\Output::i()->cssFiles, \IPS\Theme::i()->css( 'viewer.css', 'teamspeak', 'front' ) );
 	}
 }

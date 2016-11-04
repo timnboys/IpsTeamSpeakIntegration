@@ -9,13 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Data\Store;
-use IPS\teamspeak\Exception\ClientNotFoundException;
-use IPS\teamspeak\Exception\ChannelGroupException;
-use IPS\teamspeak\Exception\ServerException;
-use IPS\teamspeak\Exception\ServerGroupException;
-use IPS\teamspeak\Exception\GroupNotFoundException;
-
 class _Group extends \IPS\teamspeak\Api
 {
 	const TYPE_TEMPLATE = 0;
@@ -174,7 +167,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param int $clientId Client ID, should already be confirmed to be valid.
 	 * @param int $groupId Group ID of the group that is to be assigned.
 	 * @return bool
-	 * @throws GroupNotFoundException
+	 * @throws \IPS\teamspeak\Exception\GroupNotFoundException
 	 */
 	public function addClientToGroup( $clientId, $groupId )
 	{
@@ -199,7 +192,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $success;
 		}
 
-		throw new GroupNotFoundException;
+		throw new \IPS\teamspeak\Exception\GroupNotFoundException;
 	}
 
 	/**
@@ -208,7 +201,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param int $clientId Client ID, will be validated.
 	 * @param array $groups Group IDs of the groups that are to be assigned.
 	 * @return bool Succeeded?
-	 * @throws ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 */
 	public function addClientToGroups( $clientId, array $groups )
 	{
@@ -233,8 +226,8 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param int $groupId TS Group ID.
 	 * @param array|null $client
 	 * @return bool Succeeded?
-	 * @throws ClientNotFoundException
-	 * @throws GroupNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\GroupNotFoundException
 	 */
 	public function addUuidToGroup( $uuid, $groupId, array $client = null )
 	{
@@ -254,8 +247,8 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid Members UUID.
 	 * @param array $groups Array of TS Group IDs.
 	 * @return bool Succeeded?
-	 * @throws ClientNotFoundException
-	 * @throws GroupNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\GroupNotFoundException
 	 */
 	public function addUuidToGroups( $uuid, array $groups )
 	{
@@ -333,8 +326,8 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param int $groupId TS Group ID.
 	 * @param array|null $client
 	 * @return bool Succeeded?
-	 * @throws ClientNotFoundException
-	 * @throws GroupNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\GroupNotFoundException
 	 */
 	public function removeUuidFromGroup( $uuid, $groupId, array $client = null )
 	{
@@ -350,7 +343,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $this->removeClientFromGroup( $client['cldbid'], $groupId );
 		}
 
-		throw new GroupNotFoundException();
+		throw new \IPS\teamspeak\Exception\GroupNotFoundException();
 	}
 
 	/**
@@ -359,8 +352,8 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param array $groups
 	 * @return bool Succeeded?
-	 * @throws ClientNotFoundException
-	 * @throws GroupNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\GroupNotFoundException
 	 */
 	public function removeUuidFromGroups( $uuid, array $groups )
 	{
@@ -386,7 +379,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param array $assignGroups
 	 * @return bool
-	 * @throws ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 */
 	public function resyncGroupsByUuid( $uuid, array $assignGroups )
 	{
@@ -413,12 +406,12 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param bool $regularOnly Only include regular groups?
 	 * @param bool $templateGroups Include template groups?
 	 * @return array
-	 * @throws ServerException
-	 * @throws ServerGroupException
+	 * @throws \IPS\teamspeak\Exception\ServerException
+	 * @throws \IPS\teamspeak\Exception\ServerGroupException
 	 */
 	public static function getServerGroups( \TeamSpeakAdmin $ts = null, $simplified = true, $regularOnly = true, $templateGroups = false )
 	{
-		$dataStore = Store::i();
+		$dataStore = \IPS\Data\Store::i();
 		$cacheKey = $regularOnly ? 'teamspeak_server_groups_regular' : 'teamspeak_server_groups_all';
 		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
 		$cacheKey = $templateGroups ? $cacheKey . '_templates' : $cacheKey;
@@ -461,7 +454,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $returnGroups;
 		}
 
-		throw new ServerGroupException();
+		throw new \IPS\teamspeak\Exception\ServerGroupException();
 	}
 
 	/**
@@ -471,11 +464,11 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param bool $simplified Simplify the array (only group id and name)?
 	 * @param bool $all Include template groups too?
 	 * @return array
-	 * @throws ChannelGroupException
+	 * @throws \IPS\teamspeak\Exception\ChannelGroupException
 	 */
 	public static function getChannelGroups( \TeamSpeakAdmin $ts, $simplified = true, $all = false )
 	{
-		$dataStore = Store::i();
+		$dataStore = \IPS\Data\Store::i();
 
 		$cacheKey = 'teamspeak_channel_groups';
 		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
@@ -512,7 +505,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $returnGroups;
 		}
 
-		throw new ChannelGroupException();
+		throw new \IPS\teamspeak\Exception\ChannelGroupException();
 	}
 
 	/**
@@ -521,7 +514,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param int $groupId
 	 * @param \TeamSpeakAdmin|null $ts
 	 * @return bool Is it valid?
-	 * @throws ServerGroupException
+	 * @throws \IPS\teamspeak\Exception\ServerGroupException
 	 */
 	protected function isValidGroupId( $groupId, $ts = null )
 	{
@@ -540,11 +533,11 @@ class _Group extends \IPS\teamspeak\Api
 	 *
 	 * @param \TeamSpeakAdmin $ts
 	 * @return array
-	 * @throws ServerException
+	 * @throws \IPS\teamspeak\Exception\ServerException
 	 */
 	public static function getDefaultGroupIds( \TeamSpeakAdmin $ts )
 	{
-		$dataStore = Store::i();
+		$dataStore = \IPS\Data\Store::i();
 
 		if ( isset( $dataStore->teamspeak_default_group_ids ) )
 		{
@@ -567,7 +560,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $defaultGroupIds;
 		}
 
-		throw new ServerException();
+		throw new \IPS\teamspeak\Exception\ServerException();
 	}
 
 	/**
@@ -576,7 +569,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param \TeamSpeakAdmin $ts TS server instance.
 	 * @return array
-	 * @throws ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 */
 	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )
 	{
@@ -588,7 +581,7 @@ class _Group extends \IPS\teamspeak\Api
 			return reset( $client );
 		}
 
-		throw new ClientNotFoundException();
+		throw new \IPS\teamspeak\Exception\ClientNotFoundException();
 	}
 
 	/**

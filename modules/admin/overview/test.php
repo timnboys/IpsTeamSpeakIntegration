@@ -9,14 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\Dispatcher;
-use IPS\Member;
-use IPS\Output;
-use IPS\Settings;
-use IPS\teamspeak\Api\Server;
-use IPS\Theme;
-
 /**
  * test
  */
@@ -29,9 +21,9 @@ class _test extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'test_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'test_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
@@ -42,14 +34,14 @@ class _test extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		$ports = [
-			(int) Settings::i()->teamspeak_query_port => false,
-			(int) Settings::i()->teamspeak_file_transfer_port => false,
+			(int) \IPS\Settings::i()->teamspeak_query_port => false,
+			(int) \IPS\Settings::i()->teamspeak_file_transfer_port => false,
 		];
 
 		/* Check if needed ports are open */
 		foreach ( $ports as $port => &$success )
 		{
-			if ( Server::isPortOpen( $port, Settings::i()->teamspeak_server_ip ) )
+			if ( \IPS\teamspeak\Api\Server::isPortOpen( $port, \IPS\Settings::i()->teamspeak_server_ip ) )
 			{
 				$success = true;
 				continue;
@@ -60,7 +52,7 @@ class _test extends \IPS\Dispatcher\Controller
 
 		try
 		{
-			$ts = Server::i()->checkConnection();
+			$ts = \IPS\teamspeak\Api\Server::i()->checkConnection();
 		}
 		catch ( \Exception $e )
 		{
@@ -68,7 +60,7 @@ class _test extends \IPS\Dispatcher\Controller
 		}
 
 		/* Output */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( "teamspeak_test_title" );
-		Output::i()->output = Theme::i()->getTemplate( 'test' )->test( $ts, $ports );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( "teamspeak_test_title" );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'test' )->test( $ts, $ports );
 	}
 }

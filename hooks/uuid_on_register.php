@@ -6,12 +6,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Helpers\Form;
-use IPS\Output;
-use IPS\Settings;
-use IPS\teamspeak\Member;
-use IPS\teamspeak\Uuid;
-
 class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 {
 	/**
@@ -23,10 +17,10 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 	{
 		$form = call_user_func_array( 'parent::buildRegistrationForm', func_get_args() );
 
-		if ( (bool) Settings::i()->teamspeak_uuid_on_register )
+		if ( (bool) \IPS\Settings::i()->teamspeak_uuid_on_register )
 		{
 			$form->add(
-				new Form\Text(
+				new \IPS\Helpers\Form\Text(
 					'teamspeak_uuid', null, (bool) Settings::i()->teamspeak_uuid_on_register_force
 				), 'password_confirm'
 			);
@@ -49,10 +43,10 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 		{
 			try
 			{
-				$tsMember = Member::i();
+				$tsMember = \IPS\teamspeak\Member::i();
 				$tsMember->addGroups( $member, $values['teamspeak_uuid'] );
 
-				$uuid = new Uuid;
+				$uuid = new \IPS\teamspeak\Uuid;
 				$uuid->member_id = $member->member_id;
 				$uuid->uuid = $values['teamspeak_uuid'];
 				$uuid->save();

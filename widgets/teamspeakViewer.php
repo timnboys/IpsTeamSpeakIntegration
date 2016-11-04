@@ -19,10 +19,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Helpers\Form;
-use IPS\Member;
-use IPS\teamspeak\Api\Viewer;
-
 /**
  * teamspeakViewer Widget
  */
@@ -69,14 +65,14 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 	/**
 	 * Specify widget configuration
 	 *
-	 * @param    null|Form $form Form object
-	 * @return    null|Form
+	 * @param    null|\IPS\Helpers\Form $form Form object
+	 * @return    null|\IPS\Helpers\Form
 	 */
 	public function configuration( &$form = null )
 	{
 		if ( $form === null )
 		{
-			$form = new Form;
+			$form = new \IPS\Helpers\Form;
 		}
 
 		//		$themes = array(
@@ -86,11 +82,11 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 		//		);
 
 		$form->add(
-			new Form\Select(
+			new \IPS\Helpers\Form\Select(
 				'teamspeak_viewer_groups',
 				isset( $this->configuration['teamspeak_viewer_groups'] ) ? $this->configuration['teamspeak_viewer_groups'] : 'all',
 				true, array(
-					'options' => Member\Group::groups(),
+					'options' => \IPS\Member\Group::groups(),
 					'parse' => 'normal',
 					'multiple' => true,
 					'unlimited' => 'all',
@@ -99,31 +95,31 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 			)
 		);
 		$form->add(
-			new Form\YesNo(
+			new \IPS\Helpers\Form\YesNo(
 				'showConnectButton',
 				isset( $this->configuration['showConnectButton'] ) ? $this->configuration['showConnectButton'] : 0, true
 			)
 		);
 		$form->add(
-			new Form\YesNo(
+			new \IPS\Helpers\Form\YesNo(
 				'showGuestOnly',
 				isset( $this->configuration['showGuestOnly'] ) ? $this->configuration['showGuestOnly'] : 1, true
 			)
 		);
 		$form->add(
-			new Form\Number(
+			new \IPS\Helpers\Form\Number(
 				'cacheTime', isset( $this->configuration['cacheTime'] ) ? $this->configuration['cacheTime'] : 60 * 15,
 				true, array( 'min' => 30 )
 			)
 		);
 		$form->add(
-			new Form\YesNo(
+			new \IPS\Helpers\Form\YesNo(
 				'hideEmptyChannels',
 				isset( $this->configuration['hideEmptyChannels'] ) ? $this->configuration['hideEmptyChannels'] : 0, true
 			)
 		);
 		$form->add(
-			new Form\YesNo(
+			new \IPS\Helpers\Form\YesNo(
 				'hideParentChannels',
 				isset( $this->configuration['hideParentChannels'] ) ? $this->configuration['hideParentChannels'] : 0,
 				true
@@ -153,7 +149,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 	{
 		if ( isset( $this->configuration['teamspeak_viewer_groups'] ) &&
 			$this->configuration['teamspeak_viewer_groups'] !== 'all' &&
-			!Member::loggedIn()->inGroup( $this->configuration['teamspeak_viewer_groups'] )
+			!\IPS\Member::loggedIn()->inGroup( $this->configuration['teamspeak_viewer_groups'] )
 		)
 		{
 			return "";
@@ -166,7 +162,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 
 		try
 		{
-			$viewer = Viewer::viewerInstance( $login );
+			$viewer = \IPS\teamspeak\Api\Viewer::viewerInstance( $login );
 
 			$viewer->hideEmptyChannels = $hideEmptyChannels;
 			$viewer->hideParentChannels = $hideParentChannels;

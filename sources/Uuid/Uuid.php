@@ -9,11 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Member;
-use IPS\Output;
-use IPS\teamspeak\Exception\ClientNotFoundException;
-use IPS\teamspeak\Member as TsMember;
-
 class _Uuid extends \IPS\Patterns\ActiveRecord
 {
 	/**
@@ -55,18 +50,18 @@ class _Uuid extends \IPS\Patterns\ActiveRecord
 	 */
 	public function delete()
 	{
-		$member = Member::load( $this->member_id );
+		$member = \IPS\Member::load( $this->member_id );
 
 		try
 		{
-			$teamspeak = TsMember::i();
+			$teamspeak = \IPS\teamspeak\Member::i();
 
 			if ( !$teamspeak->removeGroups( $member, $this->uuid ) )
 			{
-				Output::i()->error( 'teamspeak_could_not_remove_groups', '4P102/1' );
+				\IPS\Output::i()->error( 'teamspeak_could_not_remove_groups', '4P102/1' );
 			}
 		}
-		catch ( ClientNotFoundException $e )
+		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
 		{
 			/* If client does not exist, ignore and just remove the entry from the database */
 		}

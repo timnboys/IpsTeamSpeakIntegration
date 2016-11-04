@@ -9,17 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Db;
-use IPS\Helpers\Form;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\Session;
-use IPS\teamspeak\Member as TsMember;
-use IPS\teamspeak\Uuid;
-use IPS\Theme;
-
 /**
  * member_sync
  */
@@ -35,9 +24,9 @@ class _membersync extends \IPS\Dispatcher\Controller
 		parent::execute();
 
 		/* Prevent Guests from accessing this page */
-		if ( !Member::loggedIn()->member_id )
+		if ( !\IPS\Member::loggedIn()->member_id )
 		{
-			Output::i()->error( 'no_module_permission_guest', '2P100/1', 403 );
+			\IPS\Output::i()->error( 'no_module_permission_guest', '2P100/1', 403 );
 		}
 	}
 
@@ -48,12 +37,12 @@ class _membersync extends \IPS\Dispatcher\Controller
 	 */
 	protected function manage()
 	{
-		$uuids = Member::loggedIn()->teamspeak_uuids;
-		$forced = (bool) Request::i()->forced;
+		$uuids = \IPS\Member::loggedIn()->teamspeak_uuids;
+		$forced = (bool) \IPS\Request::i()->forced;
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_front' );
-		Output::i()->output = Theme::i()->getTemplate( 'tables', 'teamspeak' )->syncTable( $uuids, $forced );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_front' );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'tables', 'teamspeak' )->syncTable( $uuids, $forced );
 	}
 
 	/**
@@ -64,13 +53,13 @@ class _membersync extends \IPS\Dispatcher\Controller
 	protected function add()
 	{
 		/* Check CSRF */
-		Session::i()->csrfCheck();
+		\IPS\Session::i()->csrfCheck();
 
-		$tsMember = TsMember::i();
+		$tsMember = \IPS\teamspeak\Member::i();
 
-		$form = new Form();
+		$form = new \IPS\Helpers\Form();
 		$form->addHeader( 'teamspeak_add_uuid' );
-		$form->add( new Form\Text( 's_uuid', null, true, array(), function ( $value ) use ( $tsMember ) {
+		$form->add( new \IPS\Helpers\Form\Text( 's_uuid', null, true, array(), function ( $value ) use ( $tsMember ) {
 
 			if ( !$tsMember->isValidUuid( $value ) )
 			{
@@ -84,15 +73,15 @@ class _membersync extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$uuid = new Uuid;
-				$uuid->member_id = Member::loggedIn()->member_id;
+				$uuid = new \IPS\teamspeak\Uuid;
+				$uuid->member_id = \IPS\ember::loggedIn()->member_id;
 				$uuid->uuid = $values['s_uuid'];
 				$uuid->save();
 
-				$tsMember->addGroups( Member::loggedIn(), $values['s_uuid'] );
+				$tsMember->addGroups( \IPS\Member::loggedIn(), $values['s_uuid'] );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ),
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ),
 					'teamspeak_added_uuid'
 				);
 			}
@@ -106,20 +95,20 @@ class _membersync extends \IPS\Dispatcher\Controller
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak' );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak' );
 
-		if ( Request::i()->isAjax() )
+		if ( \IPS\Request::i()->isAjax() )
 		{
-			Output::i()->output = $form->customTemplate(
+			\IPS\Output::i()->output = $form->customTemplate(
 				array(
-					call_user_func_array( array( Theme::i(), 'getTemplate' ), array( 'forms', 'core' ) ),
+					call_user_func_array( array( \IPS\Theme::i(), 'getTemplate' ), array( 'forms', 'core' ) ),
 					'popupTemplate'
 				)
 			);
 		}
 		else
 		{
-			Output::i()->output = $form;
+			\IPS\Output::i()->output = $form;
 		}
 	}
 
@@ -129,20 +118,20 @@ class _membersync extends \IPS\Dispatcher\Controller
 	protected function delete()
 	{
 		/* Check CSRF */
-		Session::i()->csrfCheck();
+		\IPS\Session::i()->csrfCheck();
 
-		$tsMember = Uuid::load( Request::i()->id );
+		$tsMember = \IPS\teamspeak\Uuid::load( Request::i()->id );
 
-		if ( $tsMember->member_id !== Member::loggedIn()->member_id )
+		if ( $tsMember->member_id !== \IPS\Member::loggedIn()->member_id )
 		{
-			Output::i()->error( 'uuid_does_not_belong_to_you', '2P100/1', 403 );
+			\IPS\Output::i()->error( 'uuid_does_not_belong_to_you', '2P100/1', 403 );
 		}
 
 		$tsMember->delete();
 
 		/* Redirect back to the table with a message that the UUID has been removed */
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ), 'teamspeak_removed_uuid'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ), 'teamspeak_removed_uuid'
 		);
 	}
 }

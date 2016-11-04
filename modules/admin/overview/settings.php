@@ -9,15 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Helpers\Form\Number;
-use IPS\Helpers\Form\Password;
-use IPS\Helpers\Form\Text;
-use IPS\Member;
-use IPS\Output;
-use IPS\Settings;
-
 /**
  * settings
  */
@@ -30,7 +21,7 @@ class _settings extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'settings_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'settings_manage' );
 		parent::execute();
 	}
 
@@ -42,21 +33,21 @@ class _settings extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Build Settings Form */
-		$settings = new Form('teamspeak_settings');
+		$settings = new \IPS\Helpers\Form('teamspeak_settings');
 
 		$settings->addTab('teamspeak_basic_settings');
-		$settings->add( new Text( 'teamspeak_server_ip', Settings::i()->teamspeak_server_ip ?: null, true ) );
-		$settings->add( new Number( 'teamspeak_virtual_port', Settings::i()->teamspeak_virtual_port ?: null, true ) );
-		$settings->add( new Number( 'teamspeak_query_port', Settings::i()->teamspeak_query_port ?: null, true ) );
-		$settings->add( new Number( 'teamspeak_file_transfer_port', Settings::i()->teamspeak_file_transfer_port ?: null, true ) );
-		$settings->add( new Text( 'teamspeak_query_admin', Settings::i()->teamspeak_query_admin ?: null, true ) );
-		$settings->add( new Password( 'teamspeak_query_password', Settings::i()->teamspeak_query_password ?: null, true ) );
-		$settings->add( new Text( 'teamspeak_query_nickname', Settings::i()->teamspeak_query_nickname ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Text( 'teamspeak_server_ip', \IPS\Settings::i()->teamspeak_server_ip ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Number( 'teamspeak_virtual_port', \IPS\Settings::i()->teamspeak_virtual_port ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Number( 'teamspeak_query_port', \IPS\Settings::i()->teamspeak_query_port ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Number( 'teamspeak_file_transfer_port', \IPS\Settings::i()->teamspeak_file_transfer_port ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Text( 'teamspeak_query_admin', \IPS\Settings::i()->teamspeak_query_admin ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Password( 'teamspeak_query_password', \IPS\Settings::i()->teamspeak_query_password ?: null, true ) );
+		$settings->add( new \IPS\Helpers\Form\Text( 'teamspeak_query_nickname', \IPS\Settings::i()->teamspeak_query_nickname ?: null, true ) );
 
 		$settings->addTab('teamspeak_other_settings');
-		$settings->add( new Form\YesNo( 'teamspeak_uuid_on_register', Settings::i()->teamspeak_uuid_on_register ?: null, false, array( 'togglesOn' => array( 'ts_uuid_register_force' ) ) ) );
-		$settings->add( new Form\YesNo( 'teamspeak_uuid_on_register_force', Settings::i()->teamspeak_uuid_on_register_force ?: null, false, array(), null, null, null, 'ts_uuid_register_force' ) );
-		$settings->add( new Form\YesNo( 'teamspeak_sync_bans', Settings::i()->teamspeak_sync_bans ?: 1 ) );
+		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_uuid_on_register', \IPS\Settings::i()->teamspeak_uuid_on_register ?: null, false, array( 'togglesOn' => array( 'ts_uuid_register_force' ) ) ) );
+		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_uuid_on_register_force', \IPS\Settings::i()->teamspeak_uuid_on_register_force ?: null, false, array(), null, null, null, 'ts_uuid_register_force' ) );
+		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_sync_bans', \IPS\Settings::i()->teamspeak_sync_bans ?: 1 ) );
 
 		if ( $values = $settings->values() )
 		{
@@ -64,7 +55,7 @@ class _settings extends \IPS\Dispatcher\Controller
 		}
 
 		/* Output */
-		Output::i()->title = Member::loggedIn()->language()->addToStack('teamspeak_settings_title');
-		Output::i()->output = $settings;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('teamspeak_settings_title');
+		\IPS\Output::i()->output = $settings;
 	}
 }

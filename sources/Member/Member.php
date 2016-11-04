@@ -9,20 +9,12 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Member;
-use IPS\Member\Group as IpsGroup;
-use IPS\teamspeak\Api\Client;
-use IPS\teamspeak\Api\Group;
-use IPS\teamspeak\Ban;
-use IPS\teamspeak\Exception\ClientNotFoundException;
-use IPS\teamspeak\Member as TsMember;
-
 class _Member
 {
 	/**
 	 * Get called class.
 	 *
-	 * @return TsMember
+	 * @return \IPS\teamspeak\Member
 	 */
 	public static function i()
 	{
@@ -33,11 +25,11 @@ class _Member
 	/**
 	 * Give member the groups that they should get.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @param string $uuid
 	 * @return bool
 	 */
-	public function addGroups( Member $member, $uuid )
+	public function addGroups( \IPS\Member $member, $uuid )
 	{
 		$assignGroups = $this->getAssociatedTsGroups( $member );
 
@@ -49,18 +41,18 @@ class _Member
 
 		$assignGroups = array_unique( $assignGroups );
 
-		$teamspeak = Group::i();
+		$teamspeak = \IPS\teamspeak\Api\Group::i();
 		return $teamspeak->addUuidToGroups( $uuid, $assignGroups );
 	}
 
 	/**
 	 * Remove groups from member that they gained through this APP.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @param string $uuid
 	 * @return bool
 	 */
-	public function removeGroups( Member $member, $uuid )
+	public function removeGroups( \IPS\Member $member, $uuid )
 	{
 		$removeGroups = $this->getAssociatedTsGroups( $member );
 
@@ -72,35 +64,35 @@ class _Member
 
 		$removeGroups = array_unique( $removeGroups );
 
-		$teamspeak = Group::i();
+		$teamspeak = \IPS\teamspeak\Api\Group::i();
 		return $teamspeak->removeUuidFromGroups( $uuid, $removeGroups );
 	}
 
 	/**
 	 * Remove groups from member that they gained through this APP.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @param string $uuid
 	 * @return bool
 	 */
-	public function resyncGroups( Member $member, $uuid )
+	public function resyncGroups( \IPS\Member $member, $uuid )
 	{
 		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
 
-		$teamspeak = Group::i();
+		$teamspeak = \IPS\teamspeak\Api\Group::i();
 		return $teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups );
 	}
 
 	/**
 	 * Remove groups from member that they gained through this APP.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @return bool
 	 */
-	public function resyncGroupsAllUuids( Member $member )
+	public function resyncGroupsAllUuids( \IPS\Member $member )
 	{
 		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
-		$teamspeak = Group::i();
+		$teamspeak = \IPS\teamspeak\Api\Group::i();
 		$success = true;
 
 		foreach ( $member->teamspeak_uuids as $uuid )
@@ -122,13 +114,13 @@ class _Member
 	 */
 	public function isValidUuid( $uuid )
 	{
-		$teamspeak = Group::i();
+		$teamspeak = \IPS\teamspeak\Api\Group::i();
 		
 		try 
 		{
 			$teamspeak->getClientFromUuid( $uuid, $teamspeak->getInstance() );
 		}
-		catch ( ClientNotFoundException $e )
+		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
 		{
 			return false;
 		}
@@ -139,14 +131,14 @@ class _Member
 	/**
 	 * Ban all UUIDs of given member.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @param int $time
 	 * @param string $reason
 	 * @return void
 	 */
-	public function ban( Member $member, $time, $reason )
+	public function ban( \IPS\Member $member, $time, $reason )
 	{
-		$teamspeak = Client::i();
+		$teamspeak = \IPS\teamspeak\Api\Client::i();
 		$banIds = array();
 
 		foreach ( $member->teamspeak_uuids as $uuid )
@@ -159,7 +151,7 @@ class _Member
 		}
 
 		/* Save ban ids */
-		$tsBan = new Ban;
+		$tsBan = new \IPS\teamspeak\Ban;
 		$tsBan->member_id = $member->member_id;
 		$tsBan->ban_ids = $banIds;
 		$tsBan->save();
@@ -168,16 +160,16 @@ class _Member
 	/**
 	 * Ban all UUIDs of given member.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @return void
 	 */
-	public function unban( Member $member )
+	public function unban( \IPS\Member $member )
 	{
-		$teamspeak = Client::i();
+		$teamspeak = \IPS\teamspeak\Api\Client::i();
 
 		try
 		{
-			$tsBan = Ban::load( $member->member_id, 'b_member_id' );
+			$tsBan = \IPS\teamspeak\Ban::load( $member->member_id, 'b_member_id' );
 		}
 		catch ( \OutOfRangeException $e )
 		{
@@ -201,10 +193,10 @@ class _Member
 	/**
 	 * Get TS groups that the member has access to.
 	 *
-	 * @param Member $member
+	 * @param \IPS\Member $member
 	 * @return array|bool
 	 */
-	protected function getAssociatedTsGroups( Member $member )
+	protected function getAssociatedTsGroups( \IPS\Member $member )
 	{
 		$tsGroups = array();
 
@@ -212,7 +204,7 @@ class _Member
 		{
 			try
 			{
-				$group = IpsGroup::load( $groupId );
+				$group = \IPS\Member\Group::load( $groupId );
 			}
 			catch ( \OutOfRangeException $e )
 			{

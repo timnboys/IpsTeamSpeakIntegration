@@ -13,9 +13,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 //TODO: Make theme selectable instead of forcing the old style ;)
 //TODO: need to get themes with 16x16px icons or this is gonna be too complicated to be worth it (using CSS sprites)
 
-use IPS\Log;
-use IPS\Settings;
-
 class _Viewer extends \IPS\teamspeak\Api
 {
 	protected $_serverDatas = array();
@@ -438,7 +435,7 @@ class _Viewer extends \IPS\teamspeak\Api
 				}
 			}
 
-			$host = Settings::i()->teamspeak_server_ip;
+			$host = \IPS\Settings::i()->teamspeak_server_ip;
 			$port = $this->_serverDatas["virtualserver_port"];
 			$name = $this->_serverDatas["virtualserver_name"];
 			$icon = "16x16_server_green";
@@ -455,7 +452,7 @@ class _Viewer extends \IPS\teamspeak\Api
 		catch ( \Exception $e )
 		{
 			$this->logout();
-			Log::log( $e );
+			\IPS\Log::log( $e );
 			$content = 'The Viewer could not be loaded, please check the error logs.';
 		}
 		

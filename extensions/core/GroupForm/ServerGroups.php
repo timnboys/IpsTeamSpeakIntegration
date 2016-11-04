@@ -19,9 +19,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Helpers\Form;
-use IPS\teamspeak\Api\Group;
-
 /**
  * Admin CP Group Form
  */
@@ -38,18 +35,18 @@ class _ServerGroups
 	{
 		try
 		{
-			$groups = Group::getServerGroups();
+			$groups = \IPS\teamspeak\Api\Group::getServerGroups();
 
 			$groups[-1] = 'None';
 
 			$options['options'] = $groups;
 			$form->add(
-				new Form\Select(
+				new \IPS\Helpers\Form\Select(
 					'teamspeak_group', isset( $group->teamspeak_group ) ? $group->teamspeak_group : -1, true, $options
 				)
 			);
 			$form->add(
-				new Form\YesNo(
+				new \IPS\Helpers\Form\YesNo(
 					'teamspeak_require_uuid',
 					isset( $group->teamspeak_require_uuid ) ? $group->teamspeak_require_uuid : 0, false
 				)
@@ -59,7 +56,7 @@ class _ServerGroups
 		{
 			/* Connection error to the server */
 			$form->add(
-				new Form\TextArea(
+				new \IPS\Helpers\Form\TextArea(
 					'teamspeak_error',
 					'Connection to the TeamSpeak server failed, please check the error logs for more information.',
 					false, [ 'disabled' => true ]

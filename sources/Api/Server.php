@@ -9,8 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Log;
-
 class _Server extends \IPS\teamspeak\Api
 {
 	/**
@@ -77,7 +75,7 @@ class _Server extends \IPS\teamspeak\Api
 			return $this->convertServerInfo( $ts->getElement( 'data', $serverInfo ) );
 		}
 
-		Log::log( $this->arrayToString( $ts->getElement( 'errors', $serverInfo ) ), 'teamspeak_server_info' );
+		\IPS\Log::log( $this->arrayToString( $ts->getElement( 'errors', $serverInfo ) ), 'teamspeak_server_info' );
 		return false;
 	}
 

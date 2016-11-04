@@ -19,11 +19,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Db;
-use IPS\Member;
-use IPS\Task\Exception;
-use IPS\teamspeak\Member as TsMember;
-
 /**
  * syncTsGroups Task
  */
@@ -44,14 +39,14 @@ class _syncTsGroups extends \IPS\Task
 	{
 		try
 		{
-			$tsMember = TsMember::i();
+			$tsMember = \IPS\teamspeak\Member::i();
 
 			/* Get the members who have a UUID set */
-			foreach ( Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
+			foreach ( \IPS\Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
 			{
 				try
 				{
-					$member = Member::load( $info['s_member_id'] );
+					$member = \IPS\Member::load( $info['s_member_id'] );
 				}
 				catch ( \OutOfRangeException $e )
 				{

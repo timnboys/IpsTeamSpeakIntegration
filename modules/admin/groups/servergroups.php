@@ -9,18 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Helpers\Table;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\teamspeak\Api\Group;
-use IPS\teamspeak\Api\Permission;
-use IPS\Theme;
-
 /**
  * servergroups
  */
@@ -33,9 +21,9 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'servergroups_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'servergroups_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
@@ -46,11 +34,11 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get server groups array */
-		$tsGroup = Group::i();
+		$tsGroup = \IPS\teamspeak\Api\Group::i();
 		$serverGroups = $tsGroup->getServerGroups( $tsGroup->getInstance(), false, false, true );
 
 		/* Create the table */
-		$table = new Table\Custom( $serverGroups, Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ) );
+		$table = new \IPS\Helpers\Table\Custom( $serverGroups, \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ) );
 		$table->langPrefix = 'teamspeak_servergroup_';
 
 		/* Column stuff */
@@ -64,7 +52,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 'name';
 		$table->advancedSearch = array(
-			'name' => Table\SEARCH_CONTAINS_TEXT
+			'name' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT
 		);
 
 		/* Root buttons */
@@ -72,11 +60,11 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			'add' => array(
 				'icon' => 'plus',
 				'title' => 'add',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=add' ),
+				'link' => \IPS\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=add' ),
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' )
 				)
 			)
 		);
@@ -87,31 +75,31 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			$return['edit'] = array(
 				'icon' => 'pencil',
 				'title' => 'edit',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=edit&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=edit&id=' ) .
 					$row['sgid']
 			);
 
 			$return['copy'] = array(
 				'icon' => 'copy',
 				'title' => 'copy',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=copy&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=copy&id=' ) .
 					$row['sgid'],
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_copy_servergroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_copy_servergroup_title' )
 				)
 			);
 
 			$return['delete'] = array(
 				'icon' => 'times-circle',
 				'title' => 'delete',
-				'link' => Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=delete&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=delete&id=' ) .
 					$row['sgid'],
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_delete_servergroup_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_delete_servergroup_title' )
 				)
 			);
 
@@ -119,8 +107,8 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		};
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_server_groups_title' );
-		Output::i()->output = Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_server_groups_title' );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
 	/**
@@ -132,36 +120,36 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	{
 		/* Set Group Types */
 		$types = array(
-			Group::TYPE_REGULAR => 'Regular Group',
-			Group::TYPE_TEMPLATE => 'Template Group',
-			Group::TYPE_SERVERQUERY => 'ServerQuery Group',
+			\IPS\teamspeak\Api\Group::TYPE_REGULAR => 'Regular Group',
+			\IPS\teamspeak\Api\Group::TYPE_TEMPLATE => 'Template Group',
+			\IPS\teamspeak\Api\Group::TYPE_SERVERQUERY => 'ServerQuery Group',
 		);
 
 		/* Build form for adding a server group */
-		$form = new Form;
-		$form->add( new Form\Text( 'teamspeak_servergroup_name', null, true ) );
-		$form->add( new Form\Select( 'teamspeak_servergroup_target_type', Group::TYPE_REGULAR, true, array( 'options' => $types ) ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_servergroup_name', null, true ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_servergroup_target_type', \IPS\teamspeak\Api\Group::TYPE_REGULAR, true, array( 'options' => $types ) ) );
 
 		if ( $values = $form->values() )
 		{
 			try
 			{
-				$group = Group::i();
+				$group = \IPS\teamspeak\Api\Group::i();
 				$group->addServerGroup( $values['teamspeak_servergroup_name'], $values['teamspeak_servergroup_target_type'] );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_added'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_added'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/1' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/1' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_add_servergroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -172,15 +160,15 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	protected function edit()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P104/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P104/1' );
 		}
 
 		/* Get permission class */
-		$permissions = Permission::i();
+		$permissions = \IPS\teamspeak\Api\Permission::i();
 
 		/* Build form for editing the server group */
 		$form = new Form;
@@ -192,19 +180,19 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			{
 				$permissions->updateServerGroupPermissionsFromFormValues( $values, $id );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_edited'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_edited'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/2' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/2' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_edit_servergroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_edit_servergroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -215,19 +203,19 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	protected function delete()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P104/2' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P104/2' );
 		}
 
 		/* Get Group class */
-		$group = Group::i();
+		$group = \IPS\teamspeak\Api\Group::i();
 
 		/* Build form for editing the server group */
-		$form = new Form;
-		$form->add( new Form\YesNo( 'teamspeak_force_delete', 0 ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_force_delete', 0 ) );
 
 		if ( $values = $form->values() )
 		{
@@ -235,19 +223,19 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			{
 				$group->deleteServerGroup( $id, intval( $values['teamspeak_force_delete'] ) );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_deleted'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_deleted'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/3' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/3' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_delete_servergroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_delete_servergroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -258,32 +246,32 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	protected function copy()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P104/4' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P104/4' );
 		}
 
 		/* Get Group class */
-		$group = Group::i();
+		$group = \IPS\teamspeak\Api\Group::i();
 		$serverGroups = $group->getServerGroups( $group->getInstance(), true, false, true );
 
-		$serverGroups[0] = Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
+		$serverGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
 		ksort( $serverGroups, SORT_ASC );
 
 		$types = array(
-			Group::TYPE_REGULAR => 'Regular Group',
-			Group::TYPE_TEMPLATE => 'Template Group',
-			Group::TYPE_SERVERQUERY => 'ServerQuery Group',
+			\IPS\teamspeak\Api\Group::TYPE_REGULAR => 'Regular Group',
+			\IPS\teamspeak\Api\Group::TYPE_TEMPLATE => 'Template Group',
+			\IPS\teamspeak\Api\Group::TYPE_SERVERQUERY => 'ServerQuery Group',
 		);
 
 		$defaultName = $serverGroups[$id] . ' (Copy)';
 
-		$form = new Form;
-		$form->add( new Form\Text( 'teamspeak_servergroup_name', $defaultName, true ) );
-		$form->add( new Form\Select( 'teamspeak_servergroup_target_group', 0, true, array( 'options' => $serverGroups ) ) );
-		$form->add( new Form\Select( 'teamspeak_servergroup_target_type', 1, true, array( 'options' => $types ) ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_servergroup_name', $defaultName, true ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_servergroup_target_group', 0, true, array( 'options' => $serverGroups ) ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_servergroup_target_type', 1, true, array( 'options' => $types ) ) );
 
 		if ( $values = $form->values() )
 		{
@@ -291,18 +279,18 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			{
 				$group->copyServerGroup( $id, $values['teamspeak_servergroup_name'], $values['teamspeak_servergroup_target_type'], $values['teamspeak_servergroup_target_group'] );
 
-				Output::i()->redirect(
-					Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_copied'
+				\IPS\Output::i()->redirect(
+					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_copied'
 				);
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/5' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/5' );
 			}
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_copy_servergroup_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_copy_servergroup_title' );
+		\IPS\Output::i()->output = $form;
 	}
 }

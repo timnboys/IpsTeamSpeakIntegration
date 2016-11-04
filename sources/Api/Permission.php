@@ -3,8 +3,6 @@
 namespace IPS\teamspeak\Api;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
-use IPS\Helpers\Form;
-
 if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 {
 	header( ( isset( $_SERVER['SERVER_PROTOCOL'] ) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0' ) . ' 403 Forbidden' );
@@ -36,12 +34,12 @@ class _Permission extends \IPS\teamspeak\Api
 	/**
 	 * Return $form with correct permission matrix.
 	 *
-	 * @param Form $form
+	 * @param \IPS\Helpers\Form $form
 	 * @param $serverGroupIp
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildServerGroupPermissionForm( Form &$form, $serverGroupIp )
+	public function buildServerGroupPermissionForm( \IPS\Helpers\Form &$form, $serverGroupIp )
 	{
 		$allPermission = $this->getPermissionList();
 		$serverGroupPermission = $this->getServerGroupPerms( $serverGroupIp );
@@ -124,12 +122,12 @@ class _Permission extends \IPS\teamspeak\Api
 	/**
 	 * Return $form with correct permission matrix.
 	 *
-	 * @param Form $form
+	 * @param \IPS\Helpers\Form $form
 	 * @param $channelGroupId
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildChannelGroupPermissionForm( Form &$form, $channelGroupId )
+	public function buildChannelGroupPermissionForm( \IPS\Helpers\Form &$form, $channelGroupId )
 	{
 		$allPermission = $this->getPermissionList();
 		$channelGroupPermission = $this->getChannelGroupPerms( $channelGroupId );

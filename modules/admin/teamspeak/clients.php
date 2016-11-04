@@ -9,19 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\DateTime;
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Helpers\Table;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\teamspeak\Api\Client;
-use IPS\teamspeak\Api\Group;
-use IPS\Theme;
-
 /**
  * clients
  */
@@ -34,9 +21,9 @@ class _clients extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'clients_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'clients_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 
 	/**
@@ -47,10 +34,10 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get client list */
-		$clientList = Client::i()->getClientList();
+		$clientList = \IPS\teamspeak\Api\Client::i()->getClientList();
 
 		/* Create the table */
-		$table = new Table\Custom( $clientList, Url::internal( "app=teamspeak&module=teamspeak&controller=clients" ) );
+		$table = new \IPS\Helpers\Table\Custom( $clientList, \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=clients" ) );
 		$table->langPrefix = 'teamspeak_';
 
 		/* Column stuff */
@@ -64,7 +51,7 @@ class _clients extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 'client_nickname';
 		$table->advancedSearch = array(
-			'client_nickname' => Table\SEARCH_CONTAINS_TEXT
+			'client_nickname' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT
 		);
 
 		/* Root buttons */
@@ -72,11 +59,11 @@ class _clients extends \IPS\Dispatcher\Controller
 			'masspoke' => array(
 				'icon' => 'comments',
 				'title' => 'teamspeak_masspoke',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=masspoke' ),
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=masspoke' ),
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' )
 				)
 			)
 		);
@@ -92,7 +79,7 @@ class _clients extends \IPS\Dispatcher\Controller
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_kick_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_kick_title' )
 				)
 			);
 
@@ -104,7 +91,7 @@ class _clients extends \IPS\Dispatcher\Controller
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_poke_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_poke_title' )
 				)
 			);
 
@@ -116,7 +103,7 @@ class _clients extends \IPS\Dispatcher\Controller
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_ban_title' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_ban_title' )
 				)
 			);
 
@@ -124,8 +111,8 @@ class _clients extends \IPS\Dispatcher\Controller
 		};
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_clients_title' );
-		Output::i()->output = Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_clients_title' );
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
 	/**
@@ -136,20 +123,20 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function kick()
 	{
 		/* Check if we have an ID */
-		$clientId = Request::i()->id;
+		$clientId = \IPS\Request::i()->id;
 
 		if ( !$clientId )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P101/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P101/1' );
 		}
 
 		/* Build form for the kick message */
-		$form = new Form( 'teamspeak_kick', 'teamspeak_kick' );
-		$form->add( new Form\Text( 'teamspeak_kick_message' ) );
+		$form = new \IPS\Helpers\Form( 'teamspeak_kick', 'teamspeak_kick' );
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_kick_message' ) );
 
 		if ( $values = $form->values() )
 		{
-			$client = Client::i();
+			$client = \IPS\teamspeak\Api\Client::i();
 
 			try
 			{
@@ -158,18 +145,18 @@ class _clients extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/1' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/1' );
 			}
 
 			/* Redirect back to the table and display a message that the client has been kicked */
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_kicked'
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_kicked'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_kick_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_kick_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -180,20 +167,20 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function poke()
 	{
 		/* Check if we have an ID */
-		$clientId = Request::i()->id;
+		$clientId = \IPS\Request::i()->id;
 
 		if ( !$clientId )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P101/2' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P101/2' );
 		}
 
 		/* Build form for the poke message */
-		$form = new Form( 'teamspeak_poke', 'teamspeak_poke' );
-		$form->add( new Form\Text( 'teamspeak_poke_message', null, true ) );
+		$form = new \IPS\Helpers\Form( 'teamspeak_poke', 'teamspeak_poke' );
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_poke_message', null, true ) );
 
 		if ( $values = $form->values() )
 		{
-			$client = Client::i();
+			$client = \IPS\teamspeak\Api\Client::i();
 
 			try
 			{
@@ -202,18 +189,18 @@ class _clients extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/2' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/2' );
 			}
 
 			/* Redirect back to the table and display a message that the client has been poked */
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_poked'
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_poked'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_poke_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_poke_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -224,25 +211,25 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function ban()
 	{
 		/* Check if we have an ID */
-		$clientId = Request::i()->id;
+		$clientId = \IPS\Request::i()->id;
 
 		if ( !$clientId )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P101/3' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P101/3' );
 		}
 
 		/* Build form for the poke message */
-		$form = new Form( 'teamspeak_ban', 'teamspeak_ban' );
-		$form->add( new Form\Text( 'teamspeak_ban_message', null, true ) );
+		$form = new \IPS\Helpers\Form( 'teamspeak_ban', 'teamspeak_ban' );
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_ban_message', null, true ) );
 		$form->add(
-			new Form\Date(
+			new \IPS\Helpers\Form\Date(
 				'teamspeak_ban_date', time() + 24*60*60, TRUE, array( 'unlimited' => 0, 'unlimitedLang' => 'teamspeak_indefinite', 'min' => DateTime::ts( time() ) )
 			)
 		);
 
 		if ( $values = $form->values() )
 		{
-			$client = Client::i();
+			$client = \IPS\teamspeak\Api\Client::i();
 
 			try
 			{
@@ -251,18 +238,18 @@ class _clients extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/3' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/3' );
 			}
 
 			/* Redirect back to the table and display a message that the client has been banned */
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_banned'
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_banned'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_ban_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_ban_title' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -273,15 +260,15 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function masspoke()
 	{
 		/* Get client class */
-		$client = Client::i();
+		$client = \IPS\teamspeak\Api\Client::i();
 
 		/* Get Server Groups */
-		$serverGroups = Group::getServerGroups( $client->getInstance(), true, false );
+		$serverGroups = \IPS\teamspeak\Api\Group::getServerGroups( $client->getInstance(), true, false );
 
 		/* Build form for the poke message */
-		$form = new Form( 'teamspeak_poke', 'teamspeak_poke' );
-		$form->add( new Form\Text( 'teamspeak_poke_message', null, true ) );
-		$form->add( new Form\Select( 'teamspeak_poke_groups', -1, true, array( 'options' => $serverGroups, 'multiple' => true, 'unlimited' => -1 ) ) );
+		$form = new \IPS\Helpers\Form( 'teamspeak_poke', 'teamspeak_poke' );
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_poke_message', null, true ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'teamspeak_poke_groups', -1, true, array( 'options' => $serverGroups, 'multiple' => true, 'unlimited' => -1 ) ) );
 
 		if ( $values = $form->values() )
 		{
@@ -293,17 +280,17 @@ class _clients extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P104/4' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P104/4' );
 			}
 
 			/* Redirect back to the table and display a message that the client has been poked */
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_masspoked'
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ), 'teamspeak_client_masspoked'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_masspoke_title' );
+		\IPS\Output::i()->output = $form;
 	}
 }

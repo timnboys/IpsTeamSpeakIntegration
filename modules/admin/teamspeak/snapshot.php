@@ -9,19 +9,6 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-use IPS\Application;
-use IPS\DateTime;
-use IPS\Dispatcher;
-use IPS\Helpers\Form;
-use IPS\Helpers\Table;
-use IPS\Http\Url;
-use IPS\Member;
-use IPS\Output;
-use IPS\Request;
-use IPS\teamspeak\Api\Server;
-use IPS\teamspeak\Snapshot;
-use IPS\Theme;
-
 /**
  * snapshot
  */
@@ -34,9 +21,9 @@ class _snapshot extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-		Dispatcher::i()->checkAcpPermission( 'snapshot_manage' );
+		\IPS\Dispatcher::i()->checkAcpPermission( 'snapshot_manage' );
 		parent::execute();
-		Application::load( 'teamspeak' )->isConfigured();
+		\IPS\Application::load( 'teamspeak' )->isConfigured();
 	}
 	
 	/**
@@ -47,7 +34,7 @@ class _snapshot extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{		
 		/* Create the table */
-		$table = new Table\Db( 'teamspeak_server_snapshots', Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ) );
+		$table = new \IPS\Helpers\Table\Db( 'teamspeak_server_snapshots', \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ) );
 		$table->langPrefix = 'teamspeak_';
 
 		/* Column stuff */
@@ -61,14 +48,14 @@ class _snapshot extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 's_name';
 		$table->advancedSearch = array(
-			's_name' => Table\SEARCH_CONTAINS_TEXT
+			's_name' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT
 		);
 
 		/* Formatters */
 		$table->parsers = array(
 			's_date' => function ( $val, $row )
 			{
-				$date = DateTime::ts( $val );
+				$date = \IPS\DateTime::ts( $val );
 
 				return $date->localeDate();
 			},
@@ -79,11 +66,11 @@ class _snapshot extends \IPS\Dispatcher\Controller
 			'add' => array(
 				'icon' => 'plus',
 				'title' => 'teamspeak_snapshot_create',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=add' ),
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=add' ),
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
-					'ipsdialog-title' => Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_create' )
+					'ipsdialog-title' => \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_create' )
 				)
 			)
 		);
@@ -94,7 +81,7 @@ class _snapshot extends \IPS\Dispatcher\Controller
 			$return['deploy'] = array(
 				'icon' => 'upload',
 				'title' => 'teamspeak_deploy',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=deploy&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=deploy&id=' ) .
 					$row['s_id'],
 				'data' => array( 'confirm' => '' )
 			);
@@ -102,7 +89,7 @@ class _snapshot extends \IPS\Dispatcher\Controller
 			$return['delete'] = array(
 				'icon' => 'times-circle',
 				'title' => 'delete',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=delete&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot&do=delete&id=' ) .
 					$row['s_id'],
 				'data' => array( 'confirm' => '' )
 			);
@@ -111,8 +98,8 @@ class _snapshot extends \IPS\Dispatcher\Controller
 		};
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_title' );
-		Output::i()->output	= Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_title' );
+		\IPS\Output::i()->output	= \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
 	/**
@@ -123,19 +110,19 @@ class _snapshot extends \IPS\Dispatcher\Controller
 	protected function add()
 	{
 		/* Build form */
-		$form = new Form;
-		$form->add( new Form\Text( 'teamspeak_snapshot_name', null, true ) );
+		$form = new \IPS\Helpers\Form;
+		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_snapshot_name', null, true ) );
 
 		if ( $values = $form->values() )
 		{
 			try
 			{
-				$server = Server::i();
+				$server = \IPS\teamspeak\Api\Server::i();
 				$snapshotData = $server->createSnapshot();
 
 				if ( !empty( $snapshotData ) )
 				{
-					$snapshot = new Snapshot();
+					$snapshot = new \IPS\teamspeak\Snapshot();
 					$snapshot->name = $values['teamspeak_snapshot_name'];
 					$snapshot->data = $snapshotData;
 					$snapshot->save();
@@ -143,17 +130,17 @@ class _snapshot extends \IPS\Dispatcher\Controller
 			}
 			catch ( \Exception $e )
 			{
-				Output::i()->error( $e->getMessage(), '4P106/1' );
+				\IPS\Output::i()->error( $e->getMessage(), '4P106/1' );
 			}
 
-			Output::i()->redirect(
-				Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_created'
+			\IPS\Output::i()->redirect(
+				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_created'
 			);
 		}
 
 		/* Display */
-		Output::i()->title = Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_create' );
-		Output::i()->output = $form;
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_snapshot_create' );
+		\IPS\Output::i()->output = $form;
 	}
 
 	/**
@@ -164,18 +151,18 @@ class _snapshot extends \IPS\Dispatcher\Controller
 	protected function delete()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P106/1' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P106/1' );
 		}
 
-		$snapshot = Snapshot::load( $id );
+		$snapshot = \IPS\teamspeak\Snapshot::load( $id );
 		$snapshot->delete();
 
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_deleted'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_deleted'
 		);
 	}
 
@@ -187,27 +174,27 @@ class _snapshot extends \IPS\Dispatcher\Controller
 	protected function deploy()
 	{
 		/* Check if we have an ID */
-		$id = Request::i()->id;
+		$id = \IPS\Request::i()->id;
 
 		if ( !$id )
 		{
-			Output::i()->error( 'teamspeak_id_missing', '3P106/2' );
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P106/2' );
 		}
 
 		try
 		{
-			$server = Server::i();
-			$snapshot = Snapshot::load( $id );
+			$server = \IPS\teamspeak\Api\Server::i();
+			$snapshot = \IPS\teamspeak\Snapshot::load( $id );
 			$data = $snapshot->data;
 			$server->deploySnapshot( $data );
 		}
 		catch ( \Exception $e )
 		{
-			Output::i()->error( $e->getMessage(), '4P106/2' );
+			\IPS\Output::i()->error( $e->getMessage(), '4P106/2' );
 		}
 
-		Output::i()->redirect(
-			Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_deployed'
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=snapshot' ), 'teamspeak_snapshot_deployed'
 		);
 	}
 }
