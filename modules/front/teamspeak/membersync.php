@@ -74,7 +74,7 @@ class _membersync extends \IPS\Dispatcher\Controller
 			try
 			{
 				$uuid = new \IPS\teamspeak\Uuid;
-				$uuid->member_id = \IPS\ember::loggedIn()->member_id;
+				$uuid->member_id = \IPS\Member::loggedIn()->member_id;
 				$uuid->uuid = $values['s_uuid'];
 				$uuid->save();
 
@@ -120,7 +120,7 @@ class _membersync extends \IPS\Dispatcher\Controller
 		/* Check CSRF */
 		\IPS\Session::i()->csrfCheck();
 
-		$tsMember = \IPS\teamspeak\Uuid::load( Request::i()->id );
+		$tsMember = \IPS\teamspeak\Uuid::load( \IPS\Request::i()->id );
 
 		if ( $tsMember->member_id !== \IPS\Member::loggedIn()->member_id )
 		{

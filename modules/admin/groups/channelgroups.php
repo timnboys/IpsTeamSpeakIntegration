@@ -268,7 +268,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		$permissions = \IPS\teamspeak\Api\Permission::i();
 
 		/* Build form for editing the server group */
-		$form = new Form;
+		$form = new \IPS\Helpers\Form;
 		$permissions->buildChannelGroupPermissionForm( $form, $id );
 
 		if ( $values = $form->values() )

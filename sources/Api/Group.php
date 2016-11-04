@@ -191,7 +191,7 @@ class _Group extends \IPS\teamspeak\Api
 
 			return $success;
 		}
-
+		
 		throw new \IPS\teamspeak\Exception\GroupNotFoundException;
 	}
 

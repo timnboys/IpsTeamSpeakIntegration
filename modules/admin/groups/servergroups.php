@@ -60,7 +60,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 			'add' => array(
 				'icon' => 'plus',
 				'title' => 'add',
-				'link' => \IPS\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=add' ),
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups&do=add' ),
 				'data' => array(
 					'ipsdialog' => '',
 					'ipsdialog-modal' => 'true',
@@ -171,7 +171,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		$permissions = \IPS\teamspeak\Api\Permission::i();
 
 		/* Build form for editing the server group */
-		$form = new Form;
+		$form = new \IPS\Helpers\Form;
 		$permissions->buildServerGroupPermissionForm( $form, $id );
 
 		if ( $values = $form->values() )

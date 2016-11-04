@@ -74,7 +74,7 @@ class _clients extends \IPS\Dispatcher\Controller
 			$return['kick'] = array(
 				'icon' => 'crosshairs',
 				'title' => 'teamspeak_kick',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=kick&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=kick&id=' ) .
 					$row['clid'],
 				'data' => array(
 					'ipsdialog' => '',
@@ -86,7 +86,7 @@ class _clients extends \IPS\Dispatcher\Controller
 			$return['poke'] = array(
 				'icon' => 'comment',
 				'title' => 'teamspeak_poke',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=poke&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=poke&id=' ) .
 					$row['clid'],
 				'data' => array(
 					'ipsdialog' => '',
@@ -98,7 +98,7 @@ class _clients extends \IPS\Dispatcher\Controller
 			$return['ban'] = array(
 				'icon' => 'ban',
 				'title' => 'teamspeak_ban',
-				'link' => Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=ban&id=' ) .
+				'link' => \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients&do=ban&id=' ) .
 					$row['clid'],
 				'data' => array(
 					'ipsdialog' => '',
@@ -223,7 +223,7 @@ class _clients extends \IPS\Dispatcher\Controller
 		$form->add( new \IPS\Helpers\Form\Text( 'teamspeak_ban_message', null, true ) );
 		$form->add(
 			new \IPS\Helpers\Form\Date(
-				'teamspeak_ban_date', time() + 24*60*60, TRUE, array( 'unlimited' => 0, 'unlimitedLang' => 'teamspeak_indefinite', 'min' => DateTime::ts( time() ) )
+				'teamspeak_ban_date', time() + 24*60*60, TRUE, array( 'unlimited' => 0, 'unlimitedLang' => 'teamspeak_indefinite', 'min' => \IPS\DateTime::ts( time() ) )
 			)
 		);
 

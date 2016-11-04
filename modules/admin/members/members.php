@@ -243,6 +243,7 @@ class _Members extends \IPS\Dispatcher\Controller
 		}
 		catch ( \Exception $e )
 		{
+			throw $e;
 			\IPS\Output::i()->error( $e->getMessage(), '4P100/3' );
 		}
 
