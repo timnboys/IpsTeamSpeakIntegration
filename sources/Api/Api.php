@@ -57,6 +57,7 @@ abstract class _Api
 	 */
 	public function __destruct()
 	{
+		$this->instance->logout();
 		$this->instance = null;
 	}
 
@@ -141,6 +142,7 @@ abstract class _Api
 	protected static function arrayToString( array $errors )
 	{
 		$string = '';
+
 		foreach ( $errors as $error )
 		{
 			$string .= $error . ' ';
