@@ -23,6 +23,7 @@ This is also an effort to prevent (inevitable) nulled versions which might inclu
 * Add/Edit/Delete/Copy Channel Groups within the ACP
 * Ban syncing
 * Create/Deploy Server Snapshots
+* View ban list/Unban members/IPs
 
 ### TODO
 

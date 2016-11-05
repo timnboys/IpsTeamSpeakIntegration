@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10008">
+ <app key="teamspeak" version="10009">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -17,6 +17,7 @@
   <word key="menu__teamspeak_groups_servergroups" js="0">Server Groups</word>
   <word key="menu__teamspeak_groups_channelgroups" js="0">Channel Groups</word>
   <word key="menu__teamspeak_teamspeak_snapshot" js="0">Snapshots</word>
+  <word key="menu__teamspeak_teamspeak_bans" js="0">Bans</word>
   <word key="teamspeak_test_title" js="0">Test TeamSpeak</word>
   <word key="teamspeak_settings_title" js="0">TeamSpeak Settings</word>
   <word key="teamspeak_members_title" js="0">Member UUIDs</word>
@@ -34,6 +35,7 @@
   <word key="teamspeak_delete_channelgroup_title" js="0">Delete Channel Group</word>
   <word key="teamspeak_copy_channelgroup_title" js="0">Copy Channel Group</word>
   <word key="teamspeak_snapshot_title" js="0">Server Snapshots</word>
+  <word key="teamspeak_bans_title" js="0">Bans</word>
   <word key="teamspeak_resync_all" js="0">Re-sync all</word>
   <word key="teamspeak_members_resynced" js="0">Re-synced all members</word>
   <word key="teamspeak_table_s_member_id" js="0">Member</word>
@@ -134,6 +136,10 @@
   <word key="r__members_manage" js="0">Can manage UUIDs?</word>
   <word key="r__clients" js="0">Clients</word>
   <word key="r__clients_manage" js="0">Can manage clients?</word>
+  <word key="r__snapshot" js="0">Snapshot</word>
+  <word key="r__snapshot_manage" js="0">Can manage Snapshots?</word>
+  <word key="r__bans" js="0">Bans</word>
+  <word key="r__bans_manage" js="0">Can manage Bans?</word>
   <word key="teamspeak_id_missing" js="0">ID parameter is missing!</word>
   <word key="teamspeak_resync_groups_failed" js="0">Re-syncing the groups failed!</word>
   <word key="teamspeak_serverinfo_error" js="0">There was an error loading the server information, please check the system logs for more information!</word>
@@ -172,6 +178,18 @@
   <word key="teamspeak_snapshot_created" js="0">Snapshot has been created</word>
   <word key="teamspeak_snapshot_deleted" js="0">Snapshot has been deleted</word>
   <word key="teamspeak_snapshot_deployed" js="0">Snapshot has been deployed</word>
+  <word key="teamspeak_banid" js="0">Ban ID</word>
+  <word key="teamspeak_ip" js="0">IP</word>
+  <word key="teamspeak_uid" js="0">UUID</word>
+  <word key="teamspeak_lastnickname" js="0">Last Nickname</word>
+  <word key="teamspeak_created" js="0">Banned at</word>
+  <word key="teamspeak_duration" js="0">Unban at</word>
+  <word key="teamspeak_invokername" js="0">Invoker Name</word>
+  <word key="teamspeak_reason" js="0">Reason</word>
+  <word key="teamspeak_bans_delete_all" js="0">Unban all</word>
+  <word key="teamspeak_unban" js="0">Unban</word>
+  <word key="teamspeak_deleted_ban" js="0">Unbanned</word>
+  <word key="teamspeak_deleted_all_bans" js="0">Unbanned everyone</word>
   <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="page__teamspeak" js="0">TeamSpeak</word>
