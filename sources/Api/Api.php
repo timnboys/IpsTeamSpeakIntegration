@@ -133,7 +133,16 @@ abstract class _Api
 		throw new \IPS\teamspeak\Exception\ConnectionException( $this->arrayToString( $e['errors'] ) );
 	}
 
-	protected function getReturnValue( \TeamSpeakAdmin $ts, array $data, $bool = false )
+	/**
+	 * Extract the required data from the array that we get from \TeamSpeakAdmin.
+	 *
+	 * @param \TeamSpeakAdmin $ts
+	 * @param array $data
+	 * @param bool $bool Only check if it succeeded (no data required)?
+	 * @return bool|mixed
+	 * @throws \Exception
+	 */
+	protected static function getReturnValue( \TeamSpeakAdmin $ts, array $data, $bool = false )
 	{
 		if ( $ts->succeeded( $data ) )
 		{
@@ -145,7 +154,7 @@ abstract class _Api
 			return true;
 		}
 
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $data ) ) );
+		throw new \Exception( static::arrayToString( $ts->getElement( 'errors', $data ) ) );
 	}
 
 	/**

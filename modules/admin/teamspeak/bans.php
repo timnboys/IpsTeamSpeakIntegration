@@ -35,8 +35,8 @@ class _bans extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get ban list */
-		$bans = \IPS\teamspeak\Api\Ban::i();
-		$banList = $bans->getBanList();
+		$banClass = \IPS\teamspeak\Api\Ban::i();
+		$banList = $banClass->getBanList();
 
 		/* Create the table */
 		$table = new \IPS\Helpers\Table\Custom( $banList, \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=bans" ) );
@@ -53,7 +53,7 @@ class _bans extends \IPS\Dispatcher\Controller
 		/* Search */
 		$table->quickSearch = 'lastnickname';
 		$table->advancedSearch = array(
-			'banid' => \IPS\Helpers\Table\SEARCH_NUMERIC_TEXT,
+			'banid' => \IPS\Helpers\Table\SEARCH_NUMERIC,
 			'ip' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT,
 			'uid' => \IPS\Helpers\Table\SEARCH_CONTAINS_TEXT,
 			'created' => \IPS\Helpers\Table\SEARCH_DATE_RANGE,
@@ -107,8 +107,57 @@ class _bans extends \IPS\Dispatcher\Controller
 		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'global', 'core' )->block( 'title', (string) $table );
 	}
 
+	/**
+	 * Delete all bans from the TS server.
+	 *
+	 * @return void
+	 */
 	protected function deleteAll()
 	{
+		$banClass = \IPS\teamspeak\Api\Ban::i();
 
+		try
+		{
+			$banClass->deleteAll();
+		}
+		catch ( \Exception $e )
+		{
+			\IPS\Output::i()->error( $e->getMessage(), '4P107/1' );
+		}
+
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=bans' ), 'teamspeak_deleted_all_bans'
+		);
+	}
+
+	/**
+	 * Delete given ban id.
+	 *
+	 * @return void
+	 */
+	protected function delete()
+	{
+		/* Check if we have an ID */
+		$id = \IPS\Request::i()->id;
+
+		if ( !$id )
+		{
+			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P107/1' );
+		}
+
+		$banClass = \IPS\teamspeak\Api\Ban::i();
+
+		try
+		{
+			$banClass->deleteBan( $id );
+		}
+		catch ( \Exception $e )
+		{
+			\IPS\Output::i()->error( $e->getMessage(), '4P107/2' );
+		}
+
+		\IPS\Output::i()->redirect(
+			\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=bans' ), 'teamspeak_deleted_ban'
+		);
 	}
 }

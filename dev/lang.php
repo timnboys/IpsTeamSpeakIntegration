@@ -21,6 +21,7 @@ $lang = array(
 	'menu__teamspeak_groups_servergroups' => "Server Groups",
 	'menu__teamspeak_groups_channelgroups' => "Channel Groups",
 	'menu__teamspeak_teamspeak_snapshot' => "Snapshots",
+	'menu__teamspeak_teamspeak_bans' => "Bans",
 
 	/* !Titles */
 	'teamspeak_test_title' => "Test TeamSpeak",
@@ -40,6 +41,7 @@ $lang = array(
 	'teamspeak_delete_channelgroup_title' => "Delete Channel Group",
 	'teamspeak_copy_channelgroup_title' => "Copy Channel Group",
 	'teamspeak_snapshot_title' => "Server Snapshots",
+	'teamspeak_bans_title' => "Bans",
 
 	/* UUID Table */
 	'teamspeak_resync_all' => "Re-sync all",
@@ -164,6 +166,10 @@ $lang = array(
 	'r__members_manage' => "Can manage UUIDs?",
 	'r__clients' => "Clients",
 	'r__clients_manage' => "Can manage clients?",
+	'r__snapshot' => "Snapshot",
+	'r__snapshot_manage' => "Can manage Snapshots?",
+	'r__bans' => "Bans",
+	'r__bans_manage' => "Can manage Bans?",
 
 	/* !Errors */
 	'teamspeak_id_missing' => "ID parameter is missing!",
@@ -225,6 +231,20 @@ $lang = array(
 	'teamspeak_snapshot_created' => "Snapshot has been created",
 	'teamspeak_snapshot_deleted' => "Snapshot has been deleted",
 	'teamspeak_snapshot_deployed' => "Snapshot has been deployed",
+
+	/* Ban Table */
+	'teamspeak_banid' => "Ban ID",
+	'teamspeak_ip' => "IP",
+	'teamspeak_uid' => "UUID",
+	'teamspeak_lastnickname' => "Last Nickname",
+	'teamspeak_created' => "Banned at",
+	'teamspeak_duration' => "Unban at",
+	'teamspeak_invokername' => "Invoker Name",
+	'teamspeak_reason' => "Reason",
+	'teamspeak_bans_delete_all' => "Unban all",
+	'teamspeak_unban' => "Unban",
+	'teamspeak_deleted_ban' => "Unbanned",
+	'teamspeak_deleted_all_bans' => "Unbanned everyone",
 
 	/* !Front */
 

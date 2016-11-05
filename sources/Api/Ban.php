@@ -32,9 +32,27 @@ class _Ban extends \IPS\teamspeak\Api
 	{
 		$ts = static::getInstance();
 
-		return $this->getReturnValue( $ts, $ts->banList() );
+		try
+		{
+			return $this->getReturnValue( $ts, $ts->banList() );
+		}
+		catch ( \Exception $e )
+		{
+			if ( $e->getMessage() == 'ErrorID: 1281 | Message: database empty result set' )
+			{
+				return array();
+			}
+
+			throw $e;
+		}
 	}
 
+	/**
+	 * Delete given ban id.
+	 *
+	 * @param $banId
+	 * @return bool|mixed
+	 */
 	public function deleteBan( $banId )
 	{
 		$ts = static::getInstance();
@@ -42,6 +60,11 @@ class _Ban extends \IPS\teamspeak\Api
 		return $this->getReturnValue( $ts, $ts->banDelete( $banId ) );
 	}
 
+	/**
+	 * Delete all bans on the TS server.
+	 *
+	 * @return bool|mixed
+	 */
 	public function deleteAll()
 	{
 		$ts = static::getInstance();
