@@ -282,15 +282,9 @@ class _Permission extends \IPS\teamspeak\Api
 	protected function getServerGroupPerms( $serverGroupId )
 	{
 		$ts = static::getInstance();
-		$permissions = $ts->serverGroupPermList( $serverGroupId );
+		$permissions = $this->getReturnValue( $ts, $ts->serverGroupPermList( $serverGroupId ) );
 
-		if ( $ts->succeeded( $permissions ) )
-		{
-			$permissions = $ts->getElement( 'data', $permissions );
-			return $this->prepareGroupPermissionList( $permissions );
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $permissions ) ) );
+		return $this->prepareGroupPermissionList( $permissions );
 	}
 
 	/**
@@ -303,15 +297,9 @@ class _Permission extends \IPS\teamspeak\Api
 	protected function getChannelGroupPerms( $channelGroupId )
 	{
 		$ts = static::getInstance();
-		$permissions = $ts->channelGroupPermList( $channelGroupId );
+		$permissions = $this->getReturnValue( $ts, $ts->channelGroupPermList( $channelGroupId ) );
 
-		if ( $ts->succeeded( $permissions ) )
-		{
-			$permissions = $ts->getElement( 'data', $permissions );
-			return $this->prepareGroupPermissionList( $permissions );
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $permissions ) ) );
+		return $this->prepareGroupPermissionList( $permissions );
 	}
 
 	/**
@@ -325,14 +313,8 @@ class _Permission extends \IPS\teamspeak\Api
 	protected function addPermissionsToServerGroup( $serverGroupId, array $permissions )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverGroupAddPerm( $serverGroupId, $permissions );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->serverGroupAddPerm( $serverGroupId, $permissions ), true );
 	}
 
 	/**
@@ -346,14 +328,8 @@ class _Permission extends \IPS\teamspeak\Api
 	protected function addPermissionsToChannelGroup( $channelGroupId, array $permissions )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->channelGroupAddPerm( $channelGroupId, $permissions );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->channelGroupAddPerm( $channelGroupId, $permissions ), true );
 	}
 
 	/**

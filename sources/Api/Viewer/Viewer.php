@@ -30,7 +30,7 @@ class _Viewer extends \IPS\teamspeak\Api
 	 *  Get Viewer instance.
 	 *
 	 * @param bool $login
-	 * @return Viewer
+	 * @return \IPS\teamspeak\Api\Viewer
 	 */
 	public static function viewerInstance( $login )
 	{

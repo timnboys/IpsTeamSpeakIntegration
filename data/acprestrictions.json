@@ -11,6 +11,9 @@
         },
         "snapshot": {
             "snapshot_manage": "snapshot_manage"
+        },
+        "bans": {
+            "bans_manage": "bans_manage"
         }
     },
     "overview": {

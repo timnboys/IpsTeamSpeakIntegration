@@ -33,16 +33,9 @@ class _Client extends \IPS\teamspeak\Api
 	public function getClientList()
 	{
 		$ts = static::getInstance();
-		$clientList = $ts->clientList();
+		$clientList = $this->getReturnValue( $ts, $ts->clientList() );
 
-		if ( $ts->succeeded( $clientList ) )
-		{
-			$clientList = $ts->getElement( 'data', $clientList );
-
-			return $this->prepareClientList( $clientList );
-		}
-
-		throw new \Exception(); //TODO
+		return $this->prepareClientList( $clientList );
 	}
 
 	/**
@@ -56,15 +49,9 @@ class _Client extends \IPS\teamspeak\Api
 	public function kick( $clientId, $message = "" )
 	{
 		$ts = static::getInstance();
-
 		$kickInfo = $ts->clientKick( $clientId, "server", $message );
 
-		if ( $ts->succeeded( $kickInfo ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $kickInfo ) ) );
+		return $this->getReturnValue( $ts, $kickInfo, true );
 	}
 
 	/**
@@ -78,15 +65,9 @@ class _Client extends \IPS\teamspeak\Api
 	public function poke( $clientId, $message )
 	{
 		$ts = static::getInstance();
-
 		$pokeInfo = $ts->clientPoke( $clientId, $message );
 
-		if ( $ts->succeeded( $pokeInfo ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $pokeInfo ) ) );
+		return $this->getReturnValue( $ts, $pokeInfo, true );
 	}
 
 	/**
@@ -100,32 +81,25 @@ class _Client extends \IPS\teamspeak\Api
 	public function masspoke( $message, $groups )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->clientList( '-groups' );
+		$clients = $this->getReturnValue( $ts, $ts->clientList( '-groups' ) );
 
-		if ( $ts->succeeded( $temp ) )
+		foreach ( $clients as $client )
 		{
-			$clients = $ts->getElement( 'data', $temp );
-
-			foreach ( $clients as $client )
+			/* Skip non-regular clients */
+			if ( $client['client_type'] != static::REGULAR_CLIENT )
 			{
-				/* Skip non-regular clients */
-				if ( $client['client_type'] != static::REGULAR_CLIENT )
-				{
-					continue;
-				}
-
-				$clientGroups = explode( ',', $client['client_servergroups'] );
-
-				if ( $groups == -1 || ( is_array( $groups ) && !empty( array_intersect( $groups, $clientGroups ) ) ) )
-				{
-					$ts->clientPoke( $client['clid'], $message );
-				}
+				continue;
 			}
 
-			return true;
+			$clientGroups = explode( ',', $client['client_servergroups'] );
+
+			if ( $groups == -1 || ( is_array( $groups ) && !empty( array_intersect( $groups, $clientGroups ) ) ) )
+			{
+				$ts->clientPoke( $client['clid'], $message );
+			}
 		}
 
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return true;
 	}
 
 	/**
@@ -148,12 +122,7 @@ class _Client extends \IPS\teamspeak\Api
 
 		$banInfo = $ts->banClient( $clientId, $banTime, $reason );
 
-		if ( $ts->succeeded( $banInfo ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $banInfo ) ) );
+		return $this->getReturnValue( $ts, $banInfo, true );
 	}
 
 	/**
@@ -168,16 +137,9 @@ class _Client extends \IPS\teamspeak\Api
 	public function banByUuid( $uuid, $time, $reason )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->banAddByUid( $uuid, $time, $reason );
+		$banInfo = $this->getReturnValue( $ts, $ts->banAddByUid( $uuid, $time, $reason ) );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$banInfo = $ts->getElement( 'data', $temp );
-
-			return intval( $banInfo['banid'] );
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return intval( $banInfo['banid'] );
 	}
 
 	/**

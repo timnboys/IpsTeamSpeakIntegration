@@ -31,14 +31,8 @@ class _Server extends \IPS\teamspeak\Api
 	public function deploySnapshot( $data )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverSnapshotDeploy( $data );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->serverSnapshotDeploy( $data ), true );
 	}
 
 	/**
@@ -50,14 +44,8 @@ class _Server extends \IPS\teamspeak\Api
 	public function createSnapshot()
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverSnapshotCreate();
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			return $ts->getElement( 'data', $temp );
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->serverSnapshotCreate() );
 	}
 
 	/**
@@ -128,6 +116,7 @@ class _Server extends \IPS\teamspeak\Api
 	public function checkConnection()
 	{
 		$ts = static::getInstance();
+
 		return $ts;
 	}
 

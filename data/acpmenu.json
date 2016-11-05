@@ -45,6 +45,12 @@
             "controller": "snapshot",
             "do": "",
             "restriction": "snapshot_manage"
+        },
+        "bans": {
+            "tab": "teamspeak",
+            "controller": "bans",
+            "do": "",
+            "restriction": "bans_manage"
         }
     },
     "groups": {

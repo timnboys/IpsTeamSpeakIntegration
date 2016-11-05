@@ -36,15 +36,9 @@ class _Group extends \IPS\teamspeak\Api
 	public function addServerGroup( $serverGroupName, $serverGroupType )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverGroupAdd( $serverGroupName, $serverGroupType );
+		$this->clearCache();
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->serverGroupAdd( $serverGroupName, $serverGroupType ), true );
 	}
 
 	/**
@@ -58,15 +52,9 @@ class _Group extends \IPS\teamspeak\Api
 	public function addChannelGroup( $channelGroupName, $channelGroupType )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->channelGroupAdd( $channelGroupName, $channelGroupType );
+		$this->clearCache();
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->channelGroupAdd( $channelGroupName, $channelGroupType ), true );
 	}
 
 	/**
@@ -80,15 +68,9 @@ class _Group extends \IPS\teamspeak\Api
 	public function deleteServerGroup( $serverGroupId, $force )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverGroupDelete( $serverGroupId, $force );
+		$this->clearCache();
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->serverGroupDelete( $serverGroupId, $force ), true );
 	}
 
 	/**
@@ -102,15 +84,9 @@ class _Group extends \IPS\teamspeak\Api
 	public function deleteChannelGroup( $channelGroupId, $force )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->channelGroupDelete( $channelGroupId, $force );
+		$this->clearCache();
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $ts->channelGroupDelete( $channelGroupId, $force ), true );
 	}
 
 	/**
@@ -126,15 +102,10 @@ class _Group extends \IPS\teamspeak\Api
 	public function copyServerGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+		$this->clearCache();
+		$copyData = $ts->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $copyData, true );
 	}
 
 	/**
@@ -150,15 +121,10 @@ class _Group extends \IPS\teamspeak\Api
 	public function copyChannelGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
 	{
 		$ts = static::getInstance();
-		$temp = $ts->channelGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+		$this->clearCache();
+		$copyData = $ts->channelGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
 
-		if ( $ts->succeeded( $temp ) )
-		{
-			$this->clearCache();
-			return true;
-		}
-
-		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $temp ) ) );
+		return $this->getReturnValue( $ts, $copyData, true );
 	}
 
 	/**
@@ -406,10 +372,8 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param bool $regularOnly Only include regular groups?
 	 * @param bool $templateGroups Include template groups?
 	 * @return array
-	 * @throws \IPS\teamspeak\Exception\ServerException
-	 * @throws \IPS\teamspeak\Exception\ServerGroupException
 	 */
-	public static function getServerGroups( \TeamSpeakAdmin $ts = null, $simplified = true, $regularOnly = true, $templateGroups = false )
+	public static function getServerGroups( \TeamSpeakAdmin $ts, $simplified = true, $regularOnly = true, $templateGroups = false )
 	{
 		$dataStore = \IPS\Data\Store::i();
 		$cacheKey = $regularOnly ? 'teamspeak_server_groups_regular' : 'teamspeak_server_groups_all';
@@ -422,39 +386,27 @@ class _Group extends \IPS\teamspeak\Api
 			return $dataStore->$cacheKey;
 		}
 
-		if ( is_null( $ts ) )
-		{
-			$ts = static::i()->getInstance();
-		}
-
-		$serverGroups = $ts->serverGroupList();
+		$serverGroups = static::getReturnValue( $ts, $ts->serverGroupList() );
 		$defaultGroupIds = static::getDefaultGroupIds( $ts );
 
-		if ( $ts->succeeded( $serverGroups ) )
+		foreach ( $serverGroups as $group )
 		{
-			$groups = $ts->getElement( 'data', $serverGroups );
-
-			foreach ( $groups as $group )
+			if ( ( $group['sgid'] != $defaultGroupIds['default_server_group'] || !$regularOnly ) && ( $group['type'] == static::TYPE_REGULAR || $templateGroups ) )
 			{
-				if ( ( $group['sgid'] != $defaultGroupIds['default_server_group'] || !$regularOnly ) && ( $group['type'] == static::TYPE_REGULAR || $templateGroups ) )
-				{
-					$group['name'] = $group['type'] == static::TYPE_TEMPLATE ? '[T] ' . $group['name'] : $group['name'];
-					$group['name'] = $group['type'] == static::TYPE_SERVERQUERY ? '[Q] ' . $group['name'] : $group['name'];
-					$returnGroups[] = $group;
-				}
+				$group['name'] = $group['type'] == static::TYPE_TEMPLATE ? '[T] ' . $group['name'] : $group['name'];
+				$group['name'] = $group['type'] == static::TYPE_SERVERQUERY ? '[Q] ' . $group['name'] : $group['name'];
+				$returnGroups[] = $group;
 			}
-
-			if ( $simplified )
-			{
-				$returnGroups = static::simplifyGroups( $returnGroups );
-			}
-
-			$dataStore->$cacheKey = $returnGroups;
-
-			return $returnGroups;
 		}
 
-		throw new \IPS\teamspeak\Exception\ServerGroupException();
+		if ( $simplified )
+		{
+			$returnGroups = static::simplifyGroups( $returnGroups );
+		}
+
+		$dataStore->$cacheKey = $returnGroups;
+
+		return $returnGroups;
 	}
 
 	/**
@@ -464,7 +416,6 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param bool $simplified Simplify the array (only group id and name)?
 	 * @param bool $all Include template groups too?
 	 * @return array
-	 * @throws \IPS\teamspeak\Exception\ChannelGroupException
 	 */
 	public static function getChannelGroups( \TeamSpeakAdmin $ts, $simplified = true, $all = false )
 	{
@@ -480,32 +431,25 @@ class _Group extends \IPS\teamspeak\Api
 			return $dataStore->$cacheKey;
 		}
 
-		$channelGroups = $ts->channelGroupList();
+		$channelGroups = static::getReturnValue( $ts, $ts->channelGroupList() );
 
-		if ( $ts->succeeded( $channelGroups ) )
+		foreach ( $channelGroups as $channelGroup )
 		{
-			$channelGroups = $ts->getElement( 'data', $channelGroups );
-
-			foreach ( $channelGroups as $channelGroup )
+			if ( $channelGroup['type'] == static::TYPE_REGULAR || $all )
 			{
-				if ( $channelGroup['type'] == static::TYPE_REGULAR || $all )
-				{
-					$channelGroup['name'] = $channelGroup['type'] == static::TYPE_TEMPLATE ? '[T] ' . $channelGroup['name'] : $channelGroup['name'];
-					$returnGroups[] = $channelGroup;
-				}
+				$channelGroup['name'] = $channelGroup['type'] == static::TYPE_TEMPLATE ? '[T] ' . $channelGroup['name'] : $channelGroup['name'];
+				$returnGroups[] = $channelGroup;
 			}
-
-			if ( $simplified )
-			{
-				$returnGroups = static::simplifyGroups( $returnGroups, true );
-			}
-
-			$dataStore->$cacheKey = $returnGroups;
-
-			return $returnGroups;
 		}
 
-		throw new \IPS\teamspeak\Exception\ChannelGroupException();
+		if ( $simplified )
+		{
+			$returnGroups = static::simplifyGroups( $returnGroups, true );
+		}
+
+		$dataStore->$cacheKey = $returnGroups;
+
+		return $returnGroups;
 	}
 
 	/**
@@ -533,7 +477,6 @@ class _Group extends \IPS\teamspeak\Api
 	 *
 	 * @param \TeamSpeakAdmin $ts
 	 * @return array
-	 * @throws \IPS\teamspeak\Exception\ServerException
 	 */
 	public static function getDefaultGroupIds( \TeamSpeakAdmin $ts )
 	{
@@ -544,23 +487,17 @@ class _Group extends \IPS\teamspeak\Api
 			return $dataStore->teamspeak_default_group_ids;
 		}
 
-		$server = $ts->serverInfo();
+		$server = static::getReturnValue( $ts, $ts->serverInfo() );
 
-		if ( $ts->succeeded( $server ) )
-		{
-			$server = $ts->getElement( 'data', $server );
-			$defaultGroupIds = [
-				'default_server_group' => $server['virtualserver_default_server_group'],
-				'default_channel_group' => $server['virtualserver_default_channel_group'],
-				'default_channel_admin_group' => $server['virtualserver_default_channel_admin_group']
-			];
+		$defaultGroupIds = [
+			'default_server_group' => $server['virtualserver_default_server_group'],
+			'default_channel_group' => $server['virtualserver_default_channel_group'],
+			'default_channel_admin_group' => $server['virtualserver_default_channel_admin_group']
+		];
 
-			$dataStore->teamspeak_default_group_ids = $defaultGroupIds;
+		$dataStore->teamspeak_default_group_ids = $defaultGroupIds;
 
-			return $defaultGroupIds;
-		}
-
-		throw new \IPS\teamspeak\Exception\ServerException();
+		return $defaultGroupIds;
 	}
 
 	/**
@@ -569,19 +506,12 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param \TeamSpeakAdmin $ts TS server instance.
 	 * @return array
-	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 */
 	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )
 	{
-		$client = $ts->clientDbFind( $uuid, true );
+		$client = $this->getReturnValue( $ts, $ts->clientDbFind( $uuid, true ) );
 
-		if ( $ts->succeeded( $client ) )
-		{
-			$client = $ts->getElement( 'data', $client );
-			return reset( $client );
-		}
-
-		throw new \IPS\teamspeak\Exception\ClientNotFoundException();
+		return reset( $client );
 	}
 
 	/**
@@ -589,7 +519,7 @@ class _Group extends \IPS\teamspeak\Api
 	 *
 	 * @return void
 	 */
-	protected function clearCache()
+	protected static function clearCache()
 	{
 		try
 		{

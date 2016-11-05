@@ -14,7 +14,7 @@ class _Alert extends \IPS\teamspeak\Api
 	/**
 	 * Only here for auto-complete.
 	 *
-	 * @return Alert
+	 * @return \IPS\teamspeak\Api\Alert
 	 */
 	public static function i()
 	{

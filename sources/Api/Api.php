@@ -57,7 +57,7 @@ abstract class _Api
 	 */
 	public function __destruct()
 	{
-		$this->instance->logout();
+		$this->logout();
 		$this->instance = null;
 	}
 
@@ -131,6 +131,21 @@ abstract class _Api
 		}
 
 		throw new \IPS\teamspeak\Exception\ConnectionException( $this->arrayToString( $e['errors'] ) );
+	}
+
+	protected function getReturnValue( \TeamSpeakAdmin $ts, array $data, $bool = false )
+	{
+		if ( $ts->succeeded( $data ) )
+		{
+			if ( !$bool )
+			{
+				return $ts->getElement( 'data', $data );
+			}
+
+			return true;
+		}
+
+		throw new \Exception( $this->arrayToString( $ts->getElement( 'errors', $data ) ) );
 	}
 
 	/**
