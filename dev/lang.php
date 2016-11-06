@@ -253,6 +253,10 @@ $lang = array(
 	'module__teamspeak_teamspeak' => "TeamSpeak Sync",
 	'page__teamspeak' => "TeamSpeak",
 
+	/* Register form */
+	'teamspeak_uuid' => "TeamSpeak UUID",
+	'teamspeak_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID",
+
 	/* Sync table */
 	'teamspeak_no_uuids' => "You have no UUIDs linked",
 	'teamspeak_add_uuid' => "Add UUID",

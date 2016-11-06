@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <javascript app="teamspeak">
- <file javascript_app="teamspeak" javascript_location="front" javascript_path="" javascript_name="viewer.js" javascript_type="framework" javascript_version="10009" javascript_position="1000050"><![CDATA[function openInSameWindow(evt) {
+ <file javascript_app="teamspeak" javascript_location="front" javascript_path="" javascript_name="viewer.js" javascript_type="framework" javascript_version="10010" javascript_position="1000050"><![CDATA[function openInSameWindow(evt) {
 	window.location = evt;
 }
 

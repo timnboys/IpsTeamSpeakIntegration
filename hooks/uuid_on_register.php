@@ -21,7 +21,7 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 		{
 			$form->add(
 				new \IPS\Helpers\Form\Text(
-					'teamspeak_uuid', null, (bool) Settings::i()->teamspeak_uuid_on_register_force
+					'teamspeak_uuid', null, (bool) \IPS\Settings::i()->teamspeak_uuid_on_register_force
 				), 'password_confirm'
 			);
 		}
