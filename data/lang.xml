@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10010">
+ <app key="teamspeak" version="10012">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -193,6 +193,8 @@
   <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="page__teamspeak" js="0">TeamSpeak</word>
+  <word key="teamspeak_uuid" js="0">TeamSpeak UUID</word>
+  <word key="teamspeak_uuid_desc" js="0">Press CTRL+I on TeamSpeak to get your UUID</word>
   <word key="teamspeak_no_uuids" js="0">You have no UUIDs linked</word>
   <word key="teamspeak_add_uuid" js="0">Add UUID</word>
   <word key="teamspeak_uuids" js="0">TeamSpeak UUIDs</word>
@@ -200,8 +202,6 @@
   <word key="teamspeak_added_uuid" js="0">Added UUID</word>
   <word key="teamspeak_removed_uuid" js="0">Unlinked UUID</word>
   <word key="teamspeak_you_are_forced_to_enter_one_uuid" js="0">The administrator requires you to link at least one account</word>
-  <word key="teamspeak_uuid" js="0">TeamSpeak UUID</word>
-  <word key="teamspeak_uuid_desc" js="0">Press CTRL+I on TeamSpeak to get your UUID</word>
   <word key="s_uuid" js="0">UUID</word>
   <word key="s_uuid_desc" js="0">Press CTRL+I on TeamSpeak to get your UUID</word>
   <word key="teamspeak_viewer" js="0">TeamSpeak Viewer</word>

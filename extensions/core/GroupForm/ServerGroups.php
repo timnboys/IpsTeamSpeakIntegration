@@ -48,7 +48,13 @@ class _ServerGroups
 
 		try
 		{
-			$groups = \IPS\teamspeak\Api\Group::getServerGroups();
+			$groups = \IPS\teamspeak\Api\Group::getCachedServerGroups();
+
+			if ( is_null( $groups ) )
+			{
+				$groupClass = \IPS\teamspeak\Api\Group::i();
+				$groups = $groupClass->getServerGroups();
+			}
 
 			$groups[-1] = 'None';
 

@@ -87,7 +87,10 @@ abstract class _Api
 	 */
 	public function logout()
 	{
-		$this->instance->logout();
+		if ( $this->instance instanceof \TeamSpeakAdmin )
+		{
+			$this->instance->logout();
+		}
 	}
 
 	/**

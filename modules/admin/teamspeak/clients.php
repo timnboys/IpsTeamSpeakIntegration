@@ -259,11 +259,15 @@ class _clients extends \IPS\Dispatcher\Controller
 	 */
 	protected function masspoke()
 	{
-		/* Get client class */
-		$client = \IPS\teamspeak\Api\Client::i();
-
 		/* Get Server Groups */
-		$serverGroups = \IPS\teamspeak\Api\Group::getServerGroups( $client->getInstance(), true, false );
+		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
+
+		if ( is_null( $serverGroups ) )
+		{
+			$groupClass = \IPS\teamspeak\Api\Group::i();
+			$serverGroups = $groupClass->getServerGroups( true, false );
+			$groupClass->logout();
+		}
 
 		/* Build form for the poke message */
 		$form = new \IPS\Helpers\Form( 'teamspeak_poke', 'teamspeak_poke' );
@@ -275,6 +279,9 @@ class _clients extends \IPS\Dispatcher\Controller
 
 			try
 			{
+				/* Get client class */
+				$client = \IPS\teamspeak\Api\Client::i();
+
 				/* Poke client with given message */
 				$client->masspoke( $values['teamspeak_poke_message'], $values['teamspeak_poke_groups'] );
 			}

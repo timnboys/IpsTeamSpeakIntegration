@@ -35,14 +35,14 @@ class _Permission extends \IPS\teamspeak\Api
 	 * Return $form with correct permission matrix.
 	 *
 	 * @param \IPS\Helpers\Form $form
-	 * @param $serverGroupIp
+	 * @param $serverGroupId
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildServerGroupPermissionForm( \IPS\Helpers\Form &$form, $serverGroupIp )
+	public function buildServerGroupPermissionForm( \IPS\Helpers\Form &$form, $serverGroupId )
 	{
 		$allPermission = $this->getPermissionList();
-		$serverGroupPermission = $this->getServerGroupPerms( $serverGroupIp );
+		$serverGroupPermission = $this->getServerGroupPerms( $serverGroupId );
 
 		$matrix = new \IPS\Helpers\Form\Matrix();
 		$matrix->manageable = false;
@@ -207,29 +207,48 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	public function updateServerGroupPermissionsFromFormValues( array $values, $serverGroupId )
 	{
-		$newArray = array();
+		$newPerms = array();
+		$changedPerms = array();
 		$grantPerm = $this->getGrantPermArray();
+		$currentPerms = $this->getServerGroupPerms( $serverGroupId );
 
 		foreach ( $values['edit_server_group'] as $permId => $permissions )
 		{
 			/* Set grant perm id with value */
 			if ( isset( $grantPerm[$permId] ) )
 			{
-				$newArray[$grantPerm[$permId]] = array(
+				$newPerms[$grantPerm[$permId]] = array(
 					intval( $permissions['grant'] ),
 					0,
 					0
 				);
 			}
 
-			$newArray[$permId] = array(
+			$newPerms[$permId] = array(
 				intval( $permissions['value'] ),
 				intval( $permissions['skip'] ),
 				intval( $permissions['negated'] )
 			);
 		}
 
-		return $this->addPermissionsToServerGroup( $serverGroupId, $newArray );
+		foreach ( $currentPerms as $currentPerm )
+		{
+			$permId = $currentPerm['permid'];
+
+			if ( $currentPerm['permvalue'] == $newPerms[$permId][0] && $currentPerm['permnegated'] == $newPerms[$permId][1] && $currentPerm['permskip'] == $newPerms[$permId][2] )
+			{
+				continue;
+			}
+
+			$changedPerms[$permId] = $newPerms[$permId];
+		}
+
+		if ( empty( $changedPerms ) )
+		{
+			return true;
+		}
+
+		return $this->addPermissionsToServerGroup( $serverGroupId, $changedPerms );
 	}
 
 	/**
@@ -242,21 +261,38 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	public function updateChannelGroupPermissionsFromFormValues( array $values, $channelGroupId )
 	{
-		$newArray = array();
+		$newPerms = array();
+		$changedPerms = array();
 		$grantPerm = $this->getGrantPermArray();
+		$currentPerms = $this->getChannelGroupPerms( $channelGroupId );
 
 		foreach ( $values['edit_channel_group'] as $permId => $permissions )
 		{
 			/* Set grant perm id with value */
 			if ( isset( $grantPerm[$permId] ) )
 			{
-				$newArray[$grantPerm[$permId]] = intval( $permissions['grant'] );
+				$newPerms[$grantPerm[$permId]] = intval( $permissions['grant'] );
 			}
 
-			$newArray[$permId] = intval( $permissions['value'] );
+			$newPerms[$permId] = intval( $permissions['value'] );
 		}
 
-		return $this->addPermissionsToChannelGroup( $channelGroupId, $newArray );
+		foreach ( $newPerms as $permId => $newPerm )
+		{
+			if ( isset( $currentPerms[$permId] ) && $newPerm == $currentPerms[$permId]['permvalue'] )
+			{
+				continue;
+			}
+
+			$changedPerms[$permId] = $newPerm;
+		}
+
+		if ( empty( $changedPerms ) )
+		{
+			return true;
+		}
+
+		return $this->addPermissionsToChannelGroup( $channelGroupId, $changedPerms );
 	}
 
 	/**
