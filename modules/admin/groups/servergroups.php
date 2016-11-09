@@ -35,7 +35,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	{
 		/* Get server groups array */
 		$tsGroup = \IPS\teamspeak\Api\Group::i();
-		$serverGroups = $tsGroup->getServerGroups( $tsGroup->getInstance(), false, false, true );
+		$serverGroups = $tsGroup->getServerGroups( false, false, true );
 
 		/* Create the table */
 		$table = new \IPS\Helpers\Table\Custom( $serverGroups, \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ) );
@@ -255,7 +255,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 
 		/* Get Group class */
 		$group = \IPS\teamspeak\Api\Group::i();
-		$serverGroups = $group->getServerGroups( $group->getInstance(), true, false, true );
+		$serverGroups = $group->getServerGroups( true, false, true );
 
 		$serverGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
 		ksort( $serverGroups, SORT_ASC );

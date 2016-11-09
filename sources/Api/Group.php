@@ -3,6 +3,8 @@
 namespace IPS\teamspeak\Api;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
+use IPS\teamspeak\Exception\ClientNotFoundException;
+
 if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 {
 	header( ( isset( $_SERVER['SERVER_PROTOCOL'] ) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0' ) . ' 403 Forbidden' );
@@ -345,7 +347,6 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param array $assignGroups
 	 * @return bool
-	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 */
 	public function resyncGroupsByUuid( $uuid, array $assignGroups )
 	{
@@ -367,25 +368,14 @@ class _Group extends \IPS\teamspeak\Api
 	/**
 	 * Get server groups.
 	 *
-	 * @param \TeamSpeakAdmin $ts
 	 * @param bool $simplified Simplify the array?
 	 * @param bool $regularOnly Only include regular groups?
 	 * @param bool $templateGroups Include template groups?
 	 * @return array
 	 */
-	public static function getServerGroups( \TeamSpeakAdmin $ts, $simplified = true, $regularOnly = true, $templateGroups = false )
+	public function getServerGroups( $simplified = true, $regularOnly = true, $templateGroups = false )
 	{
-		$dataStore = \IPS\Data\Store::i();
-		$cacheKey = $regularOnly ? 'teamspeak_server_groups_regular' : 'teamspeak_server_groups_all';
-		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
-		$cacheKey = $templateGroups ? $cacheKey . '_templates' : $cacheKey;
-
-		/* If it is cached, return the cached data */
-		if ( isset( $dataStore->$cacheKey ) )
-		{
-			return $dataStore->$cacheKey;
-		}
-
+		$ts = static::getInstance();
 		$serverGroups = static::getReturnValue( $ts, $ts->serverGroupList() );
 		$defaultGroupIds = static::getDefaultGroupIds( $ts );
 
@@ -404,33 +394,46 @@ class _Group extends \IPS\teamspeak\Api
 			$returnGroups = static::simplifyGroups( $returnGroups );
 		}
 
-		$dataStore->$cacheKey = $returnGroups;
+		return static::getCachedServerGroups( $simplified, $regularOnly, $templateGroups, $returnGroups );;
+	}
 
-		return $returnGroups;
+	/**
+	 * Get cached server groups.
+	 *
+	 * @param bool $simplified
+	 * @param bool $regularOnly
+	 * @param bool $templateGroups
+	 * @param mixed $data
+	 * @return mixed
+	 */
+	public static function getCachedServerGroups( $simplified = true, $regularOnly = true, $templateGroups = false, $data = null )
+	{
+		$dataStore = \IPS\Data\Store::i();
+		$cacheKey = $regularOnly ? 'teamspeak_server_groups_regular' : 'teamspeak_server_groups_all';
+		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
+		$cacheKey = $templateGroups ? $cacheKey . '_templates' : $cacheKey;
+
+		/* If it is cached, return the cached data */
+		if ( isset( $dataStore->$cacheKey ) && is_null( $data ) )
+		{
+			return $dataStore->$cacheKey;
+		}
+
+		$dataStore->$cacheKey = $data;
+
+		return $data;
 	}
 
 	/**
 	 * Get channel groups.
 	 *
-	 * @param \TeamSpeakAdmin $ts
 	 * @param bool $simplified Simplify the array (only group id and name)?
 	 * @param bool $all Include template groups too?
 	 * @return array
 	 */
-	public static function getChannelGroups( \TeamSpeakAdmin $ts, $simplified = true, $all = false )
+	public function getChannelGroups( $simplified = true, $all = false )
 	{
-		$dataStore = \IPS\Data\Store::i();
-
-		$cacheKey = 'teamspeak_channel_groups';
-		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
-		$cacheKey = $all ? $cacheKey . '_all' : $cacheKey;
-
-		/* If it is cached, return the cached data */
-		if ( isset( $dataStore->$cacheKey ) )
-		{
-			return $dataStore->$cacheKey;
-		}
-
+		$ts = static::getInstance();
 		$channelGroups = static::getReturnValue( $ts, $ts->channelGroupList() );
 
 		foreach ( $channelGroups as $channelGroup )
@@ -447,22 +450,38 @@ class _Group extends \IPS\teamspeak\Api
 			$returnGroups = static::simplifyGroups( $returnGroups, true );
 		}
 
-		$dataStore->$cacheKey = $returnGroups;
+		return static::getCachedChannelGroups( $simplified, $all, $returnGroups );
+	}
 
-		return $returnGroups;
+	public static function getCachedChannelGroups( $simplified = true, $all = false, $data = null )
+	{
+		$dataStore = \IPS\Data\Store::i();
+
+		$cacheKey = 'teamspeak_channel_groups';
+		$cacheKey = $simplified ? $cacheKey . '_simplified' : $cacheKey;
+		$cacheKey = $all ? $cacheKey . '_all' : $cacheKey;
+
+		/* If it is cached, return the cached data */
+		if ( isset( $dataStore->$cacheKey ) && is_null( $data ) )
+		{
+			return $dataStore->$cacheKey;
+		}
+
+		$dataStore->$cacheKey = $data;
+
+		return $data;
 	}
 
 	/**
 	 * Check if the given group id is valid.
 	 *
 	 * @param int $groupId
-	 * @param \TeamSpeakAdmin|null $ts
 	 * @return bool Is it valid?
 	 * @throws \IPS\teamspeak\Exception\ServerGroupException
 	 */
-	protected function isValidGroupId( $groupId, $ts = null )
+	protected function isValidGroupId( $groupId )
 	{
-		$groups = $this->getServerGroups( $ts );
+		$groups = $this->getServerGroups();
 
 		if ( array_key_exists( $groupId, $groups ) )
 		{
@@ -506,10 +525,25 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param \TeamSpeakAdmin $ts TS server instance.
 	 * @return array
+	 * @throws ClientNotFoundException
+	 * @throws \Exception
 	 */
 	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )
 	{
-		$client = $this->getReturnValue( $ts, $ts->clientDbFind( $uuid, true ) );
+		try
+		{
+			$client = $this->getReturnValue( $ts, $ts->clientDbFind( $uuid, true ) );
+		}
+		catch ( \Exception $e )
+		{
+			/* If for some reason we have an invalid UUID throw a different exception so we can catch it better */
+			if ( $e->getMessage() == 'ErrorID: 1281 | Message: database empty result set' )
+			{
+				throw new \IPS\teamspeak\Exception\ClientNotFoundException();
+			}
+
+			throw $e;
+		}
 
 		return reset( $client );
 	}

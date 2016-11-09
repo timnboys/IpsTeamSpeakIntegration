@@ -14,11 +14,18 @@ class _Permission extends \IPS\teamspeak\Api
 	/*
 	 * @brief Array containing IDs of permissions that have a number value.
 	 */
-	public static $numberValues = array(
+	protected static $numberValues = array(
 		76, 77, 79, 80, 96, 97, 104, 121, 122, 129, 130, 136, 137, 138, 139, 140, 141, 142, 143, 146,
 		147, 148, 149, 161, 162, 163, 164, 165, 166, 167, 171, 172, 173, 174, 175, 176, 193, 194, 196,
 		197, 198, 199, 200, 201, 202, 203, 204, 205, 213, 214, 215, 219, 220, 221, 222, 224, 225, 233,
 		234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246
+	);
+
+	/*
+	 * @brief Array containing IDs of permissions that are not applicable to the Guests group.
+	 */
+	protected static $noGuestPerms = array(
+		145
 	);
 
 	/**
@@ -231,16 +238,17 @@ class _Permission extends \IPS\teamspeak\Api
 			);
 		}
 
-		foreach ( $currentPerms as $currentPerm )
-		{
-			$permId = $currentPerm['permid'];
+		$defaultIds = \IPS\teamspeak\Api\Group::getDefaultGroupIds( static::getInstance() );
+		$defaultGroupId = $defaultIds['default_server_group'];
 
-			if ( $currentPerm['permvalue'] == $newPerms[$permId][0] && $currentPerm['permnegated'] == $newPerms[$permId][1] && $currentPerm['permskip'] == $newPerms[$permId][2] )
+		foreach ( $newPerms as $permId => $newPerm )
+		{
+			if ( ( $serverGroupId == $defaultGroupId && in_array( $permId, static::$noGuestPerms ) ) || isset( $currentPerms[$permId] ) && $newPerm[0] == $currentPerms[$permId]['permvalue'] && $newPerm[1] == $currentPerms[$permId]['permnegated'] && $newPerm[2] == $currentPerms[$permId]['permskip'] )
 			{
 				continue;
 			}
 
-			$changedPerms[$permId] = $newPerms[$permId];
+			$changedPerms[$permId] = $newPerm;
 		}
 
 		if ( empty( $changedPerms ) )

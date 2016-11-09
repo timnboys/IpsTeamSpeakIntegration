@@ -241,6 +241,10 @@ class _Members extends \IPS\Dispatcher\Controller
 				$tsMember->resyncGroups( $member, $info['s_uuid'] );
 			}
 		}
+		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
+		{
+			/* Ignore invalid UUIDs */
+		}
 		catch ( \Exception $e )
 		{
 			\IPS\Output::i()->error( $e->getMessage(), '4P100/3' );

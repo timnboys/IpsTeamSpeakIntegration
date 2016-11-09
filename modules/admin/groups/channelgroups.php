@@ -34,8 +34,14 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get channel groups */
-		$tsGroup = \IPS\teamspeak\Api\Group::i();
-		$channelGroups = $tsGroup->getChannelGroups( $tsGroup->getInstance(), false, true );
+		$channelGroups = \IPS\teamspeak\Api\Group::getCachedChannelGroups( false, true );
+
+		if ( is_null( $channelGroups ) )
+		{
+			$groupClass = \IPS\teamspeak\Api\Group::i();
+			$channelGroups = $groupClass->getChannelGroups( false, true );
+			$groupClass->logout();
+		}
 
 		/* Create the table */
 		$table = new \IPS\Helpers\Table\Custom( $channelGroups, \IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ) );
@@ -210,8 +216,8 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get Group class */
-		$group = \IPS\teamspeak\Api\Group::i();
-		$channelGroups = $group->getChannelGroups( $group->getInstance(), true, true );
+		$groupClass = \IPS\teamspeak\Api\Group::i();
+		$channelGroups = $groupClass->getChannelGroups( true, true );
 
 		$channelGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
 		ksort( $channelGroups, SORT_ASC );
@@ -232,7 +238,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group->copyChannelGroup( $id, $values['teamspeak_channelgroup_name'], $values['teamspeak_channelgroup_target_type'], $values['teamspeak_channelgroup_target_group'] );
+				$groupClass->copyChannelGroup( $id, $values['teamspeak_channelgroup_name'], $values['teamspeak_channelgroup_target_type'], $values['teamspeak_channelgroup_target_group'] );
 
 				\IPS\Output::i()->redirect(
 					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_copied'

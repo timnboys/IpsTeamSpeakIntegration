@@ -33,9 +33,24 @@ class _Server extends \IPS\Dispatcher\Controller
 	 */
 	protected function manage()
 	{
+		/* Get Server/Channel Groups */
+		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
+		$channelGroups = \IPS\teamspeak\Api\Group::getCachedChannelGroups();
+
+		if ( is_null( $serverGroups ) || is_null( $channelGroups ) )
+		{
+			$groupClass = \IPS\teamspeak\Api\Group::i();
+		}
+
+		if ( isset( $groupClass ) )
+		{
+			$serverGroups = $groupClass->getServerGroups( true, false );
+			$channelGroups = $groupClass->getChannelGroups();
+			$groupClass->logout();
+		}
+
+		/* Get server information */
 		$tsServer = \IPS\teamspeak\Api\Server::i();
-		$serverGroups = \IPS\teamspeak\Api\Group::getServerGroups( $tsServer->getInstance(), true, false );
-		$channelGroups = \IPS\teamspeak\Api\Group::getChannelGroups( $tsServer->getInstance() );
 		$serverInfo = $tsServer->getServerInfo();
 
 		if ( !$serverInfo )
