@@ -272,6 +272,8 @@ $lang = array(
 	's_uuid' => "UUID",
 	's_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID",
 
+	'teamspeak_uuid_setting' => "TeamSpeak",
+
 	/* Block manager Viewer */
 	'teamspeak_viewer' => "TeamSpeak Viewer",
 	'block_teamspeakViewer' => "Viewer",

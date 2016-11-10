@@ -18,5 +18,9 @@
     "ban_sync": {
         "type": "C",
         "class": "\\IPS\\Member"
+    },
+    "account_settings_tab": {
+        "type": "S",
+        "class": "\\IPS\\Theme\\class_core_front_system"
     }
 }

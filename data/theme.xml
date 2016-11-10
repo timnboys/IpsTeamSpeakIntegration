@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default" author_name="Invision Power Services, Inc" author_url="http://www.invisionpower.com">
+ <template template_group="settings" template_name="accountSettingsTab" template_data="$tab" template_location="front" template_app="teamspeak"><![CDATA[<li>
+	<a href='{url="app=teamspeak&module=teamspeak&controller=membersync" seoTemplate="teamspeak_member_sync"}' id='setting_tsuid' class='ipsType_normal ipsSideMenu_item {{if $tab === 'tsuid'}}ipsSideMenu_itemActive{{endif}}' title="{lang="teamspeak_uuid_setting"}" role="tab" aria-selected="false">
+	<i class='fa fa-phone'></i> {lang="teamspeak_uuid_setting"}
+	</a>
+</li>]]></template>
  <template template_group="tables" template_name="syncTable" template_data="$uuids, $forced" template_location="front" template_app="teamspeak"><![CDATA[{template="pageHeader" group="global" app="core" params="\IPS\Member::loggedIn()->language()->addToStack( 'page__teamspeak' )"}
 
 {{if $forced}}

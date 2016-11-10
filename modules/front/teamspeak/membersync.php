@@ -78,19 +78,21 @@ class _membersync extends \IPS\Dispatcher\Controller
 				$uuid->uuid = $values['s_uuid'];
 				$uuid->save();
 
-				$tsMember->addGroups( \IPS\Member::loggedIn(), $values['s_uuid'] );
+				$tsMember->resyncGroups( \IPS\Member::loggedIn(), $values['s_uuid'] );
 
 				\IPS\Output::i()->redirect(
 					\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ),
 					'teamspeak_added_uuid'
 				);
 			}
-			catch ( Db\Exception $e )
+			catch ( \IPS\Db\Exception $e )
 			{
-				if ( $e->getCode() === 1062 )
+				if ( $e->getCode() !== 1062 )
 				{
-					$form->error = 'This UUID has already been registered.';
+					throw $e;
 				}
+
+				$form->error = 'This UUID has already been registered.';
 			}
 		}
 
