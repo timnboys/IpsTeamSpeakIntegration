@@ -346,18 +346,26 @@ class _Group extends \IPS\teamspeak\Api
 	 *
 	 * @param string $uuid
 	 * @param array $assignGroups
+	 * @param array $associatedGroups
 	 * @return bool
 	 */
-	public function resyncGroupsByUuid( $uuid, array $assignGroups )
+	public function resyncGroupsByUuid( $uuid, array $assignGroups, array $associatedGroups )
 	{
 		$ts = static::getInstance();
 		$client = $this->getClientFromUuid( $uuid, $ts );
 
-		$currentGroups = $this->convertGroupsToCompare(
-			$ts->getElement( 'data', $ts->serverGroupsByClientID( $client['cldbid'] ) )
-		);
+		if ( \IPS\Settings::i()->teamspeak_remove_groups )
+		{
+			$currentGroups = $this->convertGroupsToCompare(
+				$ts->getElement( 'data', $ts->serverGroupsByClientID( $client['cldbid'] ) )
+			);
 
-		$removeGroups = array_diff( $currentGroups, $assignGroups );
+			$removeGroups = array_diff( $currentGroups, $assignGroups );
+		}
+		else
+		{
+			$removeGroups = array_diff( $associatedGroups, $assignGroups );
+		}
 
 		$removed = $this->removeClientFromGroups( $client['cldbid'], $removeGroups );
 		$added = $this->addClientToGroups( $client['cldbid'], $assignGroups );

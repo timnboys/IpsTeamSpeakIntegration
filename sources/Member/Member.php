@@ -80,7 +80,7 @@ class _Member
 		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
 
 		$teamspeak = \IPS\teamspeak\Api\Group::i();
-		return $teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups );
+		return $teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups, $this->getAllAssociatedTsGroups() );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class _Member
 
 		foreach ( $member->teamspeak_uuids as $uuid )
 		{
-			if ( !$teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups ) )
+			if ( !$teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups, $this->getAllAssociatedTsGroups() ) )
 			{
 				$success = false;
 			}
@@ -212,6 +212,26 @@ class _Member
 				continue;
 			}
 
+			if ( $group->teamspeak_group !== -1 )
+			{
+				$tsGroups[] = $group->teamspeak_group;
+			}
+		}
+
+		return $tsGroups;
+	}
+
+	/**
+	 * Get all linked TS groups.
+	 *
+	 * @return array
+	 */
+	protected function getAllAssociatedTsGroups()
+	{
+		$tsGroups = array();
+
+		foreach ( \IPS\Member\Group::groups( true, false ) as $group )
+		{
 			if ( $group->teamspeak_group !== -1 )
 			{
 				$tsGroups[] = $group->teamspeak_group;

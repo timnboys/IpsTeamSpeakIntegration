@@ -48,6 +48,7 @@ class _settings extends \IPS\Dispatcher\Controller
 		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_uuid_on_register', \IPS\Settings::i()->teamspeak_uuid_on_register ?: null, false, array( 'togglesOn' => array( 'ts_uuid_register_force' ) ) ) );
 		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_uuid_on_register_force', \IPS\Settings::i()->teamspeak_uuid_on_register_force ?: null, false, array(), null, null, null, 'ts_uuid_register_force' ) );
 		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_sync_bans', \IPS\Settings::i()->teamspeak_sync_bans ?: 1 ) );
+		$settings->add( new \IPS\Helpers\Form\YesNo( 'teamspeak_remove_groups', \IPS\Settings::i()->teamspeak_remove_groups ?: 0 ) );
 
 		if ( $values = $settings->values() )
 		{

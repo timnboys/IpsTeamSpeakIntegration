@@ -56,9 +56,13 @@ class _syncTsGroups extends \IPS\Task
 				$tsMember->resyncGroups( $member, $info['s_uuid'] );
 			}
 		}
+		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
+		{
+			/* Ignore invalid UUIDs */
+		}
 		catch ( \Exception $e )
 		{
-			throw new Exception( $this, $e->getMessage() );
+			throw new \IPS\Task\Exception( $this, $e->getMessage() );
 		}
 
 		return NULL;

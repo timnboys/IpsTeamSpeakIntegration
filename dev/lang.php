@@ -82,6 +82,8 @@ $lang = array(
 	'teamspeak_uuid_on_register_force_desc' => "Make the UUID textbox on the register form required?",
 	'teamspeak_sync_bans' => "Sync bans?",
 	'teamspeak_sync_bans_desc' => "If a member gets banned on the forum, this member will automatically be banned from the TeamSpeak.",
+	'teamspeak_remove_groups' => "Remove additional TS groups?",
+	'teamspeak_remove_groups_desc' => "If enabled, additional (non-linked) groups will be removed otherwise they will be ignored.",
 
 	/* Server information form */
 	'teamspeak_server_title' => "Edit TS Server",
