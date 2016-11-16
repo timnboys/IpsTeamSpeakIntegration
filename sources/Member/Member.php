@@ -115,7 +115,7 @@ class _Member
 	public function isValidUuid( $uuid )
 	{
 		$teamspeak = \IPS\teamspeak\Api\Group::i();
-		
+
 		try 
 		{
 			$teamspeak->getClientFromUuid( $uuid, $teamspeak->getInstance() );

@@ -3,8 +3,6 @@
 namespace IPS\teamspeak\Api;
 
 /* To prevent PHP errors (extending class does not exist) revealing path */
-use IPS\teamspeak\Exception\ClientNotFoundException;
-
 if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 {
 	header( ( isset( $_SERVER['SERVER_PROTOCOL'] ) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0' ) . ' 403 Forbidden' );
@@ -141,7 +139,7 @@ class _Group extends \IPS\teamspeak\Api
 	{
 		$ts = static::getInstance();
 
-		if ( $this->isValidGroupId( $groupId, $ts ) )
+		if ( $this->isValidGroupId( $groupId ) )
 		{
 			$temp = $ts->serverGroupAddClient( $groupId, $clientId );
 			$success = $ts->succeeded( $temp );
@@ -306,7 +304,7 @@ class _Group extends \IPS\teamspeak\Api
 			$client = $this->getClientFromUuid( $uuid, $ts );
 		}
 
-		if ( $this->isValidGroupId( $groupId, $ts ) )
+		if ( $this->isValidGroupId( $groupId ) )
 		{
 			return $this->removeClientFromGroup( $client['cldbid'], $groupId );
 		}
@@ -352,7 +350,15 @@ class _Group extends \IPS\teamspeak\Api
 	public function resyncGroupsByUuid( $uuid, array $assignGroups, array $associatedGroups )
 	{
 		$ts = static::getInstance();
-		$client = $this->getClientFromUuid( $uuid, $ts );
+
+		try
+		{
+			$client = $this->getClientFromUuid( $uuid, $ts );
+		}
+		catch( \IPS\teamspeak\Exception\ClientNotFoundException $e )
+		{
+			return true;
+		}
 
 		if ( \IPS\Settings::i()->teamspeak_remove_groups )
 		{
@@ -533,7 +539,7 @@ class _Group extends \IPS\teamspeak\Api
 	 * @param string $uuid
 	 * @param \TeamSpeakAdmin $ts TS server instance.
 	 * @return array
-	 * @throws ClientNotFoundException
+	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 * @throws \Exception
 	 */
 	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )

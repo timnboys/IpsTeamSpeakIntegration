@@ -53,7 +53,10 @@ class _syncTsGroups extends \IPS\Task
 					continue;
 				}
 
-				$tsMember->resyncGroups( $member, $info['s_uuid'] );
+				if ( $info['s_uuid'] )
+				{
+					$tsMember->resyncGroups( $member, $info['s_uuid'] );
+				}
 			}
 		}
 		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )

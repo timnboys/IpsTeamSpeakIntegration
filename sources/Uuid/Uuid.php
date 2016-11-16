@@ -22,6 +22,11 @@ class _Uuid extends \IPS\Patterns\ActiveRecord
 	public static $databaseColumnId = 'id';
 
 	/**
+	 * @brief	[ActiveRecord] Database ID Fields
+	 */
+	protected static $databaseIdFields = array( 's_uuid' );
+
+	/**
 	 * @brief    [ActiveRecord] Database table
 	 * @note    This MUST be over-ridden
 	 */
