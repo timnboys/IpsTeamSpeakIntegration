@@ -32,6 +32,7 @@ abstract class _Api
 		if ( !is_null( $tsInstance ) )
 		{
 			$this->instance = $tsInstance;
+			return;
 		}
 
 		$this->instance = $this->createInstance( $login );
