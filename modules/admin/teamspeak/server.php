@@ -36,6 +36,7 @@ class _Server extends \IPS\Dispatcher\Controller
 		/* Get Server/Channel Groups */
 		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
 		$channelGroups = \IPS\teamspeak\Api\Group::getCachedChannelGroups();
+		$tsInstance = null;
 
 		if ( is_null( $serverGroups ) || is_null( $channelGroups ) )
 		{
@@ -46,11 +47,11 @@ class _Server extends \IPS\Dispatcher\Controller
 		{
 			$serverGroups = $groupClass->getServerGroups( true, false );
 			$channelGroups = $groupClass->getChannelGroups();
-			$groupClass->logout();
+			$tsInstance = $groupClass->getInstance(); // Re-use the already established connection.
 		}
 
 		/* Get server information */
-		$tsServer = \IPS\teamspeak\Api\Server::i();
+		$tsServer = \IPS\teamspeak\Api\Server::i( $tsInstance );
 		$serverInfo = $tsServer->getServerInfo();
 
 		if ( !$serverInfo )

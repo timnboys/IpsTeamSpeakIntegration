@@ -40,6 +40,10 @@
         "default": "0"
     },
     {
+        "key": "teamspeak_viewer_height",
+        "default": "300"
+    },
+    {
         "key": "teamspeak_virtual_port",
         "default": "9987"
     }

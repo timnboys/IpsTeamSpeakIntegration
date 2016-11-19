@@ -14,11 +14,13 @@ class _Alert extends \IPS\teamspeak\Api
 	/**
 	 * Only here for auto-complete.
 	 *
-	 * @return \IPS\teamspeak\Api\Alert
+	 * @param \TeamSpeakAdmin $tsInstance
+	 * @param bool $login
+	 * @return Alert
 	 */
-	public static function i()
+	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
 	{
-		return parent::i();
+		return parent::i( $tsInstance, $login );
 	}
 
 	/**

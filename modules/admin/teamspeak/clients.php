@@ -261,12 +261,13 @@ class _clients extends \IPS\Dispatcher\Controller
 	{
 		/* Get Server Groups */
 		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
+		$tsInstance = null;
 
 		if ( is_null( $serverGroups ) )
 		{
 			$groupClass = \IPS\teamspeak\Api\Group::i();
 			$serverGroups = $groupClass->getServerGroups( true, false );
-			$groupClass->logout();
+			$tsInstance = $groupClass->getInstance(); // Re-use the already established connection.
 		}
 
 		/* Build form for the poke message */
@@ -280,7 +281,7 @@ class _clients extends \IPS\Dispatcher\Controller
 			try
 			{
 				/* Get client class */
-				$client = \IPS\teamspeak\Api\Client::i();
+				$client = \IPS\teamspeak\Api\Client::i( $tsInstance );
 
 				/* Poke client with given message */
 				$client->masspoke( $values['teamspeak_poke_message'], $values['teamspeak_poke_groups'] );

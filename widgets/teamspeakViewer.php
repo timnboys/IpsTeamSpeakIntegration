@@ -162,7 +162,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 
 		try
 		{
-			$viewer = \IPS\teamspeak\Api\Viewer::viewerInstance( $login );
+			$viewer = \IPS\teamspeak\Api\Viewer::i( null, $login );
 
 			$viewer->hideEmptyChannels = $hideEmptyChannels;
 			$viewer->hideParentChannels = $hideParentChannels;

@@ -20,9 +20,17 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 		if ( (bool) \IPS\Settings::i()->teamspeak_uuid_on_register )
 		{
 			$form->add(
-				new \IPS\Helpers\Form\Text(
-					'teamspeak_uuid', null, (bool) \IPS\Settings::i()->teamspeak_uuid_on_register_force
-				), 'password_confirm'
+				new \IPS\Helpers\Form\Text( 'teamspeak_uuid', null, (bool) \IPS\Settings::i()->teamspeak_uuid_on_register_force, array(), function ( $value ) {
+
+					$tsMember = \IPS\teamspeak\Member::i();
+
+					if ( !$tsMember->isValidUuid( $value ) )
+					{
+						throw new \InvalidArgumentException( 'Invalid UUID' );
+					}
+
+					return $value;
+				} ), 'password_confirm'
 			);
 		}
 
@@ -44,7 +52,7 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
 			try
 			{
 				$tsMember = \IPS\teamspeak\Member::i();
-				$tsMember->addGroups( $member, $values['teamspeak_uuid'] );
+				$tsMember->resyncGroups( $member, $values['teamspeak_uuid'] );
 
 				$uuid = new \IPS\teamspeak\Uuid;
 				$uuid->member_id = $member->member_id;

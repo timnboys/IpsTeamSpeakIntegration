@@ -31,11 +31,13 @@ class _Permission extends \IPS\teamspeak\Api
 	/**
 	 * Only here for auto-complete.
 	 *
+	 * @param \TeamSpeakAdmin $tsInstance
+	 * @param bool $login
 	 * @return Permission
 	 */
-	public static function i()
+	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
 	{
-		return parent::i();
+		return parent::i( $tsInstance, $login );
 	}
 
 	/**

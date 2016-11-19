@@ -22,34 +22,19 @@ abstract class _Api
 
 	/**
 	 * Builds up the connection to the TS server.
+	 * @param \TeamSpeakAdmin $tsInstance
 	 * @param bool $login
 	 */
-	public function __construct( $login = true )
+	public function __construct( \TeamSpeakAdmin $tsInstance = null, $login = true )
 	{
 		$this->settings = \IPS\Settings::i();
 
-		try
+		if ( !is_null( $tsInstance ) )
 		{
-			if ( $this->instance === null )
-			{
-				$config = [
-					'host' => $this->settings->teamspeak_server_ip,
-					'username' => $this->settings->teamspeak_query_admin,
-					'password' => $this->settings->teamspeak_query_password,
-					'query_port' => $this->settings->teamspeak_query_port,
-				];
+			$this->instance = $tsInstance;
+		}
 
-				$this->instance = $this->connect( $config['host'], $config['query_port'], $config['username'], $config['password'], $login );
-			}
-		}
-		catch ( \IPS\teamspeak\Exception\ConnectionException $e )
-		{
-			\IPS\Log::log( $e, 'teamspeak_connect' );
-		}
-		catch ( \Exception $e )
-		{
-			\IPS\Log::log( $e, 'teamspeak_connect_2' );
-		}
+		$this->instance = $this->createInstance( $login );
 	}
 
 	/**
@@ -59,6 +44,38 @@ abstract class _Api
 	{
 		$this->logout();
 		$this->instance = null;
+	}
+
+	/**
+	 * @param bool $login
+	 * @return \TeamSpeakAdmin
+	 */
+	protected function createInstance( $login = true )
+	{
+		if ( !is_null( $this->instance ) )
+		{
+			return $this->instance;
+		}
+
+		$config = [
+			'host' => $this->settings->teamspeak_server_ip,
+			'username' => $this->settings->teamspeak_query_admin,
+			'password' => $this->settings->teamspeak_query_password,
+			'query_port' => $this->settings->teamspeak_query_port,
+		];
+
+		try
+		{
+			return $this->connect( $config['host'], $config['query_port'], $config['username'], $config['password'], $login );
+		}
+		catch ( \IPS\teamspeak\Exception\ConnectionException $e )
+		{
+			\IPS\Log::log( $e, 'teamspeak_connect' );
+		}
+		catch ( \Exception $e )
+		{
+			\IPS\Log::log( $e, 'teamspeak_connect_2' );
+		}
 	}
 
 	/**
@@ -74,12 +91,14 @@ abstract class _Api
 	/**
 	 * Return called class.
 	 *
+	 * @param \TeamSpeakAdmin $tsInstance
+	 * @param bool $login
 	 * @return mixed
 	 */
-	public static function i()
+	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
 	{
 		$classname = get_called_class();
-		return new $classname;
+		return new $classname( $tsInstance, $login );
 	}
 
 	/**

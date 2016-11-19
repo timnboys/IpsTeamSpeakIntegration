@@ -26,7 +26,9 @@
 
 .ts3ssv{
 	position: relative;
-	overflow: hidden;
+	height: {setting="teamspeak_viewer_height"}px;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 
 .ts3ssv label{

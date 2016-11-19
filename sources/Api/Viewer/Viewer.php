@@ -26,17 +26,6 @@ class _Viewer extends \IPS\teamspeak\Api
 	public $hideEmptyChannels = false;
 	public $hideParentChannels = false;
 
-	/**
-	 *  Get Viewer instance.
-	 *
-	 * @param bool $login
-	 * @return \IPS\teamspeak\Api\Viewer
-	 */
-	public static function viewerInstance( $login )
-	{
-		return new static( $login );
-	}
-
 	public function clearServerGroupFlags()
 	{
 		$this->_serverGroupFlags = array();
