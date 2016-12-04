@@ -24,6 +24,10 @@
         "default": "0"
     },
     {
+        "key": "teamspeak_remove_unlinked_groups",
+        "default": "0"
+    },
+    {
         "key": "teamspeak_server_ip",
         "default": ""
     },

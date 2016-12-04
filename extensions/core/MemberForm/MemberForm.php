@@ -15,8 +15,8 @@ namespace IPS\teamspeak\extensions\core\MemberForm;
 /* To prevent PHP errors (extending class does not exist) revealing path */
 if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 {
-	header( ( isset( $_SERVER['SERVER_PROTOCOL'] ) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0' ) . ' 403 Forbidden' );
-	exit;
+    header( ( isset( $_SERVER['SERVER_PROTOCOL'] ) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0' ) . ' 403 Forbidden' );
+    exit;
 }
 
 /**
@@ -24,41 +24,41 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
  */
 class _MemberForm
 {
-	/**
-	 * Action Buttons
-	 *
-	 * @param	\IPS\Member	$member	The Member
-	 * @return	array
-	 */
-	public function actionButtons( $member )
-	{
-		return array(
-			'resync_uuids'	=> array(
-				'title'		=> 'teamspeak_resync_uuids',
-				'icon'		=> 'refresh',
-				'link'		=> \IPS\Http\Url::internal( "app=teamspeak&module=members&controller=members&do=resyncAll&id={$member->member_id}" ),
-				'data'      => array( 'confirm' => '' )
-			)
-		);
-	}
+    /**
+     * Action Buttons
+     *
+     * @param	\IPS\Member	$member	The Member
+     * @return	array
+     */
+    public function actionButtons( $member )
+    {
+        return array(
+            'resync_uuids'	=> array(
+                'title'		=> 'teamspeak_resync_uuids',
+                'icon'		=> 'refresh',
+                'link'		=> \IPS\Http\Url::internal( "app=teamspeak&module=members&controller=members&do=resyncAll&id={$member->member_id}" ),
+                'data'      => array( 'confirm' => '' )
+            )
+        );
+    }
 
-	/**
-	 * Process Form
-	 *
-	 * @param	\IPS\Helpers\Form		$form	The form
-	 * @param	\IPS\Member				$member	Existing Member
-	 * @return	void
-	 */
-	public function process( &$form, $member )
-	{}
+    /**
+     * Process Form
+     *
+     * @param	\IPS\Helpers\Form		$form	The form
+     * @param	\IPS\Member				$member	Existing Member
+     * @return	void
+     */
+    public function process( &$form, $member )
+    {}
 
-	/**
-	 * Save
-	 *
-	 * @param	array				$values	Values from form
-	 * @param	\IPS\Member			$member	The member
-	 * @return	void
-	 */
-	public function save( $values, &$member )
-	{}
+    /**
+     * Save
+     *
+     * @param	array				$values	Values from form
+     * @param	\IPS\Member			$member	The member
+     * @return	void
+     */
+    public function save( $values, &$member )
+    {}
 }

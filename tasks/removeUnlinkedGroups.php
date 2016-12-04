@@ -1,13 +1,13 @@
 <?php
 /**
- * @brief        syncTsGroups Task
- * @author        <a href='http://www.invisionpower.com'>Invision Power Services, Inc.</a>
- * @copyright    (c) 2001 - 2016 Invision Power Services, Inc.
- * @license        http://www.invisionpower.com/legal/standards/
- * @package        IPS Community Suite
- * @subpackage    teamspeak
- * @since        24 Oct 2016
- * @version        SVN_VERSION_NUMBER
+ * @brief		removeUnlinkedGroups Task
+ * @author		<a href='http://www.invisionpower.com'>Invision Power Services, Inc.</a>
+ * @copyright	(c) 2001 - 2016 Invision Power Services, Inc.
+ * @license		http://www.invisionpower.com/legal/standards/
+ * @package		IPS Community Suite
+ * @subpackage	teamspeak
+ * @since		04 Dec 2016
+ * @version		SVN_VERSION_NUMBER
  */
 
 namespace IPS\teamspeak\tasks;
@@ -20,9 +20,9 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 }
 
 /**
- * syncTsGroups Task
+ * removeUnlinkedGroups Task
  */
-class _syncTsGroups extends \IPS\Task
+class _removeUnlinkedGroups extends \IPS\Task
 {
     /**
      * Execute
@@ -32,32 +32,21 @@ class _syncTsGroups extends \IPS\Task
      * If an error occurs which means the task could not finish running, throw an \IPS\Task\Exception - do not log an error as a normal log.
      * Tasks should execute within the time of a normal HTTP request.
      *
-     * @return    mixed    Message to log or NULL
-     * @throws    Exception
+     * @return	mixed	Message to log or NULL
+     * @throws	\IPS\Task\Exception
      */
     public function execute()
     {
+        /* If not enabled, just return NULL */
+        if ( !\IPS\Settings::i()->teamspeak_remove_unlinked_groups )
+        {
+            return NULL;
+        }
+
         try
         {
             $tsMember = \IPS\teamspeak\Member::i();
-
-            /* Get the members who have a UUID set */
-            foreach ( \IPS\Db::i()->select( 's_member_id, s_uuid', 'teamspeak_member_sync' ) as $info )
-            {
-                try
-                {
-                    $member = \IPS\Member::load( $info['s_member_id'] );
-                }
-                catch ( \OutOfRangeException $e )
-                {
-                    continue;
-                }
-
-                if ( $info['s_uuid'] )
-                {
-                    $tsMember->resyncGroups( $member, $info['s_uuid'] );
-                }
-            }
+            $tsMember->syncUnlinkedUuids();
         }
         catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
         {
@@ -78,7 +67,7 @@ class _syncTsGroups extends \IPS\Task
      * will be called before execute(). Use it to clean up anything which
      * may not have been done
      *
-     * @return    void
+     * @return	void
      */
     public function cleanup()
     {
