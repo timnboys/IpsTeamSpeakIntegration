@@ -9,7 +9,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Permission extends \IPS\teamspeak\Api
+class _Permission extends \IPS\teamspeak\Api\AbstractConnection
 {
 	/*
 	 * @brief Array containing IDs of permissions that have a number value.
@@ -29,18 +29,6 @@ class _Permission extends \IPS\teamspeak\Api
 	);
 
 	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Permission
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
-
-	/**
 	 * Return $form with correct permission matrix.
 	 *
 	 * @param \IPS\Helpers\Form $form
@@ -48,7 +36,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildServerGroupPermissionForm( \IPS\Helpers\Form &$form, $serverGroupId )
+	public function buildServerGroupPermissionForm( \IPS\Helpers\Form $form, $serverGroupId )
 	{
 		$allPermission = $this->getPermissionList();
 		$serverGroupPermission = $this->getServerGroupPerms( $serverGroupId );
@@ -68,7 +56,7 @@ class _Permission extends \IPS\teamspeak\Api
 			},
 			'value'	=> function( $key, $value, $data )
 			{
-				$permId = intval( explode( '[', $key )[0] );
+				$permId = (int) explode( '[', $key )[0];
 
 				if ( in_array( $permId, static::$numberValues ) )
 				{
@@ -136,7 +124,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function buildChannelGroupPermissionForm( \IPS\Helpers\Form &$form, $channelGroupId )
+	public function buildChannelGroupPermissionForm( \IPS\Helpers\Form $form, $channelGroupId )
 	{
 		$allPermission = $this->getPermissionList();
 		$channelGroupPermission = $this->getChannelGroupPerms( $channelGroupId );
@@ -156,7 +144,7 @@ class _Permission extends \IPS\teamspeak\Api
 			},
 			'value'	=> function( $key, $value, $data )
 			{
-				$permId = intval( explode( '[', $key )[0] );
+				$permId = (int) explode( '[', $key )[0];
 
 				if ( in_array( $permId, static::$numberValues ) )
 				{
@@ -227,16 +215,16 @@ class _Permission extends \IPS\teamspeak\Api
 			if ( isset( $grantPerm[$permId] ) )
 			{
 				$newPerms[$grantPerm[$permId]] = array(
-					intval( $permissions['grant'] ),
+                    (int) $permissions['grant'],
 					0,
 					0
 				);
 			}
 
 			$newPerms[$permId] = array(
-				intval( $permissions['value'] ),
-				intval( $permissions['skip'] ),
-				intval( $permissions['negated'] )
+                (int) $permissions['value'],
+                (int) $permissions['skip'],
+                (int) $permissions['negated']
 			);
 		}
 
@@ -245,7 +233,8 @@ class _Permission extends \IPS\teamspeak\Api
 
 		foreach ( $newPerms as $permId => $newPerm )
 		{
-			if ( ( $serverGroupId == $defaultGroupId && in_array( $permId, static::$noGuestPerms ) ) || isset( $currentPerms[$permId] ) && $newPerm[0] == $currentPerms[$permId]['permvalue'] && $newPerm[1] == $currentPerms[$permId]['permnegated'] && $newPerm[2] == $currentPerms[$permId]['permskip'] )
+			if (
+			    ( $serverGroupId == $defaultGroupId && in_array( $permId, static::$noGuestPerms ) ) || isset( $currentPerms[$permId] ) && $newPerm[0] == $currentPerms[$permId]['permvalue'] && $newPerm[1] == $currentPerms[$permId]['permnegated'] && $newPerm[2] == $currentPerms[$permId]['permskip'] )
 			{
 				continue;
 			}
@@ -281,10 +270,10 @@ class _Permission extends \IPS\teamspeak\Api
 			/* Set grant perm id with value */
 			if ( isset( $grantPerm[$permId] ) )
 			{
-				$newPerms[$grantPerm[$permId]] = intval( $permissions['grant'] );
+				$newPerms[$grantPerm[$permId]] = (int) $permissions['grant'];
 			}
 
-			$newPerms[$permId] = intval( $permissions['value'] );
+			$newPerms[$permId] = (int) $permissions['value'];
 		}
 
 		foreach ( $newPerms as $permId => $newPerm )
@@ -312,10 +301,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	protected function getPermissionList()
 	{
-		$ts = static::getInstance();
-		$permission = $ts->permissionList( true );
-
-		return $permission;
+		return $this->instance->permissionList( true );
 	}
 
 	/**
@@ -327,8 +313,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	protected function getServerGroupPerms( $serverGroupId )
 	{
-		$ts = static::getInstance();
-		$permissions = $this->getReturnValue( $ts, $ts->serverGroupPermList( $serverGroupId ) );
+		$permissions = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverGroupPermList( $serverGroupId ) );
 
 		return $this->prepareGroupPermissionList( $permissions );
 	}
@@ -342,8 +327,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	protected function getChannelGroupPerms( $channelGroupId )
 	{
-		$ts = static::getInstance();
-		$permissions = $this->getReturnValue( $ts, $ts->channelGroupPermList( $channelGroupId ) );
+		$permissions = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->channelGroupPermList( $channelGroupId ) );
 
 		return $this->prepareGroupPermissionList( $permissions );
 	}
@@ -358,9 +342,7 @@ class _Permission extends \IPS\teamspeak\Api
 	 */
 	protected function addPermissionsToServerGroup( $serverGroupId, array $permissions )
 	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->serverGroupAddPerm( $serverGroupId, $permissions ), true );
+        return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverGroupAddPerm( $serverGroupId, $permissions ), true );
 	}
 
 	/**
@@ -372,10 +354,8 @@ class _Permission extends \IPS\teamspeak\Api
 	 * @throws \Exception
 	 */
 	protected function addPermissionsToChannelGroup( $channelGroupId, array $permissions )
-	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->channelGroupAddPerm( $channelGroupId, $permissions ), true );
+    {
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->channelGroupAddPerm( $channelGroupId, $permissions ), true );
 	}
 
 	/**

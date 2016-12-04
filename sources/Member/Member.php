@@ -41,7 +41,7 @@ class _Member
 
 		$assignGroups = array_unique( $assignGroups );
 
-		$teamspeak = \IPS\teamspeak\Api\Group::i();
+		$teamspeak = new \IPS\teamspeak\Api\Group();
 		return $teamspeak->addUuidToGroups( $uuid, $assignGroups );
 	}
 
@@ -64,7 +64,7 @@ class _Member
 
 		$removeGroups = array_unique( $removeGroups );
 
-		$teamspeak = \IPS\teamspeak\Api\Group::i();
+		$teamspeak = new \IPS\teamspeak\Api\Group();
 		return $teamspeak->removeUuidFromGroups( $uuid, $removeGroups );
 	}
 
@@ -79,7 +79,7 @@ class _Member
 	{
 		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
 
-		$teamspeak = \IPS\teamspeak\Api\Group::i();
+		$teamspeak = new \IPS\teamspeak\Api\Group();
 		return $teamspeak->resyncGroupsByUuid( $uuid, $associatedGroups, $this->getAllAssociatedTsGroups() );
 	}
 
@@ -92,7 +92,7 @@ class _Member
 	public function resyncGroupsAllUuids( \IPS\Member $member )
 	{
 		$associatedGroups = array_unique( $this->getAssociatedTsGroups( $member ) );
-		$teamspeak = \IPS\teamspeak\Api\Group::i();
+		$teamspeak = new \IPS\teamspeak\Api\Group();
 		$success = true;
 
 		foreach ( $member->teamspeak_uuids as $uuid )
@@ -114,11 +114,11 @@ class _Member
 	 */
 	public function isValidUuid( $uuid )
 	{
-		$teamspeak = \IPS\teamspeak\Api\Group::i();
+		$teamspeak = new \IPS\teamspeak\Api\Group();
 
 		try 
 		{
-			$teamspeak->getClientFromUuid( $uuid, $teamspeak->getInstance() );
+			$teamspeak->getClientFromUuid( $uuid );
 		}
 		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )
 		{
@@ -138,7 +138,7 @@ class _Member
 	 */
 	public function ban( \IPS\Member $member, $time, $reason )
 	{
-		$teamspeak = \IPS\teamspeak\Api\Client::i();
+		$teamspeak = new \IPS\teamspeak\Api\Client();
 		$banIds = array();
 
 		foreach ( $member->teamspeak_uuids as $uuid )
@@ -165,7 +165,7 @@ class _Member
 	 */
 	public function unban( \IPS\Member $member )
 	{
-		$teamspeak = \IPS\teamspeak\Api\Client::i();
+		$teamspeak = new \IPS\teamspeak\Api\Client();
 
 		try
 		{

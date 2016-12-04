@@ -9,19 +9,8 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Server extends \IPS\teamspeak\Api
+class _Server extends \IPS\teamspeak\Api\AbstractConnection
 {
-	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Server
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
 
 	/**
 	 * Deploy snapshot.
@@ -32,9 +21,7 @@ class _Server extends \IPS\teamspeak\Api
 	 */
 	public function deploySnapshot( $data )
 	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->serverSnapshotDeploy( $data ), true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverSnapshotDeploy( $data ), true );
 	}
 
 	/**
@@ -45,9 +32,7 @@ class _Server extends \IPS\teamspeak\Api
 	 */
 	public function createSnapshot()
 	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->serverSnapshotCreate() );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverSnapshotCreate() );
 	}
 
 	/**
@@ -57,15 +42,14 @@ class _Server extends \IPS\teamspeak\Api
 	 */
 	public function getServerInfo()
 	{
-		$ts = static::getInstance();
-		$serverInfo = $ts->serverInfo();
+		$serverInfo = $this->instance->serverInfo();
 
-		if ( $ts->succeeded( $serverInfo ) )
+		if ( $this->instance->succeeded( $serverInfo ) )
 		{
-			return $this->convertServerInfo( $ts->getElement( 'data', $serverInfo ) );
+			return $this->convertServerInfo( $this->instance->getElement( 'data', $serverInfo ) );
 		}
 
-		\IPS\Log::log( $this->arrayToString( $ts->getElement( 'errors', $serverInfo ) ), 'teamspeak_server_info' );
+		\IPS\Log::log( \IPS\teamspeak\Api\Util::arrayToString( $this->instance->getElement( 'errors', $serverInfo ) ), 'teamspeak_server_info' );
 		return false;
 	}
 
@@ -77,10 +61,9 @@ class _Server extends \IPS\teamspeak\Api
 	 */
 	public function updateServerInfo( array $serverInfo )
 	{
-		$ts = static::getInstance();
 		$serverInfo = $this->convertServerInfo( $serverInfo, true );
 
-		return $ts->succeeded( $ts->serverEdit( $serverInfo ) );
+		return $this->instance->succeeded( $this->instance->serverEdit( $serverInfo ) );
 	}
 
 	/**
@@ -117,9 +100,7 @@ class _Server extends \IPS\teamspeak\Api
 	 */
 	public function checkConnection()
 	{
-		$ts = static::getInstance();
-
-		return $ts;
+		return true;
 	}
 
 	/**

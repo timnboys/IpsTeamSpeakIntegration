@@ -34,7 +34,7 @@ class _MemberSync
 	public function onProfileUpdate( $member, $changes )
 	{
 		/* Determine whether group(s) has been changed */
-		if ( ( isset( $changes['member_group_id'] ) || isset( $changes['mgroup_others'] ) ) )
+		if ( isset( $changes['member_group_id'] ) || isset( $changes['mgroup_others'] ) )
 		{
 			/* Check if member has at least one UUID set before trying to sync */
 			$hasUuid = \IPS\Db::i()->select( 's_id', 'teamspeak_member_sync', array( 's_member_id=?', $member->member_id ) )->count();

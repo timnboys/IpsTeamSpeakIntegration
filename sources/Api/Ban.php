@@ -9,21 +9,8 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Ban extends \IPS\teamspeak\Api
+class _Ban extends \IPS\teamspeak\Api\AbstractConnection
 {
-
-	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Ban
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
-
 	/**
 	 * Get array containing all bans.
 	 *
@@ -32,15 +19,13 @@ class _Ban extends \IPS\teamspeak\Api
 	 */
 	public function getBanList()
 	{
-		$ts = static::getInstance();
-
 		try
 		{
-			return $this->getReturnValue( $ts, $ts->banList() );
+			return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->banList() );
 		}
 		catch ( \Exception $e )
 		{
-			if ( $e->getMessage() == 'ErrorID: 1281 | Message: database empty result set' )
+			if ( $e->getMessage() === 'ErrorID: 1281 | Message: database empty result set' )
 			{
 				return array();
 			}
@@ -57,9 +42,7 @@ class _Ban extends \IPS\teamspeak\Api
 	 */
 	public function deleteBan( $banId )
 	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->banDelete( $banId ) );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->banDelete( $banId ) );
 	}
 
 	/**
@@ -69,8 +52,6 @@ class _Ban extends \IPS\teamspeak\Api
 	 */
 	public function deleteAll()
 	{
-		$ts = static::getInstance();
-
-		return $this->getReturnValue( $ts, $ts->banDeleteAll() );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->banDeleteAll() );
 	}
 }

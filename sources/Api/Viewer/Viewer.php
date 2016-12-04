@@ -13,7 +13,7 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 //TODO: Make theme selectable instead of forcing the old style ;)
 //TODO: need to get themes with 16x16px icons or this is gonna be too complicated to be worth it (using CSS sprites)
 
-class _Viewer extends \IPS\teamspeak\Api
+class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
 {
 	protected $_serverDatas = array();
 	protected $_channelDatas = array();
@@ -159,15 +159,13 @@ class _Viewer extends \IPS\teamspeak\Api
 	protected function queryServer()
 	{
 		//TODO rewrite this using the API instead of manual commands (error checking)
-		$ts = static::getInstance();
 		$response = "";
-		$response .= $ts->getElement( 'data', $ts->execOwnCommand( 3, "serverinfo" ) );
-		$response .= $ts->getElement( 'data', $ts->execOwnCommand( 3, "channellist -topic -flags -voice -limits" ) );
-		$response .= $ts->getElement( 'data', $ts->execOwnCommand( 3, "clientlist -uid -away -voice -groups" ) );
-		$response .= $ts->getElement( 'data', $ts->execOwnCommand( 3, "servergrouplist" ) );
-		$response .= $ts->getElement( 'data', $ts->execOwnCommand( 3, "channelgrouplist" ) );
+		$response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "serverinfo" ) );
+		$response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "channellist -topic -flags -voice -limits" ) );
+		$response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "clientlist -uid -away -voice -groups" ) );
+		$response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "servergrouplist" ) );
+		$response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "channelgrouplist" ) );
 
-		$this->logout();
 		return $response;
 	}
 

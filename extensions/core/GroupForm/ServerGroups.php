@@ -50,9 +50,9 @@ class _ServerGroups
 		{
 			$groups = \IPS\teamspeak\Api\Group::getCachedServerGroups();
 
-			if ( is_null( $groups ) )
+			if ( $groups === null )
 			{
-				$groupClass = \IPS\teamspeak\Api\Group::i();
+				$groupClass = new \IPS\teamspeak\Api\Group();
 				$groups = $groupClass->getServerGroups();
 			}
 

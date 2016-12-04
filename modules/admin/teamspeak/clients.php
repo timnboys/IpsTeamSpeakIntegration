@@ -34,7 +34,8 @@ class _clients extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get client list */
-		$clientList = \IPS\teamspeak\Api\Client::i()->getClientList();
+		$client = new \IPS\teamspeak\Api\Client();
+		$clientList = $client->getClientList();
 
 		/* Create the table */
 		$table = new \IPS\Helpers\Table\Custom( $clientList, \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=clients" ) );
@@ -136,7 +137,7 @@ class _clients extends \IPS\Dispatcher\Controller
 
 		if ( $values = $form->values() )
 		{
-			$client = \IPS\teamspeak\Api\Client::i();
+			$client = new \IPS\teamspeak\Api\Client();
 
 			try
 			{
@@ -180,7 +181,7 @@ class _clients extends \IPS\Dispatcher\Controller
 
 		if ( $values = $form->values() )
 		{
-			$client = \IPS\teamspeak\Api\Client::i();
+			$client = new \IPS\teamspeak\Api\Client();
 
 			try
 			{
@@ -229,7 +230,7 @@ class _clients extends \IPS\Dispatcher\Controller
 
 		if ( $values = $form->values() )
 		{
-			$client = \IPS\teamspeak\Api\Client::i();
+			$client = new \IPS\teamspeak\Api\Client();
 
 			try
 			{
@@ -261,13 +262,11 @@ class _clients extends \IPS\Dispatcher\Controller
 	{
 		/* Get Server Groups */
 		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
-		$tsInstance = null;
 
-		if ( is_null( $serverGroups ) )
+		if ( $serverGroups === null )
 		{
-			$groupClass = \IPS\teamspeak\Api\Group::i();
+			$groupClass = new \IPS\teamspeak\Api\Group();
 			$serverGroups = $groupClass->getServerGroups( true, false );
-			$tsInstance = $groupClass->getInstance(); // Re-use the already established connection.
 		}
 
 		/* Build form for the poke message */
@@ -281,7 +280,7 @@ class _clients extends \IPS\Dispatcher\Controller
 			try
 			{
 				/* Get client class */
-				$client = \IPS\teamspeak\Api\Client::i( $tsInstance );
+				$client = new \IPS\teamspeak\Api\Client();
 
 				/* Poke client with given message */
 				$client->masspoke( $values['teamspeak_poke_message'], $values['teamspeak_poke_groups'] );

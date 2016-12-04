@@ -52,7 +52,7 @@ class _Ban extends \IPS\Patterns\ActiveRecord
 	/**
 	 * Convert json_encoded string to array.
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public function get_ban_ids()
 	{

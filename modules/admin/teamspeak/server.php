@@ -36,22 +36,16 @@ class _Server extends \IPS\Dispatcher\Controller
 		/* Get Server/Channel Groups */
 		$serverGroups = \IPS\teamspeak\Api\Group::getCachedServerGroups( true, false );
 		$channelGroups = \IPS\teamspeak\Api\Group::getCachedChannelGroups();
-		$tsInstance = null;
 
-		if ( is_null( $serverGroups ) || is_null( $channelGroups ) )
+		if ( $serverGroups === null || $channelGroups === null )
 		{
-			$groupClass = \IPS\teamspeak\Api\Group::i();
-		}
-
-		if ( isset( $groupClass ) )
-		{
-			$serverGroups = $groupClass->getServerGroups( true, false );
-			$channelGroups = $groupClass->getChannelGroups();
-			$tsInstance = $groupClass->getInstance(); // Re-use the already established connection.
+			$groupClass = new \IPS\teamspeak\Api\Group();
+            $serverGroups = $groupClass->getServerGroups( true, false );
+            $channelGroups = $groupClass->getChannelGroups();
 		}
 
 		/* Get server information */
-		$tsServer = \IPS\teamspeak\Api\Server::i( $tsInstance );
+		$tsServer = new \IPS\teamspeak\Api\Server();
 		$serverInfo = $tsServer->getServerInfo();
 
 		if ( !$serverInfo )

@@ -55,10 +55,10 @@ class teamspeak_hook_force_to_enter_uuid extends _HOOK_CLASS_
 				$module = 'teamspeak';
 				$controller = 'membersync';
 				$alreadyOnPage =
-					$request->app == $app && $request->module == $module && $request->controller == $controller;
+					$request->app === $app && $request->module === $module && $request->controller === $controller;
 
 				if ( !$member->members_bitoptions['validating'] && !$hasUuid && !$alreadyOnPage &&
-					\IPS\Dispatcher::i()->controllerLocation == 'front' && $request->controller != 'login'
+					\IPS\Dispatcher::i()->controllerLocation === 'front' && $request->controller !== 'login'
 				)
 				{
 					\IPS\Output::i()->redirect(

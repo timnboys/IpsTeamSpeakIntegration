@@ -36,11 +36,10 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		/* Get channel groups */
 		$channelGroups = \IPS\teamspeak\Api\Group::getCachedChannelGroups( false, true );
 
-		if ( is_null( $channelGroups ) )
+		if ( $channelGroups === null )
 		{
-			$groupClass = \IPS\teamspeak\Api\Group::i();
+			$groupClass = new \IPS\teamspeak\Api\Group();
 			$channelGroups = $groupClass->getChannelGroups( false, true );
-			$groupClass->logout();
 		}
 
 		/* Create the table */
@@ -139,7 +138,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group = \IPS\teamspeak\Api\Group::i();
+				$group = new \IPS\teamspeak\Api\Group();
 				$group->addChannelGroup( $values['teamspeak_channelgroup_name'], $values['teamspeak_channelgroup_target_type'] );
 
 				\IPS\Output::i()->redirect(
@@ -173,7 +172,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get Group class */
-		$group = \IPS\teamspeak\Api\Group::i();
+		$group = new \IPS\teamspeak\Api\Group();
 
 		/* Build form for editing the server group */
 		$form = new \IPS\Helpers\Form;
@@ -183,7 +182,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group->deleteChannelGroup( $id, intval( $values['teamspeak_force_delete'] ) );
+				$group->deleteChannelGroup( $id, (int) $values['teamspeak_force_delete'] );
 
 				\IPS\Output::i()->redirect(
 					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=channelgroups' ), 'teamspeak_channelgroup_deleted'
@@ -216,7 +215,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get Group class */
-		$groupClass = \IPS\teamspeak\Api\Group::i();
+		$groupClass = new \IPS\teamspeak\Api\Group();
 		$channelGroups = $groupClass->getChannelGroups( true, true );
 
 		$channelGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );
@@ -271,7 +270,7 @@ class _channelgroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get permission class */
-		$permissions = \IPS\teamspeak\Api\Permission::i();
+		$permissions = new \IPS\teamspeak\Api\Permission();
 
 		/* Build form for editing the server group */
 		$form = new \IPS\Helpers\Form;

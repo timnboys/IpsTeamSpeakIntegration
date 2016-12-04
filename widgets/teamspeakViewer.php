@@ -152,7 +152,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 			!\IPS\Member::loggedIn()->inGroup( $this->configuration['teamspeak_viewer_groups'] )
 		)
 		{
-			return "";
+			return '';
 		}
 
 		$hideEmptyChannels = isset( $this->configuration['hideEmptyChannels'] ) ? $this->configuration['hideEmptyChannels'] : false;
@@ -162,7 +162,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 
 		try
 		{
-			$viewer = \IPS\teamspeak\Api\Viewer::i( null, $login );
+			$viewer = new \IPS\teamspeak\Api\Viewer( $login );
 
 			$viewer->hideEmptyChannels = $hideEmptyChannels;
 			$viewer->hideParentChannels = $hideParentChannels;
@@ -170,7 +170,7 @@ class _teamspeakViewer extends \IPS\Widget\StaticCache
 		}
 		catch ( \Exception $e )
 		{
-			return "";
+			return '';
 		}
 
 		//		$theme = 'default';

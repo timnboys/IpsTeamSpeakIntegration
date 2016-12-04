@@ -9,22 +9,10 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Client extends \IPS\teamspeak\Api
+class _Client extends \IPS\teamspeak\Api\AbstractConnection
 {
 	const REGULAR_CLIENT = 0;
 	const QUERY_CLIENT = 1;
-
-	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Client
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
 
 	/**
 	 * Get list of all connected clients.
@@ -34,8 +22,7 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function getClientList()
 	{
-		$ts = static::getInstance();
-		$clientList = $this->getReturnValue( $ts, $ts->clientList() );
+		$clientList = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->clientList() );
 
 		return $this->prepareClientList( $clientList );
 	}
@@ -48,12 +35,11 @@ class _Client extends \IPS\teamspeak\Api
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function kick( $clientId, $message = "" )
+	public function kick( $clientId, $message = '' )
 	{
-		$ts = static::getInstance();
-		$kickInfo = $ts->clientKick( $clientId, "server", $message );
+		$kickInfo = $this->instance->clientKick( $clientId, 'server', $message );
 
-		return $this->getReturnValue( $ts, $kickInfo, true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $kickInfo, true );
 	}
 
 	/**
@@ -66,10 +52,9 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function poke( $clientId, $message )
 	{
-		$ts = static::getInstance();
-		$pokeInfo = $ts->clientPoke( $clientId, $message );
+		$pokeInfo = $this->instance->clientPoke( $clientId, $message );
 
-		return $this->getReturnValue( $ts, $pokeInfo, true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $pokeInfo, true );
 	}
 
 	/**
@@ -82,8 +67,7 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function masspoke( $message, $groups )
 	{
-		$ts = static::getInstance();
-		$clients = $this->getReturnValue( $ts, $ts->clientList( '-groups' ) );
+		$clients = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->clientList( '-groups' ) );
 
 		foreach ( $clients as $client )
 		{
@@ -97,7 +81,7 @@ class _Client extends \IPS\teamspeak\Api
 
 			if ( $groups == -1 || ( is_array( $groups ) && !empty( array_intersect( $groups, $clientGroups ) ) ) )
 			{
-				$ts->clientPoke( $client['clid'], $message );
+				$this->instance->clientPoke( $client['clid'], $message );
 			}
 		}
 
@@ -115,16 +99,14 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function ban( $clientId, $banTime, $reason )
 	{
-		$ts = static::getInstance();
-
 		if ( $banTime !== 0 )
 		{
 			$banTime = $banTime->getTimestamp() - time();
 		}
 
-		$banInfo = $ts->banClient( $clientId, $banTime, $reason );
+		$banInfo = $this->instance->banClient( $clientId, $banTime, $reason );
 
-		return $this->getReturnValue( $ts, $banInfo, true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $banInfo, true );
 	}
 
 	/**
@@ -138,10 +120,9 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function banByUuid( $uuid, $time, $reason )
 	{
-		$ts = static::getInstance();
-		$banInfo = $this->getReturnValue( $ts, $ts->banAddByUid( $uuid, $time, $reason ) );
+		$banInfo = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->banAddByUid( $uuid, $time, $reason ) );
 
-		return intval( $banInfo['banid'] );
+		return (int) $banInfo['banid'];
 	}
 
 	/**
@@ -152,9 +133,7 @@ class _Client extends \IPS\teamspeak\Api
 	 */
 	public function unban( $banId )
 	{
-		$ts = static::getInstance();
-
-		$ts->banDelete( $banId );
+		$this->instance->banDelete( $banId );
 	}
 
 	/**

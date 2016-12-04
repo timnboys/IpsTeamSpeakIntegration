@@ -35,7 +35,7 @@ class _bans extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get ban list */
-		$banClass = \IPS\teamspeak\Api\Ban::i();
+		$banClass = new \IPS\teamspeak\Api\Ban();
 		$banList = $banClass->getBanList();
 
 		/* Create the table */
@@ -114,7 +114,7 @@ class _bans extends \IPS\Dispatcher\Controller
 	 */
 	protected function deleteAll()
 	{
-		$banClass = \IPS\teamspeak\Api\Ban::i();
+		$banClass = new \IPS\teamspeak\Api\Ban();
 
 		try
 		{
@@ -145,7 +145,7 @@ class _bans extends \IPS\Dispatcher\Controller
 			\IPS\Output::i()->error( 'teamspeak_id_missing', '3P107/1' );
 		}
 
-		$banClass = \IPS\teamspeak\Api\Ban::i();
+		$banClass = new \IPS\teamspeak\Api\Ban();
 
 		try
 		{

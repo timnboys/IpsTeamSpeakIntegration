@@ -9,20 +9,8 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Alert extends \IPS\teamspeak\Api
+class _Alert extends \IPS\teamspeak\Api\AbstractConnection
 {
-	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Alert
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
-
 	/**
 	 * sendMessage
 	 *
@@ -53,7 +41,6 @@ class _Alert extends \IPS\teamspeak\Api
 	 */
 	public function sendMessage( $msg, $mode = 3, $target = 3 )
 	{
-		$ts = static::getInstance();
-		return (bool) $ts->getElement( 'success', $ts->sendMessage( $mode, $target, $msg ) );
+		return (bool) $this->instance->getElement( 'success', $this->instance->sendMessage( $mode, $target, $msg ) );
 	}
 }

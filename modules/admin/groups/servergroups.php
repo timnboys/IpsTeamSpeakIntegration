@@ -34,7 +34,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		/* Get server groups array */
-		$tsGroup = \IPS\teamspeak\Api\Group::i();
+		$tsGroup = new \IPS\teamspeak\Api\Group();
 		$serverGroups = $tsGroup->getServerGroups( false, false, true );
 
 		/* Create the table */
@@ -134,7 +134,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group = \IPS\teamspeak\Api\Group::i();
+				$group = new \IPS\teamspeak\Api\Group();
 				$group->addServerGroup( $values['teamspeak_servergroup_name'], $values['teamspeak_servergroup_target_type'] );
 
 				\IPS\Output::i()->redirect(
@@ -168,7 +168,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get permission class */
-		$permissions = \IPS\teamspeak\Api\Permission::i();
+		$permissions = new \IPS\teamspeak\Api\Permission();
 
 		/* Build form for editing the server group */
 		$form = new \IPS\Helpers\Form;
@@ -211,7 +211,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get Group class */
-		$group = \IPS\teamspeak\Api\Group::i();
+		$group = new \IPS\teamspeak\Api\Group();
 
 		/* Build form for editing the server group */
 		$form = new \IPS\Helpers\Form;
@@ -221,7 +221,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$group->deleteServerGroup( $id, intval( $values['teamspeak_force_delete'] ) );
+				$group->deleteServerGroup( $id, (int) $values['teamspeak_force_delete'] );
 
 				\IPS\Output::i()->redirect(
 					\IPS\Http\Url::internal( 'app=teamspeak&module=groups&controller=servergroups' ), 'teamspeak_servergroup_deleted'
@@ -254,7 +254,7 @@ class _servergroups extends \IPS\Dispatcher\Controller
 		}
 
 		/* Get Group class */
-		$group = \IPS\teamspeak\Api\Group::i();
+		$group = new \IPS\teamspeak\Api\Group();
 		$serverGroups = $group->getServerGroups( true, false, true );
 
 		$serverGroups[0] = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_new_group' );

@@ -39,7 +39,7 @@ class _Alert extends \IPS\Dispatcher\Controller
 
 		if ( $values = $form->values() )
 		{
-			$teamspeak = \IPS\teamspeak\Api\Alert::i();
+			$teamspeak = new \IPS\teamspeak\Api\Alert();
 			$teamspeak->sendMessage( $values['alert_message'] );
 			\IPS\Output::i()->redirect(
 				\IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=alert', 'admin' ),

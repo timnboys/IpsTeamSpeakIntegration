@@ -238,7 +238,11 @@ class _Members extends \IPS\Dispatcher\Controller
 					continue;
 				}
 
-				$tsMember->resyncGroups( $member, $info['s_uuid'] );
+				/* Previous bug caused entries with an empty UUID, which now results in an exception being thrown */
+				if ( isset( $info['s_uuid'] ) && !empty( $info['s_uuid'] ) )
+				{
+					$tsMember->resyncGroups( $member, $info['s_uuid'] );
+				}
 			}
 		}
 		catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e )

@@ -9,23 +9,11 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 	exit;
 }
 
-class _Group extends \IPS\teamspeak\Api
+class _Group extends \IPS\teamspeak\Api\AbstractConnection
 {
 	const TYPE_TEMPLATE = 0;
 	const TYPE_REGULAR = 1;
 	const TYPE_SERVERQUERY = 2;
-
-	/**
-	 * Only here for auto-complete.
-	 *
-	 * @param \TeamSpeakAdmin $tsInstance
-	 * @param bool $login
-	 * @return Group
-	 */
-	public static function i( \TeamSpeakAdmin $tsInstance = null, $login = true )
-	{
-		return parent::i( $tsInstance, $login );
-	}
 
 	/**
 	 * Add server group.
@@ -37,10 +25,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function addServerGroup( $serverGroupName, $serverGroupType )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
+		static::clearCache();
 
-		return $this->getReturnValue( $ts, $ts->serverGroupAdd( $serverGroupName, $serverGroupType ), true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverGroupAdd( $serverGroupName, $serverGroupType ), true );
 	}
 
 	/**
@@ -53,10 +40,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function addChannelGroup( $channelGroupName, $channelGroupType )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
+		static::clearCache();
 
-		return $this->getReturnValue( $ts, $ts->channelGroupAdd( $channelGroupName, $channelGroupType ), true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->channelGroupAdd( $channelGroupName, $channelGroupType ), true );
 	}
 
 	/**
@@ -69,10 +55,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function deleteServerGroup( $serverGroupId, $force )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
+		static::clearCache();
 
-		return $this->getReturnValue( $ts, $ts->serverGroupDelete( $serverGroupId, $force ), true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverGroupDelete( $serverGroupId, $force ), true );
 	}
 
 	/**
@@ -85,10 +70,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function deleteChannelGroup( $channelGroupId, $force )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
+		static::clearCache();
 
-		return $this->getReturnValue( $ts, $ts->channelGroupDelete( $channelGroupId, $force ), true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->channelGroupDelete( $channelGroupId, $force ), true );
 	}
 
 	/**
@@ -103,11 +87,10 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function copyServerGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
-		$copyData = $ts->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+		static::clearCache();
+		$copyData = $this->instance->serverGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
 
-		return $this->getReturnValue( $ts, $copyData, true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $copyData, true );
 	}
 
 	/**
@@ -122,11 +105,10 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function copyChannelGroup( $sourceGroupId, $targetGroupName, $targetGroupType, $targetGroupId = 0 )
 	{
-		$ts = static::getInstance();
-		$this->clearCache();
-		$copyData = $ts->channelGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
+		static::clearCache();
+		$copyData = $this->instance->channelGroupCopy( $sourceGroupId, $targetGroupId, $targetGroupName, $targetGroupType );
 
-		return $this->getReturnValue( $ts, $copyData, true );
+		return \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $copyData, true );
 	}
 
 	/**
@@ -139,18 +121,16 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function addClientToGroup( $clientId, $groupId )
 	{
-		$ts = static::getInstance();
-
 		if ( $this->isValidGroupId( $groupId ) )
 		{
-			$temp = $ts->serverGroupAddClient( $groupId, $clientId );
-			$success = $ts->succeeded( $temp );
+			$temp = $this->instance->serverGroupAddClient( $groupId, $clientId );
+			$success = $this->instance->succeeded( $temp );
 
 			if ( !$success )
 			{
-				$errors = $ts->getElement( 'errors', $temp );
+				$errors = $this->instance->getElement( 'errors', $temp );
 
-				if ( $this->arrayToString( $errors ) == 'ErrorID: 2561 | Message: duplicate entry' )
+				if ( \IPS\teamspeak\Api\Util::arrayToString( $errors ) === 'ErrorID: 2561 | Message: duplicate entry' )
 				{
 					/* If member already part of group, indicate as succeeded */
 					$success = true;
@@ -199,11 +179,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function addUuidToGroup( $uuid, $groupId, array $client = null )
 	{
-		$ts = static::getInstance();
-
 		if ( !$client )
 		{
-			$client = $this->getClientFromUuid( $uuid, $ts );
+			$client = $this->getClientFromUuid( $uuid );
 		}
 
 		return $this->addClientToGroup( $client['cldbid'], $groupId );
@@ -220,8 +198,7 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function addUuidToGroups( $uuid, array $groups )
 	{
-		$ts = static::getInstance();
-		$client = $this->getClientFromUuid( $uuid, $ts );
+		$client = $this->getClientFromUuid( $uuid );
 		$success = true;
 
 		foreach ( $groups as $groupId )
@@ -245,15 +222,14 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function removeClientFromGroup( $clientId, $groupId )
 	{
-		$ts = static::getInstance();
-		$temp = $ts->serverGroupDeleteClient( $groupId, $clientId );
-		$success = $ts->succeeded( $temp );
+		$temp = $this->instance->serverGroupDeleteClient( $groupId, $clientId );
+		$success = $this->instance->succeeded( $temp );
 
 		if ( !$success )
 		{
-			$errors = $ts->getElement( 'errors', $temp );
+			$errors = $this->instance->getElement( 'errors', $temp );
 
-			if ( $this->arrayToString( $errors ) == 'ErrorID: 2563 | Message: empty result set' )
+			if ( \IPS\teamspeak\Api\Util::arrayToString( $errors ) === 'ErrorID: 2563 | Message: empty result set' )
 			{
 				/* If member was not part of the group, indicate as succeeded */
 				$success = true;
@@ -299,11 +275,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function removeUuidFromGroup( $uuid, $groupId, array $client = null )
 	{
-		$ts = static::getInstance();
-
 		if ( !$client )
 		{
-			$client = $this->getClientFromUuid( $uuid, $ts );
+			$client = $this->getClientFromUuid( $uuid );
 		}
 
 		if ( $this->isValidGroupId( $groupId ) )
@@ -325,8 +299,7 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function removeUuidFromGroups( $uuid, array $groups )
 	{
-		$ts = static::getInstance();
-		$client = $this->getClientFromUuid( $uuid, $ts );
+		$client = $this->getClientFromUuid( $uuid );
 		$success = true;
 
 		foreach ( $groups as $groupId )
@@ -351,11 +324,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function resyncGroupsByUuid( $uuid, array $assignGroups, array $associatedGroups )
 	{
-		$ts = static::getInstance();
-
 		try
 		{
-			$client = $this->getClientFromUuid( $uuid, $ts );
+			$client = $this->getClientFromUuid( $uuid );
 		}
 		catch( \IPS\teamspeak\Exception\ClientNotFoundException $e )
 		{
@@ -365,7 +336,7 @@ class _Group extends \IPS\teamspeak\Api
 		if ( \IPS\Settings::i()->teamspeak_remove_groups )
 		{
 			$currentGroups = $this->convertGroupsToCompare(
-				$ts->getElement( 'data', $ts->serverGroupsByClientID( $client['cldbid'] ) )
+				$this->instance->getElement( 'data', $this->instance->serverGroupsByClientID( $client['cldbid'] ) )
 			);
 
 			$removeGroups = array_diff( $currentGroups, $assignGroups );
@@ -391,9 +362,9 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function getServerGroups( $simplified = true, $regularOnly = true, $templateGroups = false )
 	{
-		$ts = static::getInstance();
-		$serverGroups = static::getReturnValue( $ts, $ts->serverGroupList() );
-		$defaultGroupIds = static::getDefaultGroupIds( $ts );
+	    $returnGroups = [];
+		$serverGroups = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->serverGroupList() );
+		$defaultGroupIds = static::getDefaultGroupIds( $this->instance );
 
 		foreach ( $serverGroups as $group )
 		{
@@ -410,7 +381,7 @@ class _Group extends \IPS\teamspeak\Api
 			$returnGroups = static::simplifyGroups( $returnGroups );
 		}
 
-		return static::getCachedServerGroups( $simplified, $regularOnly, $templateGroups, $returnGroups );;
+		return static::getCachedServerGroups( $simplified, $regularOnly, $templateGroups, $returnGroups );
 	}
 
 	/**
@@ -430,7 +401,7 @@ class _Group extends \IPS\teamspeak\Api
 		$cacheKey = $templateGroups ? $cacheKey . '_templates' : $cacheKey;
 
 		/* If it is cached, return the cached data */
-		if ( isset( $dataStore->$cacheKey ) && is_null( $data ) )
+		if ( isset( $dataStore->$cacheKey ) && $data === null )
 		{
 			return $dataStore->$cacheKey;
 		}
@@ -449,8 +420,8 @@ class _Group extends \IPS\teamspeak\Api
 	 */
 	public function getChannelGroups( $simplified = true, $all = false )
 	{
-		$ts = static::getInstance();
-		$channelGroups = static::getReturnValue( $ts, $ts->channelGroupList() );
+	    $returnGroups = [];
+		$channelGroups = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->channelGroupList() );
 
 		foreach ( $channelGroups as $channelGroup )
 		{
@@ -478,7 +449,7 @@ class _Group extends \IPS\teamspeak\Api
 		$cacheKey = $all ? $cacheKey . '_all' : $cacheKey;
 
 		/* If it is cached, return the cached data */
-		if ( isset( $dataStore->$cacheKey ) && is_null( $data ) )
+		if ( isset( $dataStore->$cacheKey ) && $data === null )
 		{
 			return $dataStore->$cacheKey;
 		}
@@ -522,7 +493,7 @@ class _Group extends \IPS\teamspeak\Api
 			return $dataStore->teamspeak_default_group_ids;
 		}
 
-		$server = static::getReturnValue( $ts, $ts->serverInfo() );
+		$server = \IPS\teamspeak\Api\Util::getReturnValue( $ts, $ts->serverInfo() );
 
 		$defaultGroupIds = [
 			'default_server_group' => $server['virtualserver_default_server_group'],
@@ -539,21 +510,20 @@ class _Group extends \IPS\teamspeak\Api
 	 * Get client from UUID.
 	 *
 	 * @param string $uuid
-	 * @param \TeamSpeakAdmin $ts TS server instance.
 	 * @return array
 	 * @throws \IPS\teamspeak\Exception\ClientNotFoundException
 	 * @throws \Exception
 	 */
-	public function getClientFromUuid( $uuid, \TeamSpeakAdmin $ts )
+	public function getClientFromUuid( $uuid )
 	{
 		try
 		{
-			$client = $this->getReturnValue( $ts, $ts->clientDbFind( $uuid, true ) );
+			$client = \IPS\teamspeak\Api\Util::getReturnValue( $this->instance, $this->instance->clientDbFind( $uuid, true ) );
 		}
 		catch ( \Exception $e )
 		{
 			/* If for some reason we have an invalid UUID throw a different exception so we can catch it better */
-			if ( $e->getMessage() == 'ErrorID: 1281 | Message: database empty result set' )
+			if ( $e->getMessage() === 'ErrorID: 1281 | Message: database empty result set' )
 			{
 				throw new \IPS\teamspeak\Exception\ClientNotFoundException();
 			}

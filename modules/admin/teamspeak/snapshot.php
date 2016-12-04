@@ -117,7 +117,7 @@ class _snapshot extends \IPS\Dispatcher\Controller
 		{
 			try
 			{
-				$server = \IPS\teamspeak\Api\Server::i();
+				$server = new \IPS\teamspeak\Api\Server();
 				$snapshotData = $server->createSnapshot();
 
 				if ( !empty( $snapshotData ) )
@@ -183,7 +183,7 @@ class _snapshot extends \IPS\Dispatcher\Controller
 
 		try
 		{
-			$server = \IPS\teamspeak\Api\Server::i();
+			$server = new \IPS\teamspeak\Api\Server();
 			$snapshot = \IPS\teamspeak\Snapshot::load( $id );
 			$data = $snapshot->data;
 			$server->deploySnapshot( $data );
