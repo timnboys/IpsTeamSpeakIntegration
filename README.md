@@ -27,7 +27,9 @@ This is also an effort to prevent (inevitable) nulled versions which might inclu
 
 ### TODO
 
+* Automated tests
 * Multiple server support
+* Front-end client management (kick/poke/ban etc.)
 
 ### Credits
 
