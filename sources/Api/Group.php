@@ -539,7 +539,7 @@ class _Group extends \IPS\teamspeak\Api\AbstractConnection
      *
      * @return void
      */
-    protected static function clearCache()
+    public static function clearCache()
     {
         try
         {

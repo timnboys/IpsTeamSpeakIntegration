@@ -20,7 +20,7 @@ class _Util
      * @param \TeamSpeakAdmin $ts
      * @param array $data
      * @param bool $bool Only check if it succeeded (no data required)?
-     * @return bool|mixed
+     * @return array|bool
      * @throws \Exception
      */
     public static function getReturnValue( \TeamSpeakAdmin $ts, array $data, $bool = false )

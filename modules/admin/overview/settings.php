@@ -54,6 +54,16 @@ class _settings extends \IPS\Dispatcher\Controller
 
         if ( $values = $settings->values() )
         {
+            $currentServerIp = \IPS\Settings::i()->teamspeak_server_ip;
+            $currentVirtualPort = \IPS\Settings::i()->teamspeak_virtual_port;
+
+            /* If IP or virtual port are changed, remove caches and tell user to re-map the groups */
+            if ( $currentServerIp != $values['teamspeak_server_ip'] || $currentVirtualPort != $values['teamspeak_virtual_port'] )
+            {
+                \IPS\teamspeak\Api\Group::clearCache();
+                $settings->error = 'It seems like you have changed your TeamSpeak server. Please remember to go through every group and re-enter the corresponding TeamSpeak group manually!';
+            }
+
             $settings->saveAsSettings();
         }
 

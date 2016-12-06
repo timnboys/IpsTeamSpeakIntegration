@@ -25,10 +25,6 @@ abstract class _AbstractConnection
     {
         $api = \IPS\teamspeak\Api::getInstance( $login );
 
-        try {
-            $this->instance = $api->getTeamspeakInstance();
-        } catch ( \OutOfRangeException $e ) {
-            \IPS\Output::i()->error( $e->getMessage(), $e->getCode() );
-        }
+        $this->instance = $api->getTeamspeakInstance();
     }
 }
