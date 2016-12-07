@@ -38,7 +38,7 @@ class _clients extends \IPS\Dispatcher\Controller
         $clientList = $client->getClientList();
 
         /* Create the table */
-        $table = new \IPS\Helpers\Table\Custom( $clientList, \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=clients" ) );
+        $table = new \IPS\Helpers\Table\Custom( $clientList, \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=clients' ) );
         $table->langPrefix = 'teamspeak_';
 
         /* Column stuff */

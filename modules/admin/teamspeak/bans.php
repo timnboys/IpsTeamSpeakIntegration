@@ -39,7 +39,7 @@ class _bans extends \IPS\Dispatcher\Controller
         $banList = $banClass->getBanList();
 
         /* Create the table */
-        $table = new \IPS\Helpers\Table\Custom( $banList, \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=bans" ) );
+        $table = new \IPS\Helpers\Table\Custom( $banList, \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=bans' ) );
         $table->langPrefix = 'teamspeak_';
 
         /* Column stuff */

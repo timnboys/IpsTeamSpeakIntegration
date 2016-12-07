@@ -73,7 +73,7 @@ class _TeamSpeakTab extends \IPS\core\FrontNavigation\FrontNavigationAbstract
      */
     public function link()
     {
-        return \IPS\Http\Url::internal( "app=teamspeak&module=teamspeak&controller=membersync", 'front', 'teamspeak_member_sync' );
+        return \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front', 'teamspeak_member_sync' );
     }
 
     /**

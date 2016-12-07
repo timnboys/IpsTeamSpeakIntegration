@@ -335,7 +335,7 @@ class _Group extends \IPS\teamspeak\Api\AbstractConnection
 
         if ( \IPS\Settings::i()->teamspeak_remove_groups )
         {
-            $currentGroups = $this->convertGroupsToCompare(
+            $currentGroups = static::convertGroupsToCompare(
                 $this->instance->getElement( 'data', $this->instance->serverGroupsByClientID( $client['cldbid'] ) )
             );
 

@@ -78,27 +78,27 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
 
     protected function sortUsers( $a, $b )
     {
-        if ( $a["client_talk_power"] != $b["client_talk_power"] )
+        if ( $a['client_talk_power'] != $b['client_talk_power'] )
         {
-            return $a["client_talk_power"] > $b["client_talk_power"] ? -1 : 1;
+            return $a['client_talk_power'] > $b['client_talk_power'] ? -1 : 1;
         }
 
-        return strcasecmp( $a["client_nickname"], $b["client_nickname"] );
+        return strcasecmp( $a['client_nickname'], $b['client_nickname'] );
     }
 
     protected function parseLine( $rawLine )
     {
         $data = array();
-        $rawItems = explode( "|", $rawLine );
+        $rawItems = explode( '|', $rawLine );
 
         foreach ( $rawItems as $rawItem )
         {
-            $rawDataArr = explode( " ", $rawItem );
+            $rawDataArr = explode( ' ', $rawItem );
             $tempData = array();
             foreach ( $rawDataArr as $rawData )
             {
-                $ar = explode( "=", $rawData, 2 );
-                $tempData[$ar[0]] = isset( $ar[1] ) ? $this->tsDecode( $ar[1] ) : "";
+                $ar = explode( '=', $rawData, 2 );
+                $tempData[$ar[0]] = isset( $ar[1] ) ? $this->tsDecode( $ar[1] ) : '';
             }
 
             $data[] = $tempData;
@@ -109,23 +109,23 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
 
     protected function parseChannelName( $channel )
     {
-        $name = $channel["channel_name"];
+        $name = $channel['channel_name'];
         $cssClass = '';
         $noFlags = false;
 
-        if ( preg_match( '/\[(.*)spacer([\d\p{L}\w]+)?\]/', $name, $matches ) && $channel["channel_flag_permanent"] && !$channel["pid"] )
+        if ( $channel['channel_flag_permanent'] && !$channel['pid'] && preg_match( '/\[(.*)spacer([\p{L}\w]+)?\]/', $name, $matches )  )
         {
             $noFlags = true;
             $spacer = explode( $matches[0], $name );
             $checkSpacer = isset( $spacer[1][0] ) ? $spacer[1][0] . $spacer[1][0] . $spacer[1][0] : '';
 
-            if ( $matches[1] == 'c' )
+            if ( $matches[1] === 'c' )
             {
                 /* Channel name should be centered */
                 $name = $spacer[1];
                 $cssClass = 'tscenter';
             }
-            elseif ( $matches[1] == '*' || ( mb_strlen( $spacer[1] ) == 3 && $checkSpacer == $spacer[1] ) )
+            elseif ( $matches[1] === '*' || ( mb_strlen( $spacer[1] ) === 3 && $checkSpacer == $spacer[1] ) )
             {
                 /* Repeat given character (in most use-cases this draws a line) */
                 $addSpacer = '';
@@ -160,11 +160,11 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
     {
         //TODO rewrite this using the API instead of manual commands (error checking)
         $response = "";
-        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "serverinfo" ) );
-        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "channellist -topic -flags -voice -limits" ) );
-        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "clientlist -uid -away -voice -groups" ) );
-        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "servergrouplist" ) );
-        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, "channelgrouplist" ) );
+        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, 'serverinfo' ) );
+        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, 'channellist -topic -flags -voice -limits' ) );
+        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, 'clientlist -uid -away -voice -groups' ) );
+        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, 'servergrouplist' ) );
+        $response .= $this->instance->getElement( 'data', $this->instance->execOwnCommand( 3, 'channelgrouplist' ) );
 
         return $response;
     }
@@ -174,12 +174,12 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
         $response = \substr( $this->queryServer(), 1 );
         $lines = explode( "\n\r\n\r", $response );
 
-        if ( count( $lines ) == 1 )
+        if ( count( $lines ) === 1 )
         {
             $lines = explode( "\n\r \n\r", $response );
         }
 
-        if ( count( $lines ) == 5 )
+        if ( count( $lines ) === 5 )
         {
             $this->_serverDatas = $this->parseLine( $lines[0] );
             $this->_serverDatas = $this->_serverDatas[0];
@@ -189,30 +189,30 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
 
             foreach ( $tmpChannels as $channel )
             {
-                $channel["show"] = !$hide;
-                $this->_channelDatas[$channel["cid"]] = $channel;
+                $channel['show'] = !$hide;
+                $this->_channelDatas[$channel['cid']] = $channel;
             }
 
             $tmpUsers = $this->parseLine( $lines[2] );
-            usort( $tmpUsers, array( $this, "sortUsers" ) );
+            usort( $tmpUsers, array( $this, 'sortUsers' ) );
             foreach ( $tmpUsers as $user )
             {
-                if ( $user["client_type"] == 0 )
+                if ( $user['client_type'] == 0 )
                 {
-                    if ( !isset( $this->_userDatas[$user["cid"]] ) )
+                    if ( !isset( $this->_userDatas[$user['cid']] ) )
                     {
-                        $this->_userDatas[$user["cid"]] = array();
+                        $this->_userDatas[$user['cid']] = array();
                     }
-                    $this->_userDatas[$user["cid"]][] = $user;
+                    $this->_userDatas[$user['cid']][] = $user;
                 }
             }
 
             $serverGroups = $this->parseLine( $lines[3] );
             foreach ( $serverGroups as $sg )
             {
-                if ( $sg["iconid"] > 0 )
+                if ( $sg['iconid'] > 0 )
                 {
-                    $this->setServerGroupFlag( $sg["sgid"], 'group_' . $sg["iconid"] );
+                    $this->setServerGroupFlag( $sg['sgid'], 'group_' . $sg['iconid'] );
                 }
             }
 
@@ -221,13 +221,13 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
             {
                 if ( $cg["iconid"] > 0 )
                 {
-                    $this->setChannelGroupFlag( $cg['cgid'], 'group_' . $cg["iconid"] );
+                    $this->setChannelGroupFlag( $cg['cgid'], 'group_' . $cg['iconid'] );
                 }
             }
         }
         else
         {
-            throw new \Exception( "Invalid server response" );
+            throw new \Exception( 'Invalid server response' );
         }
     }
 
@@ -241,10 +241,10 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
         {
             if ( isset( $this->_channelDatas[$cid] ) )
             {
-                $this->_channelDatas[$cid]["show"] = true;
-                if ( !$this->hideParentChannels && $this->_channelDatas[$cid]["pid"] != 0 )
+                $this->_channelDatas[$cid]['show'] = true;
+                if ( !$this->hideParentChannels && $this->_channelDatas[$cid]['pid'] != 0 )
                 {
-                    $this->setShowFlag( $this->_channelDatas[$cid]["pid"] );
+                    $this->setShowFlag( $this->_channelDatas[$cid]['pid'] );
                 }
             }
         }
@@ -258,44 +258,44 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
         {
             foreach ( $this->_userDatas[$channelId] as $user )
             {
-                if ( $user["client_type"] == 0 )
+                if ( $user['client_type'] == 0 )
                 {
-                    $name = $user["client_nickname"];
+                    $name = $user['client_nickname'];
 
-                    $icon = "16x16_player_off";
-                    if ( $user["client_away"] == 1 )
+                    $icon = '16x16_player_off';
+                    if ( $user['client_away'] == 1 )
                     {
-                        $icon = "16x16_away";
+                        $icon = '16x16_away';
                     }
                     else
                     {
-                        if ( $user["client_flag_talking"] == 1 )
+                        if ( $user['client_flag_talking'] == 1 )
                         {
-                            $icon = "16x16_player_on";
+                            $icon = '16x16_player_on';
                         }
                         else
                         {
-                            if ( $user["client_output_hardware"] == 0 )
+                            if ( $user['client_output_hardware'] == 0 )
                             {
-                                $icon = "16x16_hardware_output_muted";
+                                $icon = '16x16_hardware_output_muted';
                             }
                             else
                             {
-                                if ( $user["client_output_muted"] == 1 )
+                                if ( $user['client_output_muted'] == 1 )
                                 {
-                                    $icon = "16x16_output_muted";
+                                    $icon = '16x16_output_muted';
                                 }
                                 else
                                 {
-                                    if ( $user["client_input_hardware"] == 0 )
+                                    if ( $user['client_input_hardware'] == 0 )
                                     {
-                                        $icon = "16x16_hardware_input_muted";
+                                        $icon = '16x16_hardware_input_muted';
                                     }
                                     else
                                     {
-                                        if ( $user["client_input_muted"] == 1 )
+                                        if ( $user['client_input_muted'] == 1 )
                                         {
-                                            $icon = "16x16_input_muted";
+                                            $icon = '16x16_input_muted';
                                         }
                                     }
                                 }
@@ -305,12 +305,12 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
 
                     $flags = array();
 
-                    if ( isset( $this->_channelGroupFlags[$user["client_channel_group_id"]] ) )
+                    if ( isset( $this->_channelGroupFlags[$user['client_channel_group_id']] ) )
                     {
-                        $flags[] = $this->_channelGroupFlags[$user["client_channel_group_id"]];
+                        $flags[] = $this->_channelGroupFlags[$user['client_channel_group_id']];
                     }
 
-                    $serverGroups = explode( ",", $user["client_servergroups"] );
+                    $serverGroups = explode( ',', $user['client_servergroups'] );
                     foreach ( $serverGroups as $serverGroup )
                     {
                         if ( isset( $this->_serverGroupFlags[$serverGroup] ) )
@@ -335,47 +335,47 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
         $content = array();
         foreach ( $this->_channelDatas as $channel )
         {
-            if ( $channel["pid"] == $channelId )
+            if ( $channel['pid'] == $channelId )
             {
-                if ( $channel["show"] )
+                if ( $channel['show'] )
                 {
-                    $title = $channel["channel_name"] . " [" . $channel["cid"] . "]";
-                    $link = "javascript:ts3ssvconnect('" . $this->_javascriptName . "'," . $channel["cid"] . ")";
+                    $title = $channel['channel_name'] . ' [' . $channel['cid'] . ']';
+                    $link = "javascript:ts3ssvconnect('" . $this->_javascriptName . "'," . $channel['cid'] . ")";
 
-                    $icon = "16x16_channel_green";
-                    if ( $channel["channel_maxclients"] > -1 && ( $channel["total_clients"] >= $channel["channel_maxclients"] ) )
+                    $icon = '16x16_channel_green';
+                    if ( $channel['channel_maxclients'] > -1 && ( $channel['total_clients'] >= $channel['channel_maxclients'] ) )
                     {
-                        $icon = "16x16_channel_red";
+                        $icon = '16x16_channel_red';
                     }
                     else
                     {
-                        if ( $channel["channel_maxfamilyclients"] > -1 && ( $channel["total_clients_family"] >= $channel["channel_maxfamilyclients"] ) )
+                        if ( $channel['channel_maxfamilyclients'] > -1 && ( $channel['total_clients_family'] >= $channel['channel_maxfamilyclients'] ) )
                         {
-                            $icon = "16x16_channel_red";
+                            $icon = '16x16_channel_red';
                         }
                         else
                         {
-                            if ( $channel["channel_flag_password"] == 1 )
+                            if ( $channel['channel_flag_password'] == 1 )
                             {
-                                $icon = "16x16_channel_yellow";
+                                $icon = '16x16_channel_yellow';
                             }
                         }
                     }
 
                     $flags = array();
-                    if ( $channel["channel_flag_default"] == 1 )
+                    if ( $channel['channel_flag_default'] == 1 )
                     {
                         $flags[] = '16x16_default';
                     }
-                    if ( $channel["channel_needed_talk_power"] > 0 )
+                    if ( $channel['channel_needed_talk_power'] > 0 )
                     {
                         $flags[] = '16x16_moderated';
                     }
-                    if ( $channel["channel_flag_password"] == 1 )
+                    if ( $channel['channel_flag_password'] == 1 )
                     {
                         $flags[] = '16x16_register';
                     }
-                    $cid = $channel["cid"];
+                    $cid = $channel['cid'];
 
                     $users = $this->renderUsers( $cid );
                     $childs = $this->renderChannels( $cid );
@@ -384,12 +384,12 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
                     $content[$cid]['link'] = $link;
                     $content[$cid]['title'] = $title;
                     $content[$cid]['icon'] = $icon;
-                    $content[$cid]['name'] = $channelNameParsed["name"];
+                    $content[$cid]['name'] = $channelNameParsed['name'];
                     $content[$cid]['flags'] = $flags;
                     $content[$cid]['users'] = $users;
                     $content[$cid]['childs'] = $childs;
-                    $content[$cid]['class'] = $channelNameParsed["cssClass"];
-                    $content[$cid]['noFlags'] = $channelNameParsed["noFlags"];
+                    $content[$cid]['class'] = $channelNameParsed['cssClass'];
+                    $content[$cid]['noFlags'] = $channelNameParsed['noFlags'];
                 }
             }
         }
@@ -423,10 +423,10 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
             }
 
             $host = \IPS\Settings::i()->teamspeak_server_ip;
-            $port = $this->_serverDatas["virtualserver_port"];
-            $name = $this->_serverDatas["virtualserver_name"];
-            $icon = "16x16_server_green";
-            $this->_javascriptName = $javascriptName = preg_replace( "#[^a-z-A-Z0-9]#", "-", $host . "-" . $port );
+            $port = $this->_serverDatas['virtualserver_port'];
+            $name = $this->_serverDatas['virtualserver_name'];
+            $icon = '16x16_server_green';
+            $this->_javascriptName = $javascriptName = preg_replace( '#[^a-z-A-Z0-9]#', '-', $host . '-' . $port );
 
             $channels = $this->renderChannels( 0 );
             $content = array();
@@ -438,9 +438,8 @@ class _Viewer extends \IPS\teamspeak\Api\AbstractConnection
         }
         catch ( \Exception $e )
         {
-            $this->logout();
             \IPS\Log::log( $e );
-            $content = 'The Viewer could not be loaded, please check the error logs.';
+            $content = 'The Viewer could not be loaded, please check the system/error logs.';
         }
 
         return $content;

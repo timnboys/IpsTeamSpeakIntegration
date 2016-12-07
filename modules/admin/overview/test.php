@@ -61,7 +61,7 @@ class _test extends \IPS\Dispatcher\Controller
         }
 
         /* Output */
-        \IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( "teamspeak_test_title" );
+        \IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_test_title' );
         \IPS\Output::i()->output = \IPS\Theme::i()->getTemplate( 'test' )->test( $ts, $ports );
     }
 }
