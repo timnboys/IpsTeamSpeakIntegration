@@ -182,6 +182,7 @@ $lang = array(
     'teamspeak_resync_groups_failed' => "Re-syncing the groups failed!",
     'teamspeak_serverinfo_error' => "There was an error loading the server information, please check the system logs for more information!",
     'teamspeak_update_server_failed' => "There was an error updating the server information, please check the system logs for more information!",
+    'teamspeak_connection_error' => "Connection to the TeamSpeak server failed! Check the system/error logs for more information.",
 
     /* !Server Group Add Form */
     'teamspeak_servergroup_added' => "Created new server group",

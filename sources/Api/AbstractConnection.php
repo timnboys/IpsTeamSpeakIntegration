@@ -20,11 +20,26 @@ abstract class _AbstractConnection
      * Set \TeamSpeakAdmin instance.
      *
      * @param bool $login
+     * @param bool $outputError
+     * @throws \IPS\teamspeak\Exception\ConnectionException
      */
-    public function __construct( $login = true )
+    public function __construct( $login = true, $outputError = true )
     {
         $api = \IPS\teamspeak\Api::getInstance( $login );
 
-        $this->instance = $api->getTeamspeakInstance();
+        try
+        {
+            $this->instance = $api->getTeamspeakInstance();
+        }
+        catch ( \IPS\teamspeak\Exception\ConnectionException $e )
+        {
+            if ( $outputError )
+            {
+                \IPS\Output::i()->error( 'teamspeak_connection_error', '3P108/1' );
+                return;
+            }
+
+            throw $e;
+        }
     }
 }

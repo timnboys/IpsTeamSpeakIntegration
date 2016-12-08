@@ -57,7 +57,7 @@ class _Api
      * Get \TeamSpeakAdmin instance or throw exception if (for some reason) it is not available.
      *
      * @return \TeamSpeakAdmin
-     * @throws \OutOfRangeException
+     * @throws \IPS\teamspeak\Exception\ConnectionException
      */
     public function getTeamspeakInstance()
     {
@@ -66,7 +66,7 @@ class _Api
             return $this->tsInstance;
         }
 
-        throw new \OutOfRangeException( 'Could not connect to the TeamSpeak server. Please check the error/system logs for more information!' );
+        throw new \IPS\teamspeak\Exception\ConnectionException();
     }
 
     /**

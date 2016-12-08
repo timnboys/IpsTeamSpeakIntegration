@@ -52,7 +52,7 @@ class _ServerGroups
 
             if ( $groups === null )
             {
-                $groupClass = new \IPS\teamspeak\Api\Group();
+                $groupClass = new \IPS\teamspeak\Api\Group( true, false );
                 $groups = $groupClass->getServerGroups();
             }
 
