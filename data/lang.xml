@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10020">
+ <app key="teamspeak" version="10021">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -150,6 +150,7 @@
   <word key="teamspeak_resync_groups_failed" js="0">Re-syncing the groups failed!</word>
   <word key="teamspeak_serverinfo_error" js="0">There was an error loading the server information, please check the system logs for more information!</word>
   <word key="teamspeak_update_server_failed" js="0">There was an error updating the server information, please check the system logs for more information!</word>
+  <word key="teamspeak_connection_error" js="0">Connection to the TeamSpeak server failed! Check the system/error logs for more information.</word>
   <word key="teamspeak_servergroup_added" js="0">Created new server group</word>
   <word key="teamspeak_servergroup_sgid" js="0">Group ID</word>
   <word key="teamspeak_servergroup_name" js="0">Name</word>

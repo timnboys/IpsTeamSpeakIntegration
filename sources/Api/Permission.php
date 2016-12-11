@@ -228,13 +228,13 @@ class _Permission extends \IPS\teamspeak\Api\AbstractConnection
             );
         }
 
-        $defaultIds = \IPS\teamspeak\Api\Group::getDefaultGroupIds( static::getInstance() );
+
+        $defaultIds = \IPS\teamspeak\Api\Group::getDefaultGroupIds( $this->instance );
         $defaultGroupId = $defaultIds['default_server_group'];
 
         foreach ( $newPerms as $permId => $newPerm )
         {
-            if (
-                ( $serverGroupId == $defaultGroupId && in_array( $permId, static::$noGuestPerms ) ) || isset( $currentPerms[$permId] ) && $newPerm[0] == $currentPerms[$permId]['permvalue'] && $newPerm[1] == $currentPerms[$permId]['permnegated'] && $newPerm[2] == $currentPerms[$permId]['permskip'] )
+            if (( $serverGroupId == $defaultGroupId && in_array( $permId, static::$noGuestPerms ) ) || isset( $currentPerms[$permId] ) && $newPerm[0] == $currentPerms[$permId]['permvalue'] && $newPerm[1] == $currentPerms[$permId]['permnegated'] && $newPerm[2] == $currentPerms[$permId]['permskip'] )
             {
                 continue;
             }

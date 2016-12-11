@@ -52,7 +52,7 @@ class _test extends \IPS\Dispatcher\Controller
 
         try
         {
-            $server = new \IPS\teamspeak\Api\Server();
+            $server = new \IPS\teamspeak\Api\Server( true, false );
             $ts = $server->checkConnection();
         }
         catch ( \Exception $e )
