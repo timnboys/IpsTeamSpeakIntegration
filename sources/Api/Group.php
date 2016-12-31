@@ -535,6 +535,27 @@ class _Group extends \IPS\teamspeak\Api\AbstractConnection
     }
 
     /**
+     * @custom This is a function only available in your custom install.
+     *
+     * Get the server groups of the UUID.
+     *
+     * @param string $uuid
+     * @return array Array containing all server group IDs.
+     * @throws \IPS\teamspeak\Exception\ClientNotFoundException
+     * @throws \Exception
+     */
+    public function getClientGroups( $uuid )
+    {
+        $client = $this->getClientFromUuid( $uuid );
+
+        $serverGroups = static::convertGroupsToCompare(
+            $this->instance->getElement( 'data', $this->instance->serverGroupsByClientID( $client['cldbid'] ) )
+        );
+
+        return $serverGroups;
+    }
+
+    /**
      * Clear all group caches.
      *
      * @return void

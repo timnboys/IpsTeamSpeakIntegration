@@ -62,7 +62,7 @@ class teamspeak_hook_uuid_on_register extends _HOOK_CLASS_
                 $uuid->save();
 
                 $tsMember = \IPS\teamspeak\Member::i();
-                $tsMember->resyncGroups( $member, $values['teamspeak_uuid'] );
+                $tsMember->resyncIpsGroups( $member, $values['teamspeak_uuid'] );
             }
             catch ( \Exception $e )
             {

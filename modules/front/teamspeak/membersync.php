@@ -78,7 +78,7 @@ class _membersync extends \IPS\Dispatcher\Controller
                 $uuid->uuid = $values['s_uuid'];
                 $uuid->save();
 
-                $tsMember->resyncGroups( \IPS\Member::loggedIn(), $values['s_uuid'] );
+                $tsMember->resyncIpsGroups( \IPS\Member::loggedIn(), $values['s_uuid'] );
 
                 \IPS\Output::i()->redirect(
                     \IPS\Http\Url::internal( 'app=teamspeak&module=teamspeak&controller=membersync', 'front' ),

@@ -55,7 +55,7 @@ class _syncTsGroups extends \IPS\Task
 
                 if ( $info['s_uuid'] )
                 {
-                    $tsMember->resyncGroups( $member, $info['s_uuid'] );
+                    $tsMember->resyncIpsGroups( $member, $info['s_uuid'] );
                 }
             }
         }

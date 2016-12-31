@@ -219,6 +219,83 @@ class _Member
     }
 
     /**
+     * @custom This is a function only available in your custom install.
+     *
+     * Re-sync the IPS groups.
+     *
+     * @param \IPS\Member $member
+     * @param $uuid
+     * return
+     */
+    public function resyncIpsGroups( \IPS\Member $member, $uuid )
+    {
+        $teamspeak = new \IPS\teamspeak\Api\Group();
+        $tsGroups = $teamspeak->getClientGroups( $uuid );
+        $ipsGroupsToGive = $this->getIpsGroupsToGive( $tsGroups );
+
+        if ( count( $ipsGroupsToGive ) > 0 )
+        {
+            $primaryGroupId = $this->getPrimaryGroupId( $member, $ipsGroupsToGive );
+
+            $ipsGroupsToGive = implode( ',', $ipsGroupsToGive );
+            $member->member_group_id = $primaryGroupId;
+            $member->mgroup_others = $ipsGroupsToGive;
+            $member->save();
+        }
+    }
+
+    /**
+     * @custom This is a function only available in your custom install.
+     *
+     * Figure out which primary group should be given.
+     *
+     * @param \IPS\Member $member
+     * @param array $ipsGroupsToGive
+     * @return int
+     */
+    protected function getPrimaryGroupId( \IPS\Member $member, array &$ipsGroupsToGive )
+    {
+        /* If the user has a valid primary group, don't touch it */
+        if ( in_array( $member->member_group_id, $ipsGroupsToGive ) )
+        {
+            /* Remove the primary group from the array */
+            $ipsGroupsToGive = array_diff( $ipsGroupsToGive, [ $member->member_group_id ] );
+
+            return $member->member_group_id;
+        }
+
+        /* If the user does not have a valid primary group, pick a random one */
+        $primaryGroupKey = array_rand( $ipsGroupsToGive );
+        $primaryGroup = (int) $ipsGroupsToGive[$primaryGroupKey];
+        unset( $ipsGroupsToGive[$primaryGroupKey] );
+
+        return $primaryGroup;
+    }
+
+    /**
+     * @custom This is a function only available in your custom install.
+     *
+     * Get array of IPS group IDs, that should be assigned to the user.
+     *
+     * @param array $tsGroups
+     * @return array
+     */
+    protected function getIpsGroupsToGive( array $tsGroups )
+    {
+        $giveIpsGroups = [];
+
+        foreach ( \IPS\Member\Group::groups( true, false ) as $ipsGroup )
+        {
+            if ( in_array( $ipsGroup->teamspeak_group, $tsGroups ) )
+            {
+                $giveIpsGroups[] = $ipsGroup->g_id;
+            }
+        }
+
+        return $giveIpsGroups;
+    }
+
+    /**
      * Get all UUIDs that are synced (saved in the DB).
      *
      * @return array

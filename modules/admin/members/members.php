@@ -175,7 +175,7 @@ class _Members extends \IPS\Dispatcher\Controller
         $uuid = \IPS\teamspeak\Uuid::load( $id );
 
         $tsMember = \IPS\teamspeak\Member::i();
-        if ( !$tsMember->resyncGroups( \IPS\Member::load( $uuid->member_id ), $uuid->uuid ) )
+        if ( !$tsMember->resyncIpsGroups( \IPS\Member::load( $uuid->member_id ), $uuid->uuid ) )
         {
             \IPS\Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/1' );
         }
@@ -193,6 +193,7 @@ class _Members extends \IPS\Dispatcher\Controller
      */
     protected function resyncAll()
     {
+        \IPS\Output::i()->error( 'NOT DONE YET', 'CUSTOM' );
         /* Check if we have an ID */
         $id = \IPS\Request::i()->id;
 
@@ -241,7 +242,7 @@ class _Members extends \IPS\Dispatcher\Controller
                 /* Previous bug caused entries with an empty UUID, which now results in an exception being thrown */
                 if ( isset( $info['s_uuid'] ) && !empty( $info['s_uuid'] ) )
                 {
-                    $tsMember->resyncGroups( $member, $info['s_uuid'] );
+                    $tsMember->resyncIpsGroups( $member, $info['s_uuid'] );
                 }
             }
         }

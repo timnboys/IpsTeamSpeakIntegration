@@ -50,6 +50,8 @@ class _test extends \IPS\Dispatcher\Controller
             $success = false;
         }
 
+        unset( $success );
+
         try
         {
             $server = new \IPS\teamspeak\Api\Server( true, false );

@@ -32,27 +32,7 @@ class _MemberSync
      * @return    void
      */
     public function onProfileUpdate( $member, $changes )
-    {
-        /* Determine whether group(s) has been changed */
-        if ( isset( $changes['member_group_id'] ) || isset( $changes['mgroup_others'] ) )
-        {
-            /* Check if member has at least one UUID set before trying to sync */
-            $hasUuid = \IPS\Db::i()->select( 's_id', 'teamspeak_member_sync', array( 's_member_id=?', $member->member_id ) )->count();
-
-            if ( $hasUuid )
-            {
-                try
-                {
-                    $tsMember = \IPS\teamspeak\Member::i();
-                    $tsMember->resyncGroupsAllUuids( $member );
-                }
-                catch ( \Exception $e )
-                {
-                    \IPS\Output::i()->error( $e->getMessage(), $e->getCode() );
-                }
-            }
-        }
-    }
+    {}
 
     /**
      * Member is flagged as spammer
