@@ -224,12 +224,23 @@ class _Member
      * Re-sync the IPS groups.
      *
      * @param \IPS\Member $member
-     * @param $uuid
-     * return
+     * @param string|null $uuid
+     * @return void
      */
-    public function resyncIpsGroups( \IPS\Member $member, $uuid )
+    public function resyncIpsGroups( \IPS\Member $member, $uuid = NULL )
     {
         $teamspeak = new \IPS\teamspeak\Api\Group();
+
+        if ( $uuid === NULL )
+        {
+            try {
+                $uuidObj = \IPS\teamspeak\Uuid::load( $member->member_id, 's_member_id' );
+                $uuid = $uuidObj->uuid;
+            } catch ( \OutOfRangeException $e ) {
+                return;
+            }
+        }
+
         $tsGroups = $teamspeak->getClientGroups( $uuid );
         $ipsGroupsToGive = $this->getIpsGroupsToGive( $tsGroups );
 

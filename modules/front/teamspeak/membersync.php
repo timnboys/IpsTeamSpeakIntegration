@@ -55,6 +55,14 @@ class _membersync extends \IPS\Dispatcher\Controller
         /* Check CSRF */
         \IPS\Session::i()->csrfCheck();
 
+        /* If member has a UUID already, output an error */
+        /* @custom This is a custom check, only available in this version */
+        try {
+            $uuid = \IPS\teamspeak\Uuid::load( \IPS\Member::loggedIn()->member_id, 's_member_id' );
+
+            \IPS\Output::i()->error( 'teamspeak_uuid_already_linked', '3P100/1', 403 );
+        } catch ( \OutOfRangeException $e ) {}
+
         $tsMember = \IPS\teamspeak\Member::i();
 
         $form = new \IPS\Helpers\Form();

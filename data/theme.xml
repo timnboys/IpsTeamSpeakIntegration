@@ -14,9 +14,11 @@
 {{endif}}
 
 <ul class="ipsToolList ipsToolList_horizontal ipsClearfix ipsSpacer_bottom ipsSpacer_half">
-	<li class="ipsToolList_primaryAction">
-		<a class="ipsButton ipsButton_medium ipsButton_important" href="{url='app=teamspeak&module=teamspeak&controller=membersync&do=add' seoTemplate='teamspeak_member_sync' csrf='1'}" data-ipsdialog="" data-ipsdialog-modal="true" data-ipsdialog-title="{lang='teamspeak_add_uuid'}">+ {lang="teamspeak_add_uuid"}</a>
-	</li>
+    {{if empty($uuids)}}
+        <li class="ipsToolList_primaryAction">
+            <a class="ipsButton ipsButton_medium ipsButton_important" href="{url='app=teamspeak&module=teamspeak&controller=membersync&do=add' seoTemplate='teamspeak_member_sync' csrf='1'}" data-ipsdialog="" data-ipsdialog-modal="true" data-ipsdialog-title="{lang='teamspeak_add_uuid'}">+ {lang="teamspeak_add_uuid"}</a>
+        </li>
+    {{endif}}
 </ul>
 
 <div class='ipsClear ipsBox'>

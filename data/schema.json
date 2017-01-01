@@ -79,6 +79,16 @@
                 "length": [
                     null
                 ]
+            },
+            "UNIQUE_MEMBER_ID": {
+                "type": "unique",
+                "name": "UNIQUE_MEMBER_ID",
+                "columns": [
+                    "s_member_id"
+                ],
+                "length": [
+                    null
+                ]
             }
         },
         "collation": "utf8mb4_unicode_ci",

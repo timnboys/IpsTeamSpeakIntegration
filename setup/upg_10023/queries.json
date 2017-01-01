@@ -1,0 +1,41 @@
+{
+    "1": {
+        "method": "addIndex",
+        "params": [
+            "teamspeak_member_sync",
+            {
+                "type": "unique",
+                "name": "UNIQUE_MEMBER_ID",
+                "columns": [
+                    "s_member_id"
+                ],
+                "length": [
+                    null
+                ]
+            }
+        ]
+    },
+    "2": {
+        "method": "dropIndex",
+        "params": [
+            "teamspeak_member_sync",
+            "UNIQUE_MEMBER_ID"
+        ]
+    },
+    "3": {
+        "method": "addIndex",
+        "params": [
+            "teamspeak_member_sync",
+            {
+                "type": "unique",
+                "name": "UNIQUE_MEMBER_ID",
+                "columns": [
+                    "s_member_id"
+                ],
+                "length": [
+                    null
+                ]
+            }
+        ]
+    }
+}

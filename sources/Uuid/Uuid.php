@@ -24,7 +24,7 @@ class _Uuid extends \IPS\Patterns\ActiveRecord
     /**
      * @brief	[ActiveRecord] Database ID Fields
      */
-    protected static $databaseIdFields = array( 's_uuid' );
+    protected static $databaseIdFields = array( 's_uuid', 's_member_id' );
 
     /**
      * @brief    [ActiveRecord] Database table

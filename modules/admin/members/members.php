@@ -193,7 +193,6 @@ class _Members extends \IPS\Dispatcher\Controller
      */
     protected function resyncAll()
     {
-        \IPS\Output::i()->error( 'NOT DONE YET', 'CUSTOM' );
         /* Check if we have an ID */
         $id = \IPS\Request::i()->id;
 
@@ -205,7 +204,7 @@ class _Members extends \IPS\Dispatcher\Controller
         $member = \IPS\Member::load( $id );
         $tsMember = \IPS\teamspeak\Member::i();
 
-        if ( !$tsMember->resyncGroupsAllUuids( $member ) )
+        if ( !$tsMember->resyncIpsGroups( $member ) )
         {
             \IPS\Output::i()->error( 'teamspeak_resync_groups_failed', '4P100/2' );
         }
