@@ -237,22 +237,34 @@ class _Member
                 $uuidObj = \IPS\teamspeak\Uuid::load( $member->member_id, 's_member_id' );
                 $uuid = $uuidObj->uuid;
             } catch ( \OutOfRangeException $e ) {
-                return;
+                return FALSE;
             }
         }
 
-        $tsGroups = $teamspeak->getClientGroups( $uuid );
-        $ipsGroupsToGive = $this->getIpsGroupsToGive( $tsGroups );
-
-        if ( count( $ipsGroupsToGive ) > 0 )
-        {
-            $primaryGroupId = $this->getPrimaryGroupId( $member, $ipsGroupsToGive );
-
-            $ipsGroupsToGive = implode( ',', $ipsGroupsToGive );
-            $member->member_group_id = $primaryGroupId;
-            $member->mgroup_others = $ipsGroupsToGive;
-            $member->save();
+        try {
+            $tsGroups = $teamspeak->getClientGroups( $uuid );
+            $ipsGroups = $this->getIpsGroups( $tsGroups );
+        } catch ( \IPS\teamspeak\Exception\ClientNotFoundException $e ) {
+            return FALSE;
         }
+
+        if ( count( $ipsGroups ) === 0 )
+        {
+            $primaryGroupId = \IPS\Settings::i()->member_group;
+            $ipsGroups = '';
+        }
+        else
+        {
+            $primaryGroupId = $this->getPrimaryGroupId( $member, $ipsGroups );
+
+            $ipsGroups = implode( ',', $ipsGroups );
+        }
+
+        $member->member_group_id = $primaryGroupId;
+        $member->mgroup_others = $ipsGroups;
+        $member->save();
+
+        return TRUE;
     }
 
     /**
@@ -261,24 +273,24 @@ class _Member
      * Figure out which primary group should be given.
      *
      * @param \IPS\Member $member
-     * @param array $ipsGroupsToGive
+     * @param array $ipsGroups
      * @return int
      */
-    protected function getPrimaryGroupId( \IPS\Member $member, array &$ipsGroupsToGive )
+    protected function getPrimaryGroupId( \IPS\Member $member, array &$ipsGroups )
     {
         /* If the user has a valid primary group, don't touch it */
-        if ( in_array( $member->member_group_id, $ipsGroupsToGive ) )
+        if ( in_array( $member->member_group_id, $ipsGroups ) )
         {
             /* Remove the primary group from the array */
-            $ipsGroupsToGive = array_diff( $ipsGroupsToGive, [ $member->member_group_id ] );
+            $ipsGroups = array_diff( $ipsGroups, [ $member->member_group_id ] );
 
             return $member->member_group_id;
         }
 
         /* If the user does not have a valid primary group, pick a random one */
-        $primaryGroupKey = array_rand( $ipsGroupsToGive );
-        $primaryGroup = (int) $ipsGroupsToGive[$primaryGroupKey];
-        unset( $ipsGroupsToGive[$primaryGroupKey] );
+        $primaryGroupKey = array_rand( $ipsGroups );
+        $primaryGroup = (int) $ipsGroups[$primaryGroupKey];
+        unset( $ipsGroups[$primaryGroupKey] );
 
         return $primaryGroup;
     }
@@ -291,19 +303,19 @@ class _Member
      * @param array $tsGroups
      * @return array
      */
-    protected function getIpsGroupsToGive( array $tsGroups )
+    protected function getIpsGroups( array $tsGroups )
     {
-        $giveIpsGroups = [];
+        $ipsGroups = [];
 
         foreach ( \IPS\Member\Group::groups( true, false ) as $ipsGroup )
         {
             if ( in_array( $ipsGroup->teamspeak_group, $tsGroups ) )
             {
-                $giveIpsGroups[] = $ipsGroup->g_id;
+                $ipsGroups[] = $ipsGroup->g_id;
             }
         }
 
-        return $giveIpsGroups;
+        return $ipsGroups;
     }
 
     /**
