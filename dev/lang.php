@@ -262,7 +262,7 @@ $lang = array(
 
     /* Register form */
     'teamspeak_uuid' => "TeamSpeak UUID",
-    'teamspeak_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID",
+    'teamspeak_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID.<br>If using TeamSpeak 3.1.0.1 or higher, you additionally have to click on the 'Go Advanced' link.",
 
     /* Sync table */
     'teamspeak_no_uuids' => "You have no UUIDs linked",
@@ -275,7 +275,7 @@ $lang = array(
 
     /* Add UUID Form */
     's_uuid' => "UUID",
-    's_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID",
+    's_uuid_desc' => "Press CTRL+I on TeamSpeak to get your UUID.<br>If using TeamSpeak 3.1.0.1 or higher, you additionally have to click on the 'Go Advanced' link.",
 
     'teamspeak_uuid_setting' => "TeamSpeak",
 
