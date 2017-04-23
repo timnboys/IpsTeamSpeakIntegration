@@ -72,6 +72,13 @@ class _bans extends \IPS\Dispatcher\Controller
             },
             'duration' => function ( $val, $row )
             {
+                $val = (int) $val;
+
+                /* Permanent ban */
+                if ($val === 0) {
+                    return \IPS\Member::loggedIn()->language()->addToStack( 'teamspeak_unban_never' );
+                }
+
                 $dateTime = \IPS\DateTime::ts( $val + $row['created'] );
 
                 return $dateTime->localeDate() . ' @ ' . $dateTime->localeTime();

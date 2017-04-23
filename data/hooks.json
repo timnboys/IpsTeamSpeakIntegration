@@ -22,5 +22,9 @@
     "account_settings_tab": {
         "type": "S",
         "class": "\\IPS\\Theme\\class_core_front_system"
+    },
+    "user_dropdown_menu": {
+        "type": "S",
+        "class": "\\IPS\\Theme\\class_core_front_global"
     }
 }

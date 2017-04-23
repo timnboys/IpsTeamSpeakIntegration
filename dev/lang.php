@@ -252,6 +252,7 @@ $lang = array(
     'teamspeak_unban' => "Unban",
     'teamspeak_deleted_ban' => "Unbanned",
     'teamspeak_deleted_all_bans' => "Unbanned everyone",
+    'teamspeak_unban_never' => 'Never',
 
     /* !Front */
 

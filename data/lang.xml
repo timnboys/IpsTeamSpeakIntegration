@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
- <app key="teamspeak" version="10024">
+ <app key="teamspeak" version="10025">
   <word key="__app_teamspeak" js="0">TeamSpeak Integration</word>
   <word key="menutab__teamspeak" js="0">TeamSpeak</word>
   <word key="menutab__teamspeak_icon" js="0">phone</word>
@@ -197,6 +197,7 @@
   <word key="teamspeak_unban" js="0">Unban</word>
   <word key="teamspeak_deleted_ban" js="0">Unbanned</word>
   <word key="teamspeak_deleted_all_bans" js="0">Unbanned everyone</word>
+  <word key="teamspeak_unban_never" js="0">Never</word>
   <word key="frontnavigation_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="module__teamspeak_teamspeak" js="0">TeamSpeak Sync</word>
   <word key="page__teamspeak" js="0">TeamSpeak</word>
