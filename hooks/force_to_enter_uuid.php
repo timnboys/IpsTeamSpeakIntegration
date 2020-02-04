@@ -57,7 +57,7 @@ class teamspeak_hook_force_to_enter_uuid extends _HOOK_CLASS_
                 $alreadyOnPage =
                     $request->app === $app && $request->module === $module && $request->controller === $controller;
 
-                if ( !$member->members_bitoptions['validating'] && !$hasUuid && !$alreadyOnPage &&
+                if (!$member->members_bitoptions['validating'] && !$member->members_bitoptions['must_reaccept_terms'] && !$hasUuid && !$alreadyOnPage &&
                     \IPS\Dispatcher::i()->controllerLocation === 'front' && $request->controller !== 'login'
                 )
                 {
